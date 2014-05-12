@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>jQM Editable Listview Demo</title>
+	
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.css" />
+	<link rel="stylesheet" href="../jquery.mobile.editablelistview.css">
+	<link rel="stylesheet" href="demo.css">
+	
+	<script src="http://code.jquery.com/jquery-2.1.1.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.js"></script>
+	<script src="../jquery.mobile.editablelistview.js"></script>
+	
+    <script>
+	    $( ":jqmData(role='editable-listview')" ).editablelistview(); 
+	</script>
+</head>
+<body>
+	
+	<ul data-role="editable-listview" data-list-title="Activities" data-list-empty-title="No activities in the list" data-button-label="Add Activities">
+	    <li>Apple</li>
+	    <li>Orange</li>
+	    <li>Banana</li>
+	    <li>Mango</li>
+	</ul>
+	
+</body>
+</html>
