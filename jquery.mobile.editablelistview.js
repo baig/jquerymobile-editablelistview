@@ -67,6 +67,7 @@
             this._changeEditButtonState()
             this._changeEditButtonLabel()
             this._insertTextInputBox()
+            this._toggleSplitIcon()
             
             console.log("EDIT", e.target)
         },
@@ -81,8 +82,19 @@
         },
          _insertTextInputBox: function() {
             inEditState
-            ? this._ui.content.children().first().before( $('<li id="temp">Hello</li>') )
-            : this._ui.content.find( 'li#temp' ).remove()
+            ? this._ui.content.children().first().before( $('<li id="temp">Hello</li>') )   // true
+            : this._ui.content.find( 'li#temp' ).remove()   // false
+        },
+        _toggleSplitIcon: function() {
+            inEditState
+            ? this._ui.content.find('li')   // true
+                              .remove( 'li#temp' )
+                              .addClass( 'ui-li-has-alt' )
+                              .append( '<a class="ui-editable-temp ui-btn ui-btn-icon-notext ui-icon-minus ui-btn-a"></a>' )
+            : this._ui.content.find('li')   // false
+                              .removeClass( 'ui-li-has-alt' )
+                              .find( 'a.ui-editable-temp' )
+                              .remove()
         },
 
         // -- Event Handler Helper Functions --
@@ -171,7 +183,7 @@
                 $li = $ul.children();
             
             $ul.addClass( 'ui-listview ui-corner-all ui-shadow' )
-            $li.wrapInner( '<a class="ui-btn ui-btn-icon-right ui-icon-carat-r"></a>' );
+            $li.wrapInner( '<a class="ui-btn"></a>' );
             $li.first().addClass( 'ui-first-child' )
             $li.last().addClass( 'ui-last-child' )
             
