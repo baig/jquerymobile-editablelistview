@@ -97,7 +97,7 @@
         _onEditButtonTapped: function(e) {
             inEditState = !inEditState;
             
-            this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
+            this._handleExpandCollapse( !inEditState )
 
             this._changeEditButton()
             this._insertTextInputBox()
@@ -123,12 +123,30 @@
             ? this._on( this._ui.content.find('li#temp button#item-add'), { "tap": "_insertListItem" })
             : this._off( this._ui.content.find('li#temp button#item-add'), "tap")
         },
-        _insertListItem: function() {
-            console.log("INSERTED :)")
+
+        _insertListItem: function(e) {
+            var $target = $(e.target)
+            var $input = $target.prev().find('input')
+            var inputTextString = $input.val()
+            var firstLiTextString = $target.parents('li#temp').next().text()
+            var $li = this._enhanceListItem( '<li>' + firstLiTextString + '</li>')
+
+            // Clearing the input text field
+            $input.val("")
+
+            $target.parents('li#temp')
+                   .next()
+                       .find('a')
+                       .first()
+                       .text(inputTextString)
+                   .parent()
+                   .after($li)
         },
+
         _deleteListItem: function(e) {
+            console.log(e.currentTarget)
+            console.log($(e.currentTarget).parent())
             $(e.currentTarget).parent().remove();
-//            console.log("DELETED :)", $(e.currentTarget).text())
         },
 
         _enableListItemDeleteEvent: function() {
@@ -240,6 +258,20 @@
             console.log($el[0])
         },
         
+        _enhanceListItem: function( li ) {
+            var $li = $( li );
+
+            // Building DOM
+            $li.wrapInner( '<a class="ui-btn"></a>' );
+            $li.first().addClass( 'ui-li-has-alt' )
+            $li.append('<a class="ui-editable-temp ui-btn ui-btn-icon-notext ui-icon-minus ui-btn-a"></a>')
+
+            // Attaching Delete List Item event to Delete icon button
+            this._on( $li.find('a.ui-editable-temp'), { "tap": "_deleteListItem" })
+
+            return $li;
+        },
+
         refresh: function( created ) {
             if ( !created ) {
                 console.log("Happy creation :)")
