@@ -1,6 +1,14 @@
 .ui-editable-listview-corner {
-    -webkit-border-bottom-right-radius: 0;
-    -webkit-border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+    -webkit-border-top-right-radius: .3125em /*{global-radii-buttons}*/;
+    -webkit-border-top-left-radius: .3125em /*{global-radii-buttons}*/;
+    border-top-right-radius: .3125em /*{global-radii-buttons}*/;
+    border-top-left-radius: .3125em /*{global-radii-buttons}*/;
+}
+
+.ui-editable-listview-title {
+    padding-left: 3px;
+    padding-top: 5px;
+    padding-bottom: 3px;
+    font-size: 1.1em;
+    text-align: left;
 }

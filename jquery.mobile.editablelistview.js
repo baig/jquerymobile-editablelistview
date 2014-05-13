@@ -7,9 +7,10 @@
     
     // Whether the widget is already present on the page or not
     var isCreated = false;
+    
 
     //create widget
-    $.widget("mobile.editablelistview", $.mobile.widget, $.extend( {
+    $.widget("mobile.editablelistview", $.extend( {
         
         initSelector: ":jqmData(role='editablelistview'), :jqmData(role='editable-listview')",
         
@@ -63,7 +64,18 @@
                 }
             })
             
+//            this._on( {
+//                "tap": function() { console.log("HELOOOOOO")},
+//                "focus": function() { console.log("AFASFASASADS")},
+////                "blur": "_handleBlur"
+//            });
+            
 //            console.log(this._addFirstLastClasses)
+        },
+        
+        _isListEmpty: function() {
+            console.log(this.element.find('li').length)
+            return ( this.element.find('li').length === 0 ? true : false )
         },
         
         _init: function() {
@@ -92,6 +104,21 @@
             return $('<div>' + $el[0].outerHTML + '</div>');
         },
         
+        widget: function() {
+            return ( this.inputNeedsWrap ) ? this.element.parent() : this.element;
+        },
+        
+        _handleFocus: function() {
+//            // In many situations, iOS will zoom into the input upon tap, this
+//            // prevents that from happening
+//            if ( this.options.preventFocusZoom ) {
+//                $.mobile.zoom.disable( true );
+//            }
+//            this.widget().addClass( $.mobile.focusClass );
+            console.log("focuseDDD")
+            this.element.addClass( "ui-focus" );
+        },
+        
 //        <div class="ui-header ui-bar-inherit" role="banner" data-role="header">
 //            <h1 aria-level="1" role="heading" class="ui-title">Page Title</h1>
 //            <a role="button" data-role="button" href="#" class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-right ui-btn-inline ui-corner-all ui-mini">Options</a>
@@ -99,16 +126,16 @@
         
         // Add all relevant classes
         _enhance: function($el, ui) {
+            var opts = this.options
             
             ui.wrapper = $el.wrap( "<div class='ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content'></div>" )
             
-            ui.header = $(  //'<h1 class="ui-collapsible-heading">' +
-                                '<div class="ui-header ui-editable-listview-corner ui-inset ui-bar-inherit" role="banner" data-role="header">' +
-//                                    '<h1 aria-level="1" role="heading" class="ui-title">Page Title</h1>' +
-                                    '<a class="ui-collapsible-heading-toggle ui-btn">Options</a>' +
-                                    '<a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right ui-icon-gear">Edit</a>' +
-                                '</div>' );
-//                            '</h1>' );
+            ui.header = $(  '<div class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ' + (function(context){ if(context._isListEmpty()) { return '' } else {return 'ui-btn-icon-left ui-icon-carat-d' }}(this)) + '"role="banner" data-role="header">' +
+                                '<div class="ui-bar ui-editable-listview-title">' +
+                                    '<span>' + ( this._isListEmpty() ? opts.listEmptyTitle : opts.listTitle ) + '</span>' +
+                                '</div>' +
+                                '<a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right ui-icon-gear">Edit</a>' +
+                            '</div>' );
             
             ui.content = $el.wrap( "<div class='ui-collapsible-content ui-body-inherit'></div>" );
             
@@ -136,65 +163,6 @@
             
             console.log($el[0])
         },
-//        
-        _enhanceCollapsible: function( $elem, ui ) {
-            var iconclass,
-                opts = this._renderedOptions,
-//                contentThemeClass = this._themeClassFromOption( "ui-body-", opts.contentTheme );
-//
-            contentThemeClass = "hello";
-            console.log($elem);
-            
-//            $elem.addClass( "ui-collapsible " +
-//                          ( opts.inset ? "ui-collapsible-inset " : "" ) +
-//                          ( opts.inset && opts.corners ? "ui-corner-all " : "" ) +
-//                          ( contentThemeClass ? "ui-collapsible-themed-content " : "" ) );
-            
-            ui.originalHeading = $elem.children( this.options.heading ).first();
-            
-            ui.content = $elem.wrapInner( "<div class='ui-collapsible-content " + contentThemeClass + "'></div>" )
-                              .children( ".ui-collapsible-content" );
-            
-            ui.heading = ui.originalHeading;
-
-            // Replace collapsibleHeading if it's a legend
-            if ( ui.heading.is( "legend" ) ) {
-                ui.heading = $( "<div role='heading'>"+ ui.heading.html() +"</div>" );
-                ui.placeholder = $( "<div><!-- placeholder for legend --></div>" ).insertBefore( ui.originalHeading );
-                ui.originalHeading.remove();
-            }
-
-            iconclass = opts.collapsed
-                        ? ( opts.collapsedIcon
-                            ? "ui-icon-" + opts.collapsedIcon
-                            : "" )
-                        : ( opts.expandedIcon
-                            ? "ui-icon-" + opts.expandedIcon
-                            : "" )
-
-            ui.status = $( "<span class='ui-collapsible-heading-status'></span>" );
-            
-            ui.anchor = ui.heading
-                          .detach()
-                          //modify markup & attributes
-                          .addClass( "ui-collapsible-heading" )
-                          .append( ui.status )
-                          .wrapInner( "<a href='#' class='ui-collapsible-heading-toggle'></a>" )
-                          .find( "a" )
-                          .first()
-                          .addClass( "ui-btn " +
-                                     ( iconclass ? iconclass + " " : "" ) +
-                                     ( iconclass ? iconposClass( opts.iconpos ) + " " : "" ) +
-                                     this._themeClassFromOption( "ui-btn-", opts.theme ) +
-                                     " " +
-                                     ( opts.mini ? "ui-mini " : "" )
-                                   );
-
-            //drop heading in before content
-            ui.heading.insertBefore( ui.content );
-
-            
-        },
         
         refresh: function( created ) {
             if ( !created ) {
@@ -211,7 +179,9 @@
 
 //            ui.status.text( isCollapsed ? opts.expandCueText : opts.collapseCueText );
             ui.header
-              .toggleClass( "ui-collapsible-heading-collapsed", isCollapsed )
+              .toggleClass( "ui-collapsible-heading-collapsed ui-corner-all", isCollapsed )
+              .toggleClass( "ui-editable-listview-corner", !isCollapsed )
+              .css( "margin-bottom", "0" )
               .find( "a" )
               .first()
               .toggleClass( "ui-icon-" + opts.expandedIcon, !isCollapsed )
@@ -222,6 +192,7 @@
             this.element.toggleClass( "ui-collapsible-collapsed", isCollapsed );
             
             ui.content
+              .parent()
               .toggleClass( "ui-collapsible-content-collapsed", isCollapsed )
               .attr( "aria-hidden", isCollapsed )
               .trigger( "updatelayout" );
@@ -270,18 +241,4 @@
 
     }, $.mobile.behaviors.addFirstLastClasses) );
     
-    
-//    $.mobile.collapsible.defaults = {
-//        expandCueText: " click to expand contents",
-//        collapseCueText: " click to collapse contents",
-//        collapsedIcon: "plus",
-//        contentTheme: "inherit",
-//        expandedIcon: "minus",
-//        iconpos: "left",
-//        inset: true,
-//        corners: true,
-//        theme: "inherit",
-//        mini: false
-//    };
-
 }(jQuery));
