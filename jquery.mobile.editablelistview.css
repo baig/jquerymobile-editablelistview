@@ -12,3 +12,7 @@
     font-size: 1.1em;
     text-align: left;
 }
+.controlgroup-textinput{
+    padding-top:.22em;
+    padding-bottom:.22em;
+}

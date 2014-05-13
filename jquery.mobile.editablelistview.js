@@ -9,17 +9,44 @@
     var isCreated = false;
     var inEditState = false;
     
-    var $textInput = $(
-                        '<li id="temp" style="padding: 0 10px">' +
-                            '<div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset ui-input-has-clear">' +
-                                '<input name="text-3" id="text-3" value="" type="text">' +
-                                '<a class="ui-input-clear ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all" title="Clear text">Clear text</a>' +
+    var $listTextInputMarkup = $(
+                        '<li id="temp" class="ui-btn" style="padding: .8em 25px">' +
+                            '<div style="width: 100%; margin: 0" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">' +
+                                '<div style="width: inherit" class="ui-controlgroup-controls ">' +
+                                    '<div style="width: 95%; background-color: white" class="ui-input-text ui-body-inherit ui-corner-all controlgroup-textinput ui-btn ui-shadow-inset ui-first-child">' +
+                                        '<input type="text">' +
+                                    '</div>' +
+                                    '<button id="item-add" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-plus ui-last-child">Add</button>' +
                                 '</div>' +
+                            '</div>' +
                         '</li>'
                       );
 
+    var $listItemTextInputMarkup = $(
+                            '<div style="width: 100%" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">' +
+                                '<div style="width: inherit" class="ui-controlgroup-controls ">' +
+                                    '<div style="width: 91%" class="ui-input-text ui-body-inherit ui-corner-all controlgroup-textinput ui-btn ui-shadow-inset ui-first-child">' +
+                                        '<input type="text">' +
+                                    '</div>' +
+                                    '<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-check ui-btn-a">Add</button>' +
+                                    '<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-delete ui-last-child">Dismiss</button>' +
+                                '</div>' +
+                            '</div>'
+                          );
 
-    //create widget
+    var $headerMarkup = function(context) {
+        return $(
+            '<div class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ' + (function(ctx){ if(ctx._isListEmpty()) { return '' } else {return 'ui-btn-icon-left ui-icon-carat-d' }}(context)) + '"role="banner" data-role="header">' +
+                '<div class="ui-bar ui-editable-listview-title">' +
+                    '<span>' + ( context._isListEmpty() ? context.options.listEmptyTitle : context.options.listTitle ) + '</span>' +
+                '</div>' +
+                '<a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right ui-icon-edit">Edit</a>' +
+            '</div>'
+        );
+    }
+
+
+    // Plugin Definition
     $.widget("mobile.editablelistview", $.extend( {
         
         initSelector: ":jqmData(role='editablelistview'), :jqmData(role='editable-listview')",
@@ -66,42 +93,72 @@
 
         },
 
-        // -- Event Handlers --
+        // --(start)-- Event Handlers --
         _onEditButtonTapped: function(e) {
             inEditState = !inEditState;
             
             this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
-            this._changeEditButtonState()
-            this._changeEditButtonLabel()
+
+            this._changeEditButton()
             this._insertTextInputBox()
             this._toggleSplitIcon()
-            this._disableHeaderTapEvent()
+            this._attachDetachEventHandlers()
+
             
             console.log("EDIT", e.target)
         },
         _onHeaderTapped: function() {
             this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
         },
-        // -- Event Handlers --
+        // --(end)-- Event Handlers --
 
-        // -- Event Handler Helper Functions --
+        // --(start)-- Event Handler Helper Functions --
+        _attachDetachEventHandlers: function() {
+            this._disableHeaderTapEvent()
+            this._enableInsertListItemEvent()
+            this._enableListItemDeleteEvent()
+        },
+        _enableInsertListItemEvent: function() {
+            inEditState
+            ? this._on( this._ui.content.find('li#temp button#item-add'), { "tap": "_insertListItem" })
+            : this._off( this._ui.content.find('li#temp button#item-add'), "tap")
+        },
+        _insertListItem: function() {
+            console.log("INSERTED :)")
+        },
+        _deleteListItem: function(e) {
+            $(e.currentTarget).parent().remove();
+//            console.log("DELETED :)", $(e.currentTarget).text())
+        },
+
+        _enableListItemDeleteEvent: function() {
+            inEditState
+            ? this._on( this._ui.content.find('li.ui-li-has-alt a.ui-editable-temp'), { "tap": "_deleteListItem" })
+            : this._off( this._ui.content.find('li.ui-li-has-alt a.ui-editable-temp'), "tap")
+        },
         _disableHeaderTapEvent: function() {
-            if (inEditState)
-            { this._off( this._ui.header, "tap"); console.log("DISABLE TAP")} else
-            { this._on( this._ui.header, { "tap": "_onHeaderTapped" }); console.log("ENABLE TAP") }
+            inEditState
+            ? this._off( this._ui.header, "tap")
+            : this._on( this._ui.header, { "tap": "_onHeaderTapped" })
         },
-        _changeEditButtonState: function() {
-            inEditState ? this._ui.button.addClass( "ui-btn-active" ) : this._ui.button.removeClass( "ui-btn-active" );
+        _changeEditButton: function() {
+            // Change "Edit" button state, icon and label
+            inEditState
+            ? this._ui.button
+                      .removeClass( "ui-icon-edit" )
+                      .addClass( "ui-btn-active ui-icon-check" )
+                      .text( "Done" )
+            : this._ui.button
+                      .removeClass( "ui-btn-active ui-icon-check" )
+                      .addClass( "ui-icon-edit" )
+                      .text( "Edit" )
         },
-         _changeEditButtonLabel: function() {
-            inEditState ? this._ui.button.text( "Done" ) : this._ui.button.text( "Edit" );
-        },
-         _insertTextInputBox: function() {
+        _insertTextInputBox: function() {
             inEditState
             ? this._ui.content  // true
                       .children()
                       .first()
-                      .before( $textInput )   // true
+                      .before( $listTextInputMarkup )   // true
             : this._ui.content  // false
                       .find( 'li#temp' )
                       .remove()
@@ -118,12 +175,7 @@
                               .remove()
         },
 
-//        <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset ui-input-has-clear">
-//            <input name="text-3" id="text-3" value="" type="text">
-//            <a class="ui-input-clear ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all" title="Clear text">Clear text</a>
-//        </div>
-
-        // -- Event Handler Helper Functions --
+        // --(end)-- Event Handler Helper Functions --
         
         _isListEmpty: function() {
             console.log(this.element.find('li').length)
@@ -137,25 +189,7 @@
         _addToolbarButton: function($el) {
             return $('<button class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">' + this.options.buttonLabel + '</button>' + $el[0].outerHTML );
         },
-        
-        _wrapCollapsible: function($el) {
-            return $('<div data-role="collapsible">' +  // class="ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content ui-collapsible-collapsed"
-                        '<div role="heading">' +        // class="ui-collapsible-heading ui-header ui-bar-inherit"
-                        '</div>' +
-                        '<div rol="content">' +         // class="ui-collapsible-content ui-body-inherit"
-                            $el[0].outerHTML +
-                        '</div>' +
-                     '</div>');
-        },
-        
-        _wrapToolbar: function($el) {
-            return $('<div>' + $el[0].outerHTML + '</div>');
-        },
-        
-        _wrap: function($el) {
-            return $('<div>' + $el[0].outerHTML + '</div>');
-        },
-        
+
         widget: function() {
             return ( this.inputNeedsWrap ) ? this.element.parent() : this.element;
         },
@@ -170,24 +204,14 @@
             console.log("focuseDDD")
             this.element.addClass( "ui-focus" );
         },
-        
-//        <div class="ui-header ui-bar-inherit" role="banner" data-role="header">
-//            <h1 aria-level="1" role="heading" class="ui-title">Page Title</h1>
-//            <a role="button" data-role="button" href="#" class="ui-btn-right ui-btn ui-icon-gear ui-btn-icon-right ui-btn-inline ui-corner-all ui-mini">Options</a>
-//        </div>
-        
+
         // Add all relevant classes
         _enhance: function($el, ui) {
-            var opts = this.options
+//            var opts = this.options
             
             ui.wrapper = $el.wrap( "<div class='ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content'></div>" )
             
-            ui.header = $(  '<div class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ' + (function(context){ if(context._isListEmpty()) { return '' } else {return 'ui-btn-icon-left ui-icon-carat-d' }}(this)) + '"role="banner" data-role="header">' +
-                                '<div class="ui-bar ui-editable-listview-title">' +
-                                    '<span>' + ( this._isListEmpty() ? opts.listEmptyTitle : opts.listTitle ) + '</span>' +
-                                '</div>' +
-                                '<a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right ui-icon-gear">Edit</a>' +
-                            '</div>' );
+            ui.header = $headerMarkup(this);
             
             ui.content = $el.wrap( "<div class='ui-collapsible-content ui-body-inherit'></div>" );
             
