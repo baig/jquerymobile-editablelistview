@@ -7,6 +7,7 @@
     
     // Whether the widget is already present on the page or not
     var isCreated = false;
+    var inEditState = false;
     
 
     //create widget
@@ -47,31 +48,44 @@
             this._enhance($el, this._ui);
             
             this._on( this._ui.header, {
-                "tap": function() {
-                    ui.header.find( "a" ).first().addClass( $.mobile.activeBtnClass );
-                },
-
                 "click": function( event ) {
                     this._handleExpandCollapse( !ui.header.hasClass( "ui-collapsible-heading-collapsed" ) );
                     event.preventDefault();
-                    event.stopPropagation();
                 }
-            })
-//            
+            });
+
             this._on( this._ui.button, {
-                "tap": function() {
-                    console.log("EDIT")
-                }
-            })
-            
-//            this._on( {
-//                "tap": function() { console.log("HELOOOOOO")},
-//                "focus": function() { console.log("AFASFASASADS")},
-////                "blur": "_handleBlur"
-//            });
-            
-//            console.log(this._addFirstLastClasses)
+                "tap": "_onEditButtonTapped",
+            });
+
         },
+
+        // -- Event Handlers --
+        _onEditButtonTapped: function(e) {
+            inEditState = !inEditState;
+            
+            this._changeEditButtonState()
+            this._changeEditButtonLabel()
+            this._insertTextInputBox()
+            
+            console.log("EDIT", e.target)
+        },
+        // -- Event Handlers --
+
+        // -- Event Handler Helper Functions --
+        _changeEditButtonState: function() {
+            inEditState ? this._ui.button.addClass( "ui-btn-active" ) : this._ui.button.removeClass( "ui-btn-active" );
+        },
+         _changeEditButtonLabel: function() {
+            inEditState ? this._ui.button.text( "Done" ) : this._ui.button.text( "Edit" );
+        },
+         _insertTextInputBox: function() {
+            inEditState
+            ? this._ui.content.children().first().before( $('<li id="temp">Hello</li>') )
+            : this._ui.content.find( 'li#temp' ).remove()
+        },
+
+        // -- Event Handler Helper Functions --
         
         _isListEmpty: function() {
             console.log(this.element.find('li').length)
@@ -139,9 +153,9 @@
             
             ui.content = $el.wrap( "<div class='ui-collapsible-content ui-body-inherit'></div>" );
             
-            ui.button = ui.header.find('a').last()
+            ui.button = ui.header.find('a')
             
-            console.log(ui.content)
+            console.log(ui.button)
             
             //drop heading in before content
             ui.header.insertBefore( ui.content.parent() );
