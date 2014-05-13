@@ -9,19 +9,35 @@
     var isCreated = false;
 
     //create widget
-    $.widget("mobile.editablelistview", $.mobile.widget, {
+    $.widget("mobile.editablelistview", $.mobile.widget, $.extend( {
         
         initSelector: ":jqmData(role='editablelistview'), :jqmData(role='editable-listview')",
         
         options: {
             listTitle: "",
             listEmptyTitle: "",
-            buttonLabel: "Edit"
+            buttonLabel: "Edit",
+            collapsed: true,
+            
+            enhanced: false,
+            expandCueText: null,
+            collapseCueText: null,
+            heading: "h1,h2,h3,h4,h5,h6,legend",
+            collapsedIcon: "carat-d",
+            expandedIcon: "carat-u",
+            iconpos: null,
+            theme: null,
+            contentTheme: null,
+            inset: null,
+            corners: null,
+            mini: null
         },
         
         _ui : {},
         
         _create: function() {
+            var ui = this._ui;
+            
             console.log("Hello _create :)")
             var $el = this.element; // jQuery Object
             var options = this.options; // POJO
@@ -31,7 +47,13 @@
             
             this._on( this._ui.header, {
                 "tap": function() {
-                    console.log("TAPPED")
+                    ui.header.find( "a" ).first().addClass( $.mobile.activeBtnClass );
+                },
+
+                "click": function( event ) {
+                    this._handleExpandCollapse( !ui.header.hasClass( "ui-collapsible-heading-collapsed" ) );
+                    event.preventDefault();
+                    event.stopPropagation();
                 }
             })
 //            
@@ -40,6 +62,8 @@
                     console.log("EDIT")
                 }
             })
+            
+//            console.log(this._addFirstLastClasses)
         },
         
         _init: function() {
@@ -94,6 +118,10 @@
             
             //drop heading in before content
             ui.header.insertBefore( ui.content.parent() );
+            
+            this._handleExpandCollapse( this.options.collapsed );
+
+            return ui;
             
         },
         
@@ -165,9 +193,7 @@
             //drop heading in before content
             ui.heading.insertBefore( ui.content );
 
-            this._handleExpandCollapse( this.options.collapsed );
-
-            return ui;
+            
         },
         
         refresh: function( created ) {
@@ -178,7 +204,84 @@
                 console.log("programmatic refresh")
             }
         },
+        
+        _handleExpandCollapse: function( isCollapsed ) {
+            var opts = this.options,
+                ui = this._ui;
 
-    });
+//            ui.status.text( isCollapsed ? opts.expandCueText : opts.collapseCueText );
+            ui.header
+              .toggleClass( "ui-collapsible-heading-collapsed", isCollapsed )
+              .find( "a" )
+              .first()
+              .toggleClass( "ui-icon-" + opts.expandedIcon, !isCollapsed )
+//              // logic or cause same icon for expanded/collapsed state would remove the ui-icon-class
+//              .toggleClass( "ui-icon-" + opts.collapsedIcon, ( isCollapsed || opts.expandedIcon === opts.collapsedIcon ) )
+//              .removeClass( $.mobile.activeBtnClass );
+
+            this.element.toggleClass( "ui-collapsible-collapsed", isCollapsed );
+            
+            ui.content
+              .toggleClass( "ui-collapsible-content-collapsed", isCollapsed )
+              .attr( "aria-hidden", isCollapsed )
+              .trigger( "updatelayout" );
+            
+            this.options.collapsed = isCollapsed;
+            this._trigger( isCollapsed ? "collapse" : "expand" );
+        },
+
+        expand: function() {
+            this._handleExpandCollapse( false );
+        },
+
+        collapse: function() {
+            this._handleExpandCollapse( true );
+        },
+
+        _destroy: function() {
+            var ui = this._ui,
+                opts = this.options;
+
+            if ( opts.enhanced ) {
+                return;
+            }
+
+            if ( ui.placeholder ) {
+                ui.originalHeading.insertBefore( ui.placeholder );
+                ui.placeholder.remove();
+                ui.heading.remove();
+            } else {
+                ui.status.remove();
+                ui.heading
+                    .removeClass( "ui-collapsible-heading ui-collapsible-heading-collapsed" )
+                    .children()
+                        .contents()
+                            .unwrap();
+            }
+
+            ui.anchor.contents().unwrap();
+            ui.content.contents().unwrap();
+            this.element
+                .removeClass( "ui-collapsible ui-collapsible-collapsed " +
+                    "ui-collapsible-themed-content ui-collapsible-inset ui-corner-all" );
+        }
+        
+        
+
+    }, $.mobile.behaviors.addFirstLastClasses) );
+    
+    
+//    $.mobile.collapsible.defaults = {
+//        expandCueText: " click to expand contents",
+//        collapseCueText: " click to collapse contents",
+//        collapsedIcon: "plus",
+//        contentTheme: "inherit",
+//        expandedIcon: "minus",
+//        iconpos: "left",
+//        inset: true,
+//        corners: true,
+//        theme: "inherit",
+//        mini: false
+//    };
 
 }(jQuery));
