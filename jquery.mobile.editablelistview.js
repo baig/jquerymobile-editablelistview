@@ -129,18 +129,21 @@
             var $input = $target.prev().find('input')
             var inputTextString = $input.val()
             var firstLiTextString = $target.parents('li#temp').next().text()
-            var $li = this._enhanceListItem( '<li>' + firstLiTextString + '</li>')
+            console.log(firstLiTextString, ( !!firstLiTextString ? firstLiTextString : inputTextString ))
+            var $li = this._enhanceListItem( '<li class="' + ( !!firstLiTextString ? "" : "ui-last-child" ) + '">' + ( !!firstLiTextString ? firstLiTextString : inputTextString ) + '</li>')
 
             // Clearing the input text field
             $input.val("")
 
-            $target.parents('li#temp')
-                   .next()
-                       .find('a')
-                       .first()
-                       .text(inputTextString)
-                   .parent()
-                   .after($li)
+            !!firstLiTextString
+            ? $target.parents('li#temp')
+                     .next()
+                         .find('a')
+                         .first()
+                         .text(inputTextString)
+                     .parent()
+                     .after($li)
+            : $target.parents('li#temp').after($li)
         },
 
         _deleteListItem: function(e) {
@@ -171,16 +174,16 @@
                       .addClass( "ui-icon-edit" )
                       .text( "Edit" )
         },
+
         _insertTextInputBox: function() {
             inEditState
             ? this._ui.content  // true
-                      .children()
-                      .first()
-                      .before( $listTextInputMarkup )   // true
+                      .prepend( $listTextInputMarkup )   // true
             : this._ui.content  // false
                       .find( 'li#temp' )
                       .remove()
         },
+
         _toggleSplitIcon: function() {
             inEditState
             ? this._ui.content.find('li')   // true
@@ -305,6 +308,12 @@
               .attr( "aria-hidden", isCollapsed )
               .trigger( "updatelayout" );
             
+            // If List is empty
+            if (!ui.content.find('li').length && !inEditState) {
+                ui.header.addClass( "ui-corner-all" )
+                ui.content.parent().removeClass("ui-collapsible-content")
+            }
+
             this.options.collapsed = isCollapsed;
             this._trigger( isCollapsed ? "collapse" : "expand" );
         },

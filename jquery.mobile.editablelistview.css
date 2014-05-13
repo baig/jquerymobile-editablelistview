@@ -12,7 +12,10 @@
     font-size: 1.1em;
     text-align: left;
 }
-.controlgroup-textinput{
+.controlgroup-textinput {
     padding-top:.22em;
     padding-bottom:.22em;
+}
+.ui-editable-list-empty {
+    padding-bottom: 0;
 }
