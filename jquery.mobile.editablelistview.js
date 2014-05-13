@@ -9,6 +9,15 @@
     var isCreated = false;
     var inEditState = false;
     
+    var $textInput = $(
+                        '<li id="temp" style="padding: 0 10px">' +
+                            '<div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset ui-input-has-clear">' +
+                                '<input name="text-3" id="text-3" value="" type="text">' +
+                                '<a class="ui-input-clear ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all" title="Clear text">Clear text</a>' +
+                                '</div>' +
+                        '</li>'
+                      );
+
 
     //create widget
     $.widget("mobile.editablelistview", $.extend( {
@@ -47,14 +56,11 @@
             this._enhanceList($el);
             this._enhance($el, this._ui);
             
-            this._on( this._ui.header, {
-                "click": function( event ) {
-                    this._handleExpandCollapse( !ui.header.hasClass( "ui-collapsible-heading-collapsed" ) );
-                    event.preventDefault();
-                }
+            this._on( ui.header, {
+                "tap": "_onHeaderTapped"
             });
 
-            this._on( this._ui.button, {
+            this._on( ui.button, {
                 "tap": "_onEditButtonTapped",
             });
 
@@ -64,16 +70,26 @@
         _onEditButtonTapped: function(e) {
             inEditState = !inEditState;
             
+            this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
             this._changeEditButtonState()
             this._changeEditButtonLabel()
             this._insertTextInputBox()
             this._toggleSplitIcon()
+            this._disableHeaderTapEvent()
             
             console.log("EDIT", e.target)
+        },
+        _onHeaderTapped: function() {
+            this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
         },
         // -- Event Handlers --
 
         // -- Event Handler Helper Functions --
+        _disableHeaderTapEvent: function() {
+            if (inEditState)
+            { this._off( this._ui.header, "tap"); console.log("DISABLE TAP")} else
+            { this._on( this._ui.header, { "tap": "_onHeaderTapped" }); console.log("ENABLE TAP") }
+        },
         _changeEditButtonState: function() {
             inEditState ? this._ui.button.addClass( "ui-btn-active" ) : this._ui.button.removeClass( "ui-btn-active" );
         },
@@ -82,13 +98,18 @@
         },
          _insertTextInputBox: function() {
             inEditState
-            ? this._ui.content.children().first().before( $('<li id="temp">Hello</li>') )   // true
-            : this._ui.content.find( 'li#temp' ).remove()   // false
+            ? this._ui.content  // true
+                      .children()
+                      .first()
+                      .before( $textInput )   // true
+            : this._ui.content  // false
+                      .find( 'li#temp' )
+                      .remove()
         },
         _toggleSplitIcon: function() {
             inEditState
             ? this._ui.content.find('li')   // true
-                              .remove( 'li#temp' )
+                              .next()
                               .addClass( 'ui-li-has-alt' )
                               .append( '<a class="ui-editable-temp ui-btn ui-btn-icon-notext ui-icon-minus ui-btn-a"></a>' )
             : this._ui.content.find('li')   // false
@@ -96,6 +117,11 @@
                               .find( 'a.ui-editable-temp' )
                               .remove()
         },
+
+//        <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset ui-input-has-clear">
+//            <input name="text-3" id="text-3" value="" type="text">
+//            <a class="ui-input-clear ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all" title="Clear text">Clear text</a>
+//        </div>
 
         // -- Event Handler Helper Functions --
         
