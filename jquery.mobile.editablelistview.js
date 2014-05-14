@@ -3,6 +3,7 @@
     // Whether the widget is already present on the page or not
     var isCreated = false;
     var inEditState = false;
+    var liInsertion = true;
 
     // Plugin Definition
     $.widget("mobile.editablelistview", $.extend( {
@@ -91,24 +92,35 @@
 
         // --(start)-- Event Handlers --
         _onEditButtonTapped: function(e) {
+            // Toggling Edit State
             inEditState = !inEditState;
             
-            this._handleExpandCollapse( !inEditState )
+            // Keeps the list expanded when you exit Edit Mode
+            this._handleExpandCollapse( true )
 
             this._changeEditButton()
             this._insertTextInputBox()
             this._toggleSplitIcon()
             this._attachDetachEventHandlers()
+
         },
 
         _onHeaderTapped: function() {
-            this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
+            inEditState
+            ? this._handleExpandCollapse( false )
+            : this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
+
+            // QUICK FIX: fixed ul margin after dynamic li insertion
+            !liInsertion
+            ? inEditState
+              ? this._ui.content.filter('ul').css("margin", "-0.5em -1em")
+              : this._ui.content.filter('ul').css("margin", "-0.6em -1em")
+            : this._ui.content.filter('ul').css("margin", "-0.5em -1em")
         },
         // --(end)-- Event Handlers --
 
         // --(start)-- Event Handler Helper Functions --
         _attachDetachEventHandlers: function() {
-            this._disableHeaderTapEvent()
             this._enableInsertListItemEvent()
             this._enableListItemDeleteEvent()
 
@@ -154,28 +166,27 @@
         _insertListItem: function(e) {
             var $target = $(e.target),
                 $input = $target.prev().find('input'),
-                inputTextString = $input.val(),
-                $li = this._attachDeleteListItemEvent(this._enhanceListItem('<li>' + inputTextString + '</li>'))
+                inputTextString = $input.val();
 
-            // Clearing the input text field
-            $input.val("")
+            // Inserting list item only if input string is not empty
+            if (!!inputTextString) {
+                var $li = this._attachDeleteListItemEvent(this._enhanceListItem('<li>' + inputTextString + '</li>'))
+                $input.val("")  // Clearing the input text field
+                $target.parents('ul')
+                           .children('li')
+                           .first()
+                           .css( "border-bottom-width", "0") // QUICK FIX for li#temp: setting List Text Input bottom border width to zero
+                           .after($li)
 
-            $target.parents('ul')
-                       .children('li')
-                       .first()
-                       .after($li)
+                this.refresh();
 
-            this.refresh();
+                // QUICK FIX
+                liInsertion = false;
+            }
         },
 
         _deleteListItem: function(e) {
             $(e.currentTarget).parent().remove();
-        },
-
-        _disableHeaderTapEvent: function() {
-            inEditState
-            ? this._off( this._ui.header, "tap")
-            : this._on( this._ui.header, { "tap": "_onHeaderTapped" })
         },
 
         _changeEditButton: function() {
@@ -192,9 +203,12 @@
         },
 
         _insertTextInputBox: function() {
+            // QUICK CSS FIX
+            var borderWidth = liInsertion ? "0 0 1px 0" : "0"
+
             inEditState
             ? this._ui.content  // true
-                      .prepend( $Markup.listTextInput() )   // true
+                      .prepend( $Markup.listTextInput().css( /* QUICK FIX */ "border-width", borderWidth) )   // true
             : this._ui.content  // false
                       .find( 'li#temp' )
                       .remove()

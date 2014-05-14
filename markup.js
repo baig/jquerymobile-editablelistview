@@ -2,7 +2,7 @@ var $Markup = {
 
     listTextInput: function() {
         return $(
-            '<li id="temp" class="ui-btn" style="padding: .8em 25px">' +
+            '<li id="temp" class="ui-btn" style="padding: .8em 25px;">' +
                 '<div style="width: 100%; margin: 0" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">' +
                     '<div style="width: inherit" class="ui-controlgroup-controls ">' +
                         '<div style="width: 95%; background-color: white" class="ui-input-text ui-body-inherit ui-corner-all controlgroup-textinput ui-btn ui-shadow-inset ui-first-child">' +
