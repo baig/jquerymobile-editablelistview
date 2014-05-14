@@ -1,50 +1,8 @@
 (function ($, undefined) {
 
-    //auto-init on pagecreate
-    $(document).bind("pagecreate", function (e) {
-        $(":jqmData(role='editablelistview'), :jqmData(role='editable-listview')", e.target).editablelistview();
-    });
-    
     // Whether the widget is already present on the page or not
     var isCreated = false;
     var inEditState = false;
-    
-    var $listTextInputMarkup = $(
-                        '<li id="temp" class="ui-btn" style="padding: .8em 25px">' +
-                            '<div style="width: 100%; margin: 0" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">' +
-                                '<div style="width: inherit" class="ui-controlgroup-controls ">' +
-                                    '<div style="width: 95%; background-color: white" class="ui-input-text ui-body-inherit ui-corner-all controlgroup-textinput ui-btn ui-shadow-inset ui-first-child">' +
-                                        '<input type="text">' +
-                                    '</div>' +
-                                    '<button id="item-add" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-plus ui-last-child">Add</button>' +
-                                '</div>' +
-                            '</div>' +
-                        '</li>'
-                      );
-
-    var $listItemTextInputMarkup = $(
-                            '<div style="width: 100%" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">' +
-                                '<div style="width: inherit" class="ui-controlgroup-controls ">' +
-                                    '<div style="width: 91%" class="ui-input-text ui-body-inherit ui-corner-all controlgroup-textinput ui-btn ui-shadow-inset ui-first-child">' +
-                                        '<input type="text">' +
-                                    '</div>' +
-                                    '<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-check ui-btn-a">Add</button>' +
-                                    '<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-delete ui-last-child">Dismiss</button>' +
-                                '</div>' +
-                            '</div>'
-                          );
-
-    var $headerMarkup = function(context) {
-        return $(
-            '<div class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ' + (function(ctx){ if(ctx._isListEmpty()) { return '' } else {return 'ui-btn-icon-left ui-icon-carat-d' }}(context)) + '"role="banner" data-role="header">' +
-                '<div class="ui-bar ui-editable-listview-title">' +
-                    '<span>' + ( context._isListEmpty() ? context.options.listEmptyTitle : context.options.listTitle ) + '</span>' +
-                '</div>' +
-                '<a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right ui-icon-edit">Edit</a>' +
-            '</div>'
-        );
-    }
-
 
     // Plugin Definition
     $.widget("mobile.editablelistview", $.extend( {
@@ -52,15 +10,18 @@
         initSelector: ":jqmData(role='editablelistview'), :jqmData(role='editable-listview')",
         
         options: {
-            listTitle: "",
-            listEmptyTitle: "",
-            buttonLabel: "Edit",
+            listTitle: "Tap to view list items",
+            listEmptyTitle: "No items to view",
+            buttonEditLabel: "Edit",
+            buttonAddLabel: "Add",
+            buttonAddIcon: "plus",
+            buttonEditIcon: "edit",
             collapsed: true,
             
             enhanced: false,
             expandCueText: null,
             collapseCueText: null,
-            heading: "h1,h2,h3,h4,h5,h6,legend",
+//            heading: "h1,h2,h3,h4,h5,h6,legend",
             collapsedIcon: "carat-d",
             expandedIcon: "carat-u",
             iconpos: null,
@@ -74,14 +35,26 @@
         _ui : {},
         
         _create: function() {
+            
+            var $elem = this.element,   // jQuery Object
+                opts = this.options,    // POJO
+//                ui = this._ui,          // POJO
+                isEnhanced = opts.enhanced; // To be jQuery Object; null initially
+            
+            (isEnhanced)
+            ? this._ui = {
+//                            groupLegend: $elem.children( ".ui-controlgroup-label" ).children(),
+//                            childWrapper: $elem.children( ".ui-controlgroup-controls" ),
+                            wrapper: $elem.parent().parent(),
+                            header: $elem.parent().prev(),
+                            button: $elem.parent().prev().children('a.ui-btn'),
+                            content: $elem,
+                         }
+            : this._ui = this._enhance();
+
             var ui = this._ui;
-            
-            console.log("Hello _create :)")
-            var $el = this.element; // jQuery Object
-            var options = this.options; // POJO
-            
-            this._enhanceList($el);
-            this._enhance($el, this._ui);
+
+            this._handleExpandCollapse( opts.collapsed );
             
             this._on( ui.header, {
                 "tap": "_onHeaderTapped"
@@ -91,7 +64,33 @@
                 "tap": "_onEditButtonTapped",
             });
 
+//            this.refresh( true );
+
         },
+
+        // Add Wrapper DOM and all the relevant Classes returning ui hash containing references
+        // to elements that we need later for behvaior manipulation
+        _enhance: function() {
+            var $el = this.element,
+                opts = this.options,
+                ui = this._ui;
+
+            this._enhanceList($el);
+
+            ui.wrapper = $el.wrap( "<div class='ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content'></div>" )
+
+            ui.header = $Markup.header(this, opts);
+
+            ui.content = $el.wrap( "<div class='ui-collapsible-content ui-body-inherit'></div>" );
+
+            ui.button = ui.header.find('a')
+
+            //drop heading in before content
+            ui.header.insertBefore( ui.content.parent() );
+
+            return ui;
+        },
+
 
         // --(start)-- Event Handlers --
         _onEditButtonTapped: function(e) {
@@ -117,11 +116,29 @@
             this._disableHeaderTapEvent()
             this._enableInsertListItemEvent()
             this._enableListItemDeleteEvent()
+            this._enableListItemEditing()
         },
         _enableInsertListItemEvent: function() {
             inEditState
             ? this._on( this._ui.content.find('li#temp button#item-add'), { "tap": "_insertListItem" })
             : this._off( this._ui.content.find('li#temp button#item-add'), "tap")
+        },
+
+        _enableListItemEditing: function() {
+            inEditState
+            ? this._on( this._ui.content.find('li a.ui-btn'), { "tap": "_editListItem" })
+            : this._off( this._ui.content.find('li a.ui-btn'), "tap")
+        },
+
+        _editListItem: function(e) {
+            var $parent = $(e.currentTarget).parent()
+            console.log(e)
+            console.log($(e.currentTarget).parent())
+            console.log($(e.currentTarget).text())
+            console.log(document.activeElement)
+
+//            var $children = $parent.children()
+//            $parent.replaceWith( $Markup.listItemTextInput() )
         },
 
         _insertListItem: function(e) {
@@ -178,7 +195,7 @@
         _insertTextInputBox: function() {
             inEditState
             ? this._ui.content  // true
-                      .prepend( $listTextInputMarkup )   // true
+                      .prepend( $Markup.listTextInput() )   // true
             : this._ui.content  // false
                       .find( 'li#temp' )
                       .remove()
@@ -203,9 +220,9 @@
             return ( this.element.find('li').length === 0 ? true : false )
         },
         
-        _init: function() {
-            this.refresh( isCreated );
-        },
+//        _init: function() {
+//            this.refresh( isCreated );
+//        },
         
         _addToolbarButton: function($el) {
             return $('<button class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">' + this.options.buttonLabel + '</button>' + $el[0].outerHTML );
@@ -226,28 +243,6 @@
             this.element.addClass( "ui-focus" );
         },
 
-        // Add all relevant classes
-        _enhance: function($el, ui) {
-//            var opts = this.options
-            
-            ui.wrapper = $el.wrap( "<div class='ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content'></div>" )
-            
-            ui.header = $headerMarkup(this);
-            
-            ui.content = $el.wrap( "<div class='ui-collapsible-content ui-body-inherit'></div>" );
-            
-            ui.button = ui.header.find('a')
-            
-            console.log(ui.button)
-            
-            //drop heading in before content
-            ui.header.insertBefore( ui.content.parent() );
-            
-            this._handleExpandCollapse( this.options.collapsed );
-
-            return ui;
-            
-        },
         
         _enhanceList: function($el) {
             var $ul = $el.filter('ul'),
@@ -275,20 +270,10 @@
             return $li;
         },
 
-        refresh: function( created ) {
-            if ( !created ) {
-                console.log("Happy creation :)")
-                isCreated = true
-            } else {
-                console.log("programmatic refresh")
-            }
-        },
-        
         _handleExpandCollapse: function( isCollapsed ) {
             var opts = this.options,
                 ui = this._ui;
 
-//            ui.status.text( isCollapsed ? opts.expandCueText : opts.collapseCueText );
             ui.header
               .toggleClass( "ui-collapsible-heading-collapsed ui-corner-all", isCollapsed )
               .toggleClass( "ui-editable-listview-corner", !isCollapsed )
@@ -296,9 +281,6 @@
               .find( "a" )
               .first()
               .toggleClass( "ui-icon-" + opts.expandedIcon, !isCollapsed )
-//              // logic or cause same icon for expanded/collapsed state would remove the ui-icon-class
-//              .toggleClass( "ui-icon-" + opts.collapsedIcon, ( isCollapsed || opts.expandedIcon === opts.collapsedIcon ) )
-//              .removeClass( $.mobile.activeBtnClass );
 
             this.element.toggleClass( "ui-collapsible-collapsed", isCollapsed );
             
@@ -352,10 +334,52 @@
             this.element
                 .removeClass( "ui-collapsible ui-collapsible-collapsed " +
                     "ui-collapsible-themed-content ui-collapsible-inset ui-corner-all" );
-        }
+        },
         
+        // Public API
+
+        length: function() {
+            return this.element.find('li').length
+        },
+
+        items: function() {
+            var arr = [];
+            this.element.find('li').each( function(idx, el) {
+                arr.push(el.textContent)
+            })
+            return arr
+        },
+
+        widget: function() {
+            return this._ui.wrapper;
+        },
         
+        refresh: function( isCreated ) {
+            this.element.trigger( "updatelayout" );
+//            var $el = this.container(),
+//			els = $el.find( ".ui-btn" ).not( ".ui-slider-handle" ),
+//			create = this._initialRefresh;
+//
+//            if ( $.mobile.checkboxradio ) {
+//                $el.find( ":mobile-checkboxradio" ).checkboxradio( "refresh" );
+//            }
+//
+//            this._addFirstLastClasses( els, ( this.options.excludeInvisible ? this._getVisibles(els,create) : els ) , create );
+//            this._initialRefresh = false;
+
+//            if ( !created ) {
+//                console.log("Happy creation :)")
+//                isCreated = true
+//            } else {
+//                console.log("programmatic refresh")
+//            }
+        },
 
     }, $.mobile.behaviors.addFirstLastClasses) );
     
+    // Auto-initialize on pagecreate
+    $(document).bind("pagecreate", function (e) {
+        $(":jqmData(role='editablelistview'), :jqmData(role='editable-listview')", e.target).editablelistview();
+    });
+
 }(jQuery));

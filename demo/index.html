@@ -12,22 +12,84 @@
 	
 	<script src="http://code.jquery.com/jquery-2.1.1.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.js"></script>
+	<script src="../markup.js"></script>
 	<script src="../jquery.mobile.editablelistview.js"></script>
 	
-    <script>
-	    $( ":jqmData(role='editable-listview')" ).editablelistview(); 
-	</script>
+
 </head>
 <body>
-	<div style="padding: 20px">
-        <ul data-role="editable-listview" data-list-title="Activities" data-list-empty-title="No activities in the list" data-button-label="Add Activities">
 <!--
+	<div style="padding: 20px">
+        <ul id="list">
             <li>Apple</li>
             <li>Orange</li>
             <li>Banana</li>
             <li>Mango</li>
--->
         </ul>
 	</div>
+-->
+
+<!--
+	<div style="padding: 20px">
+        <ul data-role="editable-listview" data-list-title="Activities" data-list-empty-title="No activities in the list" data-button-label="Add Activities">
+            <li>Apple</li>
+            <li>Orange</li>
+            <li>Banana</li>
+            <li>Mango</li>
+        </ul>
+	</div>
+-->
+
+    <!-- static data-enhance=true -->
+    <div style="padding: 20px">
+        <div class="ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content">
+            <div role="banner" class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ui-btn-icon-left ui-icon-carat-d ui-editable-listview-corner" style="margin-bottom: 0px;">
+                <div class="ui-bar ui-editable-listview-title">
+                    <span>Activities</span>
+                </div>
+                <a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right ui-icon-edit ui-icon-carat-u">Edit </a>
+            </div>
+            <div class="ui-collapsible-content ui-body-inherit" aria-hidden="false">
+                <ul data-role="editable-listview" data-enhanced="true" data-list-title="Activities" data-list-empty-title="No activities in the list" data-button-label="Add Activities" class="ui-listview ui-corner-all ui-shadow">
+                    <li class="ui-first-child">
+                        <a class="ui-btn">Apple</a>
+                    </li>
+                    <li>
+                        <a class="ui-btn">Orange</a>
+                    </li>
+                    <li>
+                        <a class="ui-btn">Banana</a>
+                    </li>
+                    <li class="ui-last-child">
+                        <a class="ui-btn">Mango</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- dynamic data-enhance=true -->
+<!--
+    <div class="ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content">
+        <div role="banner" class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ui-btn-icon-left ui-icon-carat-d ui-collapsible-heading-collapsed ui-corner-all" style="margin-bottom: 0px;">
+                <div class="ui-bar ui-editable-listview-title">
+                    <span>Tap to view list items</span>
+                </div>
+                <a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right ui-icon-edit">Hello World </a>
+        </div>
+        <div class="ui-collapsible-content ui-body-inherit ui-collapsible-content-collapsed" aria-hidden="true">
+            <ul id="list" data-enhance="true" class="ui-listview ui-corner-all ui-shadow ui-collapsible-collapsed">
+            </ul>
+        </div>
+    </div>
+-->
+
+    <script>
+	    var $list = $( "#list" ).editablelistview({
+	        buttonEditLabel: "Hello World",
+	        buttonAddLabel: "Yes!!!"
+        });
+        console.log($list.editablelistview("widget"))
+	</script>
 </body>
 </html>
