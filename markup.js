@@ -33,16 +33,16 @@ var $Markup = {
         var listTitle = ( context._isListEmpty() ? opts.listEmptyTitle : opts.listTitle );
         var buttonLabel = ( context._isListEmpty() ? opts.buttonAddLabel : opts.buttonEditLabel );
         var buttonIcon = ( context._isListEmpty() ? opts.buttonAddIcon : opts.buttonEditIcon );;
-        var showIcon = (function(ctx) {
+        var listIcon = (function(ctx) {
             if (ctx._isListEmpty()) {
                 return '';
             } else {
-                return 'ui-btn-icon-left ui-icon-carat-d';
+                return 'ui-icon-' + opts.collapsedIcon;
             }
         } (context) );
 
         return $(
-            '<div role="banner" class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ' + showIcon + '">' +
+            '<div role="banner" class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ui-btn-icon-left ' + listIcon + '">' +
                 '<div class="ui-bar ui-editable-listview-title">' +
                     '<span>' + listTitle + '</span>' +
                 '</div>' +

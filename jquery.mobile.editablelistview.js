@@ -17,13 +17,12 @@
             buttonAddIcon: "plus",
             buttonEditIcon: "edit",
             collapsed: true,
-            
             enhanced: false,
-            expandCueText: null,
-            collapseCueText: null,
-//            heading: "h1,h2,h3,h4,h5,h6,legend",
             collapsedIcon: "carat-d",
             expandedIcon: "carat-u",
+
+            expandCueText: null,
+            collapseCueText: null,
             iconpos: null,
             theme: null,
             contentTheme: null,
@@ -33,18 +32,16 @@
         },
         
         _ui : {},
+        _initialRefresh: true,
         
         _create: function() {
             
             var $elem = this.element,   // jQuery Object
                 opts = this.options,    // POJO
-//                ui = this._ui,          // POJO
                 isEnhanced = opts.enhanced; // To be jQuery Object; null initially
             
             (isEnhanced)
             ? this._ui = {
-//                            groupLegend: $elem.children( ".ui-controlgroup-label" ).children(),
-//                            childWrapper: $elem.children( ".ui-controlgroup-controls" ),
                             wrapper: $elem.parent().parent(),
                             header: $elem.parent().prev(),
                             button: $elem.parent().prev().children('a.ui-btn'),
@@ -64,7 +61,7 @@
                 "tap": "_onEditButtonTapped",
             });
 
-//            this.refresh( true );
+            this.refresh();
 
         },
 
@@ -102,10 +99,8 @@
             this._insertTextInputBox()
             this._toggleSplitIcon()
             this._attachDetachEventHandlers()
-
-            
-            console.log("EDIT", e.target)
         },
+
         _onHeaderTapped: function() {
             this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
         },
@@ -116,57 +111,14 @@
             this._disableHeaderTapEvent()
             this._enableInsertListItemEvent()
             this._enableListItemDeleteEvent()
-            this._enableListItemEditing()
+
+            this._enableListItemEditing() // v0.2
         },
+
         _enableInsertListItemEvent: function() {
             inEditState
             ? this._on( this._ui.content.find('li#temp button#item-add'), { "tap": "_insertListItem" })
             : this._off( this._ui.content.find('li#temp button#item-add'), "tap")
-        },
-
-        _enableListItemEditing: function() {
-            inEditState
-            ? this._on( this._ui.content.find('li a.ui-btn'), { "tap": "_editListItem" })
-            : this._off( this._ui.content.find('li a.ui-btn'), "tap")
-        },
-
-        _editListItem: function(e) {
-            var $parent = $(e.currentTarget).parent()
-            console.log(e)
-            console.log($(e.currentTarget).parent())
-            console.log($(e.currentTarget).text())
-            console.log(document.activeElement)
-
-//            var $children = $parent.children()
-//            $parent.replaceWith( $Markup.listItemTextInput() )
-        },
-
-        _insertListItem: function(e) {
-            var $target = $(e.target)
-            var $input = $target.prev().find('input')
-            var inputTextString = $input.val()
-            var firstLiTextString = $target.parents('li#temp').next().text()
-            console.log(firstLiTextString, ( !!firstLiTextString ? firstLiTextString : inputTextString ))
-            var $li = this._enhanceListItem( '<li class="' + ( !!firstLiTextString ? "" : "ui-last-child" ) + '">' + ( !!firstLiTextString ? firstLiTextString : inputTextString ) + '</li>')
-
-            // Clearing the input text field
-            $input.val("")
-
-            !!firstLiTextString
-            ? $target.parents('li#temp')
-                     .next()
-                         .find('a')
-                         .first()
-                         .text(inputTextString)
-                     .parent()
-                     .after($li)
-            : $target.parents('li#temp').after($li)
-        },
-
-        _deleteListItem: function(e) {
-            console.log(e.currentTarget)
-            console.log($(e.currentTarget).parent())
-            $(e.currentTarget).parent().remove();
         },
 
         _enableListItemDeleteEvent: function() {
@@ -174,11 +126,58 @@
             ? this._on( this._ui.content.find('li.ui-li-has-alt a.ui-editable-temp'), { "tap": "_deleteListItem" })
             : this._off( this._ui.content.find('li.ui-li-has-alt a.ui-editable-temp'), "tap")
         },
+
+        // updates header label and show/hide icon based on whether list is empty or not
+        _updateHeader: function() {
+            var opts = this.options,
+                isListEmpty = this._isListEmpty(),
+                isCollapsed = this.options.collapsed;
+
+            ( isListEmpty )
+            ? this._ui.header.find('span').text( opts.listEmptyTitle )
+            : this._ui.header.find('span').text( opts.listTitle )
+
+            this._ui.header.toggleClass('ui-btn-icon-left ui-icon-' + opts.collapsedIcon, !isListEmpty && isCollapsed)
+            this._ui.header.toggleClass('ui-btn-icon-left ui-icon-' + opts.expandedIcon, !isListEmpty && !isCollapsed)
+        },
+
+        // TODO v0.2
+        _enableListItemEditing: function() {
+            inEditState
+            ? this._on( this._ui.content.find('li a.ui-btn'), { "tap": "_editListItem" })
+            : this._off( this._ui.content.find('li a.ui-btn'), "tap")
+        },
+
+        // TODO v0.2
+        _editListItem: function(e) {},
+
+        _insertListItem: function(e) {
+            var $target = $(e.target),
+                $input = $target.prev().find('input'),
+                inputTextString = $input.val(),
+                $li = this._attachDeleteListItemEvent(this._enhanceListItem('<li>' + inputTextString + '</li>'))
+
+            // Clearing the input text field
+            $input.val("")
+
+            $target.parents('ul')
+                       .children('li')
+                       .first()
+                       .after($li)
+
+            this.refresh();
+        },
+
+        _deleteListItem: function(e) {
+            $(e.currentTarget).parent().remove();
+        },
+
         _disableHeaderTapEvent: function() {
             inEditState
             ? this._off( this._ui.header, "tap")
             : this._on( this._ui.header, { "tap": "_onHeaderTapped" })
         },
+
         _changeEditButton: function() {
             // Change "Edit" button state, icon and label
             inEditState
@@ -216,44 +215,23 @@
         // --(end)-- Event Handler Helper Functions --
         
         _isListEmpty: function() {
-            console.log(this.element.find('li').length)
-            return ( this.element.find('li').length === 0 ? true : false )
+            var isEmpty = (inEditState)
+                          ? this.element.find('li').not('li#temp').length === 0 ? true : false
+                          : this.element.find('li').length === 0 ? true : false
+            console.log(isEmpty)
+            return isEmpty;
         },
-        
-//        _init: function() {
-//            this.refresh( isCreated );
-//        },
-        
+
         _addToolbarButton: function($el) {
             return $('<button class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">' + this.options.buttonLabel + '</button>' + $el[0].outerHTML );
         },
 
-        widget: function() {
-            return ( this.inputNeedsWrap ) ? this.element.parent() : this.element;
-        },
-        
-        _handleFocus: function() {
-//            // In many situations, iOS will zoom into the input upon tap, this
-//            // prevents that from happening
-//            if ( this.options.preventFocusZoom ) {
-//                $.mobile.zoom.disable( true );
-//            }
-//            this.widget().addClass( $.mobile.focusClass );
-            console.log("focuseDDD")
-            this.element.addClass( "ui-focus" );
-        },
-
-        
         _enhanceList: function($el) {
             var $ul = $el.filter('ul'),
                 $li = $ul.children();
             
             $ul.addClass( 'ui-listview ui-corner-all ui-shadow' )
             $li.wrapInner( '<a class="ui-btn"></a>' );
-            $li.first().addClass( 'ui-first-child' )
-            $li.last().addClass( 'ui-last-child' )
-            
-            console.log($el[0])
         },
         
         _enhanceListItem: function( li ) {
@@ -264,9 +242,11 @@
             $li.first().addClass( 'ui-li-has-alt' )
             $li.append('<a class="ui-editable-temp ui-btn ui-btn-icon-notext ui-icon-minus ui-btn-a"></a>')
 
-            // Attaching Delete List Item event to Delete icon button
-            this._on( $li.find('a.ui-editable-temp'), { "tap": "_deleteListItem" })
+            return $li;
+        },
 
+        _attachDeleteListItemEvent: function( $li ) {
+            this._on( $li.find('a.ui-editable-temp'), { "tap": "_deleteListItem" });
             return $li;
         },
 
@@ -291,9 +271,12 @@
               .trigger( "updatelayout" );
             
             // If List is empty
-            if (!ui.content.find('li').length && !inEditState) {
+//            if (!ui.content.find('li').length && !inEditState) {
+            if (this._isListEmpty() && !inEditState) {
                 ui.header.addClass( "ui-corner-all" )
                 ui.content.parent().removeClass("ui-collapsible-content")
+            } else {
+                ui.content.parent().addClass("ui-collapsible-content")
             }
 
             this.options.collapsed = isCollapsed;
@@ -354,25 +337,15 @@
             return this._ui.wrapper;
         },
         
-        refresh: function( isCreated ) {
-            this.element.trigger( "updatelayout" );
-//            var $el = this.container(),
-//			els = $el.find( ".ui-btn" ).not( ".ui-slider-handle" ),
-//			create = this._initialRefresh;
-//
-//            if ( $.mobile.checkboxradio ) {
-//                $el.find( ":mobile-checkboxradio" ).checkboxradio( "refresh" );
-//            }
-//
-//            this._addFirstLastClasses( els, ( this.options.excludeInvisible ? this._getVisibles(els,create) : els ) , create );
-//            this._initialRefresh = false;
+        refresh: function() {
+            var $el = this._ui.content,
+                opts = this.options,
+                create = this._initialRefresh,
+                $li = $el.find( "li" );
 
-//            if ( !created ) {
-//                console.log("Happy creation :)")
-//                isCreated = true
-//            } else {
-//                console.log("programmatic refresh")
-//            }
+            this._updateHeader();
+            this._addFirstLastClasses( $li, ( opts.excludeInvisible ? this._getVisibles($li ,create) : $li ), create );
+            this._initialRefresh = false;
         },
 
     }, $.mobile.behaviors.addFirstLastClasses) );
