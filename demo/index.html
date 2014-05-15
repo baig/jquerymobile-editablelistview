@@ -89,7 +89,12 @@
 	        buttonEditLabel: "Hello World",
 	        buttonAddLabel: "Yes!!!"
         });
-        console.log($list.editablelistview("widget"))
+        $list.addClass("wasif")
+        $list.find('li').last().prev().prev().remove()
+        $list.prepend("<li>Hello</li>")
+        $list.append("<li>Bye</li>")
+	    $list.editablelistview("refresh")
+//	    $list.editablelistview("destroy")
 	</script>
 </body>
 </html>

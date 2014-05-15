@@ -245,7 +245,9 @@
                 $li = $ul.children();
             
             $ul.addClass( 'ui-listview ui-corner-all ui-shadow' )
-            $li.wrapInner( '<a class="ui-btn"></a>' );
+            $li.each( function() {
+                !$(this).children().length ? $(this).wrapInner( '<a class="ui-btn"></a>' ) : 0;
+            })
         },
         
         _enhanceListItem: function( li ) {
@@ -273,8 +275,8 @@
               .toggleClass( "ui-editable-listview-corner", !isCollapsed )
               .css( "margin-bottom", "0" )
               .find( "a" )
-              .first()
-              .toggleClass( "ui-icon-" + opts.expandedIcon, !isCollapsed )
+                .first()
+                .toggleClass( "ui-icon-" + opts.expandedIcon, !isCollapsed )
 
             this.element.toggleClass( "ui-collapsible-collapsed", isCollapsed );
             
@@ -284,8 +286,7 @@
               .attr( "aria-hidden", isCollapsed )
               .trigger( "updatelayout" );
             
-            // If List is empty
-//            if (!ui.content.find('li').length && !inEditState) {
+            // QUICK FIX: adjusting margin and padding for content when list is empty
             if (this._isListEmpty() && !inEditState) {
                 ui.header.addClass( "ui-corner-all" )
                 ui.content.parent().removeClass("ui-collapsible-content")
@@ -307,32 +308,30 @@
 
         _destroy: function() {
             var ui = this._ui,
-                opts = this.options;
+                opts = this.options,
+                $ul = ui.content.filter('ul'),
+                $li = $ul.find('li'),
+                items = this.items()
 
+            // Not doing anything if DOM was already enhanced
             if ( opts.enhanced ) {
-                return;
+                return this;
             }
 
-            if ( ui.placeholder ) {
-                ui.originalHeading.insertBefore( ui.placeholder );
-                ui.placeholder.remove();
-                ui.heading.remove();
-            } else {
-                ui.status.remove();
-                ui.heading
-                    .removeClass( "ui-collapsible-heading ui-collapsible-heading-collapsed" )
-                    .children()
-                        .contents()
-                            .unwrap();
-            }
+            ui.header.remove()
+            ui.content = ui.content.unwrap().unwrap()
 
-            ui.anchor.contents().unwrap();
-            ui.content.contents().unwrap();
-            this.element
-                .removeClass( "ui-collapsible ui-collapsible-collapsed " +
-                    "ui-collapsible-themed-content ui-collapsible-inset ui-corner-all" );
+            $ul.removeClass("ui-listview ui-corner-all ui-shadow ui-collapsible-collapsed")
+            $ul.find('a').remove()
+            this._removeFirstLastClasses($li)
+            $li.removeClass('ui-li-has-alt')
+            $li.each( function(idx, val) {
+                this.textContent = items[idx]
+            })
+
+            return ui
         },
-        
+
         // Public API
 
         length: function() {
@@ -358,6 +357,7 @@
                 $li = $el.find( "li" );
 
             this._updateHeader();
+            this._enhanceList($el)
             this._addFirstLastClasses( $li, ( opts.excludeInvisible ? this._getVisibles($li ,create) : $li ), create );
             this._initialRefresh = false;
         },
