@@ -1,15 +1,27 @@
 var $Markup = {
 
+//    listTextInput: function() {
+//        return $(
+//            '<li id="temp" class="ui-btn" style="padding: .8em 25px;">' +
+////                '<div style="margin: 0" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">' +
+//                    '<div style="width: inherit" class="ui-controlgroup-controls ui-editable-flex">' +
+//                        '<div style="background-color: white" class="ui-editable-flex-item ui-input-text ui-body-inherit ui-corner-all controlgroup-textinput ui-btn ui-shadow-inset ui-first-child ui-block-a">' +
+//                            '<input type="text">' +
+//                        '</div>' +
+//                        '<button id="item-add" class="ui-editable-flex-item ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-plus ui-last-child ui-block-b">Add</button>' +
+//                    '</div>' +
+////                '</div>' +
+//            '</li>'
+//        );
+//    },
     listTextInput: function() {
         return $(
-            '<li id="temp" class="ui-btn" style="padding: .8em 25px;">' +
-                '<div style="width: 100%; margin: 0" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">' +
-                    '<div style="width: inherit" class="ui-controlgroup-controls ">' +
-                        '<div style="width: 95%; background-color: white" class="ui-input-text ui-body-inherit ui-corner-all controlgroup-textinput ui-btn ui-shadow-inset ui-first-child">' +
-                            '<input type="text">' +
-                        '</div>' +
-                        '<button id="item-add" class="ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-plus ui-last-child">Add</button>' +
+            '<li id="temp" class="ui-btn" style="padding: 0.3em 0.8em;">' +
+                '<div class="ui-editable-flex">' +
+                    '<div style="background-color: white; padding: 0;" class="ui-editable-flex-item-left ui-editable-border-left ui-input-text ui-btn ui-shadow-inset">' +
+                        '<input type="text">' +
                     '</div>' +
+                    '<button id="item-add" style="height: auto" class="ui-editable-flex-item-right ui-editable-border-right ui-btn ui-shadow ui-btn-icon-notext ui-icon-plus">Add</button>' +
                 '</div>' +
             '</li>'
         );

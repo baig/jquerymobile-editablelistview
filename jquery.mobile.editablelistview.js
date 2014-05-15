@@ -131,6 +131,11 @@
             inEditState
             ? this._on( this._ui.content.find('li#temp button#item-add'), { "tap": "_insertListItem" })
             : this._off( this._ui.content.find('li#temp button#item-add'), "tap")
+
+            inEditState
+            ? this._on( this._ui.content.find('input[type=text]'), { "keyup": "_insertListItem" })
+            : this._off( this._ui.content.find('input[type=text]'), "keyup")
+
         },
 
         _enableListItemDeleteEvent: function() {
@@ -164,8 +169,13 @@
         _editListItem: function(e) {},
 
         _insertListItem: function(e) {
+            if (e.type !== "tap"  && e.keyCode !== $.mobile.keyCode.ENTER)
+                return;
+
             var $target = $(e.target),
-                $input = $target.prev().find('input'),
+                $input = (e.type === "keyup")
+                         ? $target
+                         : $target.prev().find('input'),
                 inputTextString = $input.val();
 
             // Inserting list item only if input string is not empty
@@ -187,6 +197,7 @@
 
         _deleteListItem: function(e) {
             $(e.currentTarget).parent().remove();
+            e.preventDefault();
         },
 
         _changeEditButton: function() {

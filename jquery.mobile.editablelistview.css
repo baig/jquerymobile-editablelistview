@@ -19,3 +19,66 @@
 .ui-editable-list-empty {
     padding-bottom: 0;
 }
+.ui-editable-flex {
+    width: 100%;
+    display: inline-flex;
+    flex-direction: row;
+}
+.ui-editable-border-right {
+    border-top-right-radius: .3125em;
+    border-bottom-right-radius: .3125em;
+}
+.ui-editable-border-left {
+    border-top-left-radius: .3125em;
+    border-bottom-left-radius: .3125em;
+}
+
+/* Large desktop */
+@media (min-width: 1200px) {
+    .ui-editable-flex-item-left {
+        flex: 35 1 auto;
+    }
+    .ui-editable-flex-item-right {
+        flex: 1 1 auto;
+    }
+}
+
+/* Landscape tablet and dated desktop */
+@media (min-width: 980px) and (max-width: 1199px) {
+    .ui-editable-flex-item-left {
+        flex: 25 1 auto;
+    }
+    .ui-editable-flex-item-right {
+        flex: 1 1 auto;
+    }
+}
+
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 767px) and (max-width: 979px) {
+    .ui-editable-flex-item-left {
+        flex: 15 1 auto;
+    }
+    .ui-editable-flex-item-right {
+        flex: 1 1 auto;
+    }
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+    .ui-editable-flex-item-left {
+        flex: 15 1 auto;
+    }
+    .ui-editable-flex-item-right {
+        flex: 1 1 auto;
+    }
+}
+
+/* Landscape phones and down */
+@media (max-width: 480px) {
+    .ui-editable-flex-item-left {
+        flex: 5 1 auto;
+    }
+    .ui-editable-flex-item-right {
+        flex: 1 1 auto;
+    }
+}
