@@ -1,20 +1,41 @@
 {
     "name": "jqm-editable-listview",
     "version": "0.1.0",
+    "authors": "Wasif Hasan Baig",
+    "description": "An infinite scroll plugin geared for usage with jQuery Mobile",
+    "license": "GPLv3",
+
     "main": [
         "markup.js",
         "jquery.mobile.editablelistview.js",
         "jquery.mobile.editablelistview.css"
     ],
+
     "ignore": [
         ".jshintrc",
-        "demo"
+        "demo",
+        "README.md",
+        "package.json"
+        "node_modules"
     ],
+
     "dependencies": {
-        "jquery": "2.1.1",
-        "jquery-mobile": "1.4.2"
+        "jquery-mobile-bower": "1.4.2"
     },
+
     "devDependencies": {
 
-    }
+    },
+
+    "keywords": [
+        "jquery",
+        "mobile",
+        "jquerymobile",
+        "jquery-mobile",
+        "jqm",
+        "listview",
+        "editable",
+        "editablelistview"
+        "list"
+    ],
 }

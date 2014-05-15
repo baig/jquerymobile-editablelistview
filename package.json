@@ -1,0 +1,38 @@
+{
+  "name": "jqm-editable-listview",
+  "version": "0.1.0",
+  "description": "A customized version of jQuery Mobile Listview Widget that supports insertion of new list items and removal of existing list items",
+  "main": "js/editable-listview.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/baig/jquerymobile-editablelistview.git"
+  },
+  "keywords": [
+    "jquery",
+    "mobile",
+    "jquerymobile",
+    "jqm",
+    "listview",
+    "list",
+    "editable",
+    "editablelistview",
+    "editable-listview"
+  ],
+  "author": "Wasif Hasan Baig",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/baig/jquerymobile-editablelistview/issues"
+  },
+  "homepage": "https://github.com/baig/jquerymobile-editablelistview",
+  "devDependencies": {
+    "gulp": "^3.6.2",
+    "gulp-usemin": "^0.3.3",
+    "gulp-clean": "^0.2.4",
+    "gulp-uglify": "^0.3.0",
+    "gulp-concat": "^2.2.0",
+    "gulp-rename": "^1.2.0"
+  }
+}

@@ -1,4 +1,14 @@
-(function ($, undefined) {
+/*!
+* jQuery Mobile Editable Listview Plugin
+* https://github.com/baig/jquerymobile-editablelistview
+*
+* Copyright 2014 (c) Wasif Hasan Baig
+*
+* Released under the MIT license
+* https://github.com/baig/jquerymobile-editablelistview/blob/master/LICENSE.txt
+*/
+
+(function ($, undefined ) {
 
     // Whether the widget is already present on the page or not
     var isCreated = false;
@@ -7,9 +17,9 @@
 
     // Plugin Definition
     $.widget("mobile.editablelistview", $.extend( {
-        
+
         initSelector: ":jqmData(role='editablelistview'), :jqmData(role='editable-listview')",
-        
+
         options: {
             listTitle: "View list items",
             listEmptyTitle: "No items to view",
@@ -33,16 +43,16 @@
 //            corners: null,
 //            mini: null
         },
-        
+
         _ui : {},
         _initialRefresh: true,
-        
+
         _create: function() {
-            
+
             var $elem = this.element,   // jQuery Object
                 opts = this.options,    // POJO
                 isEnhanced = opts.enhanced; // To be jQuery Object; null initially
-            
+
             (isEnhanced)
             ? this._ui = {
                             wrapper: $elem.parent().parent(),
@@ -55,7 +65,7 @@
             var ui = this._ui;
 
             this._handleExpandCollapse( opts.collapsed );
-            
+
             this._on( ui.header, {
                 "tap": "_onHeaderTapped"
             });
@@ -73,13 +83,14 @@
         _enhance: function() {
             var $el = this.element,
                 opts = this.options,
+                $markup = this._$markup,
                 ui = this._ui;
 
             this._enhanceList($el);
 
             ui.wrapper = $el.wrap( "<div class='ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content'></div>" )
 
-            ui.header = $Markup.header(this, opts);
+            ui.header = $markup.header(this, opts);
 
             ui.content = $el.wrap( "<div class='ui-collapsible-content ui-body-inherit'></div>" );
 
@@ -96,7 +107,7 @@
         _onEditButtonTapped: function(e) {
             // Toggling Edit State
             inEditState = !inEditState;
-            
+
             // Keeps the list expanded when you exit Edit Mode
             this._handleExpandCollapse( true )
 
@@ -223,12 +234,14 @@
         },
 
         _insertTextInputBox: function() {
+            var $markup = this._$markup;
+
             // QUICK CSS FIX
             var borderWidth = liInsertion ? "0 0 1px 0" : "0"
 
             inEditState
             ? this._ui.content  // true
-                      .prepend( $Markup.listTextInput().css( /* QUICK FIX */ "border-width", borderWidth) )   // true
+                      .prepend( $markup.listTextInput().css( /* QUICK FIX */ "border-width", borderWidth) )   // true
             : this._ui.content  // false
                       .find( 'li#temp' )
                       .remove()
@@ -247,7 +260,7 @@
         },
 
         // --(end)-- Event Handler Helper Functions --
-        
+
         _isListEmpty: function() {
               return (this.element.find('li').not('li#temp').length === 0) ? true : false
         },
@@ -259,13 +272,13 @@
         _enhanceList: function($el) {
             var $ul = $el.filter('ul'),
                 $li = $ul.children();
-            
+
             $ul.addClass( 'ui-listview ui-corner-all ui-shadow' )
             $li.each( function() {
                 !$(this).children().length ? $(this).wrapInner( '<a class="ui-btn"></a>' ) : 0;
             })
         },
-        
+
         _enhanceListItem: function( li ) {
             var $li = $( li );
 
@@ -294,13 +307,13 @@
               .toggleClass( "ui-icon-" + opts.collapsedIcon, isCollapsed )
 
             this.element.toggleClass( "ui-collapsible-collapsed", isCollapsed );
-            
+
             ui.content
               .parent()
               .toggleClass( "ui-collapsible-content-collapsed", isCollapsed )
               .attr( "aria-hidden", isCollapsed )
               .trigger( "updatelayout" );
-            
+
             // QUICK FIX: adjusting margin and padding for content when list is empty
             if (this._isListEmpty() && !inEditState) {
                 ui.header.addClass( "ui-corner-all" )
@@ -364,7 +377,7 @@
         widget: function() {
             return this._ui.wrapper;
         },
-        
+
         refresh: function() {
             var $el = this._ui.content,
                 opts = this.options,
@@ -377,11 +390,65 @@
             this._initialRefresh = false;
         },
 
+        _$markup: {
+
+            listTextInput: function() {
+                return $(
+                    '<li id="temp" class="ui-btn" style="padding: 0.3em 0.8em;">' +
+                        '<div class="ui-editable-flex">' +
+                            '<div style="background-color: white; padding: 0;" class="ui-editable-flex-item-left ui-editable-border-left ui-input-text ui-btn ui-shadow-inset">' +
+                                '<input type="text">' +
+                            '</div>' +
+                            '<button id="item-add" style="height: auto" class="ui-editable-flex-item-right ui-editable-border-right ui-btn ui-shadow ui-btn-icon-notext ui-icon-plus">Add</button>' +
+                        '</div>' +
+                    '</li>'
+                );
+            },
+
+            header: function(context, opts) {
+                var listTitle = ( context._isListEmpty() ? opts.listEmptyTitle : opts.listTitle );
+                var buttonLabel = ( context._isListEmpty() ? opts.buttonAddLabel : opts.buttonEditLabel );
+                var buttonIcon = ( context._isListEmpty() ? opts.buttonAddIcon : opts.buttonEditIcon );;
+                var listIcon = (function(ctx) {
+                    if (ctx._isListEmpty()) {
+                        return '';
+                    } else {
+                        return 'ui-icon-' + opts.collapsedIcon;
+                    }
+                } (context) );
+
+                return $(
+                    '<div role="banner" class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ui-btn-icon-left ' + listIcon + '">' +
+                        '<div class="ui-bar ui-editable-listview-title">' +
+                            '<span>' + listTitle + '</span>' +
+                        '</div>' +
+                        '<a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right">' + buttonLabel + '</a>' +
+                    '</div>'
+                );
+            },
+
+            // For v0.2
+            /*listItemTextInput: function() {
+                return $(
+                    '<div style="width: 100%" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">' +
+                        '<div style="width: inherit" class="ui-controlgroup-controls ">' +
+                            '<div style="width: 91%" class="ui-input-text ui-body-inherit ui-corner-all controlgroup-textinput ui-btn ui-shadow-inset ui-first-child">' +
+                                '<input type="text">' +
+                            '</div>' +
+                            '<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-check ui-btn-a">Add</button>' +
+                            '<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-delete ui-last-child">Dismiss</button>' +
+                        '</div>' +
+                    '</div>'
+                );
+            }*/
+
+        }
+
     }, $.mobile.behaviors.addFirstLastClasses) );
-    
-    // Auto-initialize on pagecreate
-    $(document).bind("pagecreate", function (e) {
-        $(":jqmData(role='editablelistview'), :jqmData(role='editable-listview')", e.target).editablelistview();
-    });
 
 }(jQuery));
+
+// Auto-initialize on pagecreate
+$(document).bind("pagecreate", function (e) {
+    $(":jqmData(role='editablelistview'), :jqmData(role='editable-listview')", e.target).editablelistview();
+});
