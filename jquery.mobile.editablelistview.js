@@ -19,8 +19,8 @@
             buttonEditIcon: "edit",
             collapsed: true,
             enhanced: false,
-            collapsedIcon: "carat-d",
-            expandedIcon: "carat-u",
+            collapsedIcon: "carat-r",
+            expandedIcon: "carat-d",
 
             expandCueText: null,
             collapseCueText: null,

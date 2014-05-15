@@ -1,0 +1,20 @@
+{
+    "name": "jqm-editable-listview",
+    "version": "0.1.0",
+    "main": [
+        "markup.js",
+        "jquery.mobile.editablelistview.js",
+        "jquery.mobile.editablelistview.css"
+    ],
+    "ignore": [
+        ".jshintrc",
+        "demo"
+    ],
+    "dependencies": {
+        "jquery": "2.1.1",
+        "jquery-mobile": "1.4.2"
+    },
+    "devDependencies": {
+
+    }
+}
