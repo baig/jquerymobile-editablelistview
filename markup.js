@@ -44,7 +44,7 @@ var $Markup = {
                 '<div class="ui-bar ui-editable-listview-title">' +
                     '<span>' + listTitle + '</span>' +
                 '</div>' +
-                '<a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right ui-icon-' + buttonIcon + '">' + buttonLabel + '</a>' +
+                '<a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right">' + buttonLabel + '</a>' +
             '</div>'
         );
     },

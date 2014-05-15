@@ -15,21 +15,23 @@
             listEmptyTitle: "No items to view",
             buttonEditLabel: "Edit",
             buttonAddLabel: "Add",
+            buttonDoneLabel: "Done",
             buttonAddIcon: "plus",
             buttonEditIcon: "edit",
+            buttonDoneIcon: "check",
             collapsed: true,
             enhanced: false,
             collapsedIcon: "carat-r",
             expandedIcon: "carat-d",
 
-            expandCueText: null,
-            collapseCueText: null,
-            iconpos: null,
-            theme: null,
-            contentTheme: null,
-            inset: null,
-            corners: null,
-            mini: null
+//            expandCueText: null,
+//            collapseCueText: null,
+//            iconpos: null,
+//            theme: null,
+//            contentTheme: null,
+//            inset: null,
+//            corners: null,
+//            mini: null
         },
         
         _ui : {},
@@ -98,7 +100,7 @@
             // Keeps the list expanded when you exit Edit Mode
             this._handleExpandCollapse( true )
 
-            this._changeEditButton()
+            this._updateHeader()
             this._insertTextInputBox()
             this._toggleSplitIcon()
             this._attachDetachEventHandlers()
@@ -149,12 +151,31 @@
                 isListEmpty = this._isListEmpty(),
                 isCollapsed = this.options.collapsed;
 
-            ( isListEmpty )
-            ? this._ui.header.find('span').text( opts.listEmptyTitle )
-            : this._ui.header.find('span').text( opts.listTitle )
+            this._ui.header.find('span').text( isListEmpty? opts.listEmptyTitle : opts.listTitle )
 
-            this._ui.header.toggleClass('ui-btn-icon-left ui-icon-' + opts.collapsedIcon, !isListEmpty && isCollapsed)
-            this._ui.header.toggleClass('ui-btn-icon-left ui-icon-' + opts.expandedIcon, !isListEmpty && !isCollapsed)
+            // Change "Edit" button state, icon and label
+            this._ui.button.removeClass('ui-icon-' + opts.buttonDoneIcon + ' ui-icon-' + opts.buttonAddIcon + ' ui-icon-' + opts.buttonEditIcon)
+                           .addClass( inEditState
+                                      ? 'ui-icon-' + opts.buttonDoneIcon
+                                      : isListEmpty
+                                        ? 'ui-icon-' + opts.buttonAddIcon
+                                        : 'ui-icon-' + opts.buttonEditIcon )
+                           .text( inEditState
+                                  ? opts.buttonDoneLabel
+                                  : isListEmpty
+                                    ? opts.buttonAddLabel
+                                    : opts.buttonEditLabel )
+
+            this._ui.header.removeClass('ui-btn-icon-left ui-icon-' + opts.expandedIcon + ' ui-icon-' + opts.expandedIcon)
+                           .addClass( inEditState
+                                      ? isListEmpty
+                                        ? ''
+                                        : 'ui-btn-icon-left ui-icon-' + opts.expandedIcon
+                                      : isListEmpty
+                                        ? ''
+                                        : isCollapsed
+                                          ? 'ui-btn-icon-left ui-icon-' + opts.collapsedIcon
+                                          : 'ui-btn-icon-left ui-icon-' + opts.expandedIcon )
         },
 
         // TODO v0.2
@@ -199,20 +220,6 @@
             $(e.currentTarget).parent().remove();
             this._updateHeader();
             e.preventDefault();
-        },
-
-        _changeEditButton: function() {
-            console.log(this._isListEmpty())
-            // Change "Edit" button state, icon and label
-            inEditState
-            ? this._ui.button
-                      .removeClass( "ui-icon-edit" )
-                      .addClass( "ui-btn-active ui-icon-check" )
-                      .text( "Done" )
-            : this._ui.button
-                      .removeClass( "ui-btn-active ui-icon-check" )
-                      .addClass( this._isListEmpty() ? "ui-icon-plus" : "ui-icon-edit" )
-                      .text( this._isListEmpty() ? "Add" : "Edit" )
         },
 
         _insertTextInputBox: function() {
