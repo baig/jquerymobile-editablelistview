@@ -11,7 +11,7 @@
         initSelector: ":jqmData(role='editablelistview'), :jqmData(role='editable-listview')",
         
         options: {
-            listTitle: "Tap to view list items",
+            listTitle: "View list items",
             listEmptyTitle: "No items to view",
             buttonEditLabel: "Edit",
             buttonAddLabel: "Add",
@@ -135,7 +135,6 @@
             inEditState
             ? this._on( this._ui.content.find('input[type=text]'), { "keyup": "_insertListItem" })
             : this._off( this._ui.content.find('input[type=text]'), "keyup")
-
         },
 
         _enableListItemDeleteEvent: function() {
@@ -169,6 +168,7 @@
         _editListItem: function(e) {},
 
         _insertListItem: function(e) {
+            // returning immediately if keyup keycode does not match keyCode.ENTER i.e. 13
             if (e.type !== "tap"  && e.keyCode !== $.mobile.keyCode.ENTER)
                 return;
 
@@ -197,10 +197,12 @@
 
         _deleteListItem: function(e) {
             $(e.currentTarget).parent().remove();
+            this._updateHeader();
             e.preventDefault();
         },
 
         _changeEditButton: function() {
+            console.log(this._isListEmpty())
             // Change "Edit" button state, icon and label
             inEditState
             ? this._ui.button
@@ -209,8 +211,8 @@
                       .text( "Done" )
             : this._ui.button
                       .removeClass( "ui-btn-active ui-icon-check" )
-                      .addClass( "ui-icon-edit" )
-                      .text( "Edit" )
+                      .addClass( this._isListEmpty() ? "ui-icon-plus" : "ui-icon-edit" )
+                      .text( this._isListEmpty() ? "Add" : "Edit" )
         },
 
         _insertTextInputBox: function() {
@@ -240,11 +242,7 @@
         // --(end)-- Event Handler Helper Functions --
         
         _isListEmpty: function() {
-            var isEmpty = (inEditState)
-                          ? this.element.find('li').not('li#temp').length === 0 ? true : false
-                          : this.element.find('li').length === 0 ? true : false
-            console.log(isEmpty)
-            return isEmpty;
+              return (this.element.find('li').not('li#temp').length === 0) ? true : false
         },
 
         _addToolbarButton: function($el) {
@@ -285,9 +283,8 @@
               .toggleClass( "ui-collapsible-heading-collapsed ui-corner-all", isCollapsed )
               .toggleClass( "ui-editable-listview-corner", !isCollapsed )
               .css( "margin-bottom", "0" )
-              .find( "a" )
-                .first()
-                .toggleClass( "ui-icon-" + opts.expandedIcon, !isCollapsed )
+              .toggleClass( "ui-icon-" + opts.expandedIcon, !isCollapsed )
+              .toggleClass( "ui-icon-" + opts.collapsedIcon, isCollapsed )
 
             this.element.toggleClass( "ui-collapsible-collapsed", isCollapsed );
             
