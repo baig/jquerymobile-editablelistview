@@ -17,109 +17,74 @@
  */
 
 var gulp = require('gulp');
-//var prefix = require('gulp-autoprefixer');
-//var minifyCss = require('gulp-minify-css');
-//var minifyHtml = require('gulp-minify-html');
+var help = require('gulp-help');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
+var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
-//var gzip = require('gulp-gzip');
 var clean = require('gulp-clean');
-var usemin = require('gulp-usemin');
-//var stripDebug = require('gulp-strip-debug');
 
+/** gulp tasks */
 
-gulp.task('clean', function () {
+help(gulp)
+
+gulp.task('clean', 'Cleans the build folder.', [], function () {
     gulp.src('build/**/*', { read: false })
         .pipe(clean({ force: true }));
+}, {
+    aliases: ['c', 'C']
 });
 
-gulp.task("concat", ["clean"], function () {
+gulp.task("concat", 'Joins all the script files putting them in build folder.', [], function () {
     gulp.src('js/**/*.js')
         .pipe(concat('jqm.editable.listview.js'))
         .pipe(gulp.dest('build/'));
+}, {
+    aliases: ['j', 'J']
 });
 
-gulp.task("minify", ["concat"], function () {
-   gulp.src('build/*.js')
+gulp.task("minify", 'Minifies all the script files.', [], function () {
+   gulp.src('js/**/*.js')
+        .pipe(concat('jqm.editable.listview.js'))
         .pipe(rename('jqm.editable.listview.min.js'))
-//        .pipe(uglify())
+        .pipe(uglify({
+            preserveComments: 'some'
+        }))
         .pipe(gulp.dest('build/'))
+}, {
+    aliases: ['m', 'M']
 });
-//
-//gulp.task("compress", ["minify"], function () {
-//    var stream = gulp.src(CONFIG.MINIFY.JS.DESTINATION + '/' + CONFIG.MINIFY.JS.NAME)
-//        .pipe(gzip())
-//        .pipe(gulp.dest(CONFIG.COMPRESS.JS.DESTINATION))
-//        .pipe(filesize());
-//    return stream;
-//});
-//
-//// CSS autoprefixing
-//gulp.task('prefix', function () {
-//    gulp.src(CONFIG.CSS.SRCPATHS)
-//        .pipe(prefix("last 3 versions", "> 1%", "ie 8", "ie 7"))
-//        .pipe(rename(CONFIG.CSS.NAME))
-//        .pipe(gulp.dest(CONFIG.CSS.COMPILEDPATH))
-//});
-//
-//gulp.task('copy', function () {
-//    gulp.src('./indexsrc.html')
-//        .pipe(gulp.dest('./build'))
-//});
-//
-//// Strip console, alert and debugger statements from JS code
-//gulp.task('deconsole', function () {
-//    gulp.src(CONFIG.CONCAT.JS.DESTINATION)
-//        .pipe(stripDebug())
-//        .pipe(rename(CONFIG.CONCAT.JS.NO_DEBUG_NAME))
-//        .pipe(gulp.dest(CONFIG.CONCAT.JS.DESTINATION));
-//});
-//
-///////////////////////////////////////////////////////////////////////
-//
-//// Gulp Build Targets
-//
-//gulp.task('default', function () {
-//    // make my JavaScript ugly
-//    gulp.watch("./dev/js/**/*.js", function (event) {
-//        gulp.run('uglify');
-//    });
-//    // images
-//    gulp.watch("./dev/img/**/*", function (event) {
-//        gulp.run('imagemin');
-//        gulp.run('svgmin');
-//    });
-//});
-//
-gulp.task("build", function () {
-    gulp.run('compress');
+
+gulp.task("minify-css", 'Minifies the CSS stylesheets.', [], function() {
+    gulp.src('css/**/*.css')
+        .pipe(concat('jqm.editable.listview.min.css'))
+        .pipe(minifyCss({
+            noAdvanced: false
+        }))
+        .pipe(gulp.dest('build'))
+}, {
+    aliases: ['s', 'S']
+})
+
+gulp.task("assets", 'Copies all assets (css stylesheets, images etc.) to the build folder.', [], function(){
+    gulp.src("css/**/*")
+        .pipe(concat("jqm.editable.listview.css"))
+        .pipe(gulp.dest('build'))
+}, {
+    aliases: ['a', 'A']
+})
+
+gulp.task("build", '(default task) Cleans, concatenates and minifies all script files into build folder.', [], function () {
+    gulp.run('clean')
+    gulp.run('concat')
+    gulp.run('minify')
+    gulp.run('assets')
+    gulp.run('minify-css')
+}, {
+    aliases: ['b', 'B']
 });
-//
-//// Test Build
-//gulp.task('test-build', function() {
-//    gulp.src('indexsrc.html')
-//        .pipe(rename('index.html'))
-//        .pipe(fileinclude())
-//        .pipe(usemin({
-//            css: [minifyCss(), 'concat'],
-//            html: [minifyHtml({empty: true})],
-//            js: [uglify()]
-//        }))
-//        .pipe(gulp.dest(CONFIG.HTML.BUILDPATH));
-//});
-//
-//gulp.task('test-build-watch', function() {
-//    gulp.watch(['./*.html', './*.css'], function (event) {
-//        gulp.src(CONFIG.HTML.SRCPATHS)
-//            .pipe(rename('index.html'))
-//            .pipe(fileinclude())
-//            .pipe(usemin())
-//            .pipe(gulp.dest(CONFIG.HTML.BUILDPATH));
-//    });
-//});
-//
-////Production Build
-//gulp.task("prod-build", function () {
-//    gulp.run('usemin');
-//});
+
+gulp.task('default', function () {
+    gulp.run('build')
+});
+

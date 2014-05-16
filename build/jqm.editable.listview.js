@@ -44,38 +44,39 @@
 //            mini: null
         },
 
-        _ui : {},
-        _initialRefresh: true,
-
         _create: function() {
-
             var $elem = this.element,   // jQuery Object
                 opts = this.options,    // POJO
+                ui = {},
                 isEnhanced = opts.enhanced; // To be jQuery Object; null initially
 
-            (isEnhanced)
-            ? this._ui = {
-                            wrapper: $elem.parent().parent(),
-                            header: $elem.parent().prev(),
-                            button: $elem.parent().prev().children('a.ui-btn'),
-                            content: $elem,
-                         }
-            : this._ui = this._enhance();
+            $.extend( this, {
+                _ui: null,
+                _initialRefresh: true
+            });
 
-            var ui = this._ui;
+            if ( isEnhanced ) {
+                this._ui = {
+                    wrapper: $elem.parent().parent(),
+                    header: $elem.parent().prev(),
+                    button: $elem.parent().prev().children('a.ui-btn'),
+                    content: $elem,
+                 }
+            } else {
+                this._ui = this._enhance();
+            }
 
             this._handleExpandCollapse( opts.collapsed );
 
-            this._on( ui.header, {
+            this._on( this._ui.header, {
                 "tap": "_onHeaderTapped"
             });
 
-            this._on( ui.button, {
+            this._on( this._ui.button, {
                 "tap": "_onEditButtonTapped",
             });
 
             this.refresh();
-
         },
 
         // Add Wrapper DOM and all the relevant Classes returning ui hash containing references
@@ -84,11 +85,11 @@
             var $el = this.element,
                 opts = this.options,
                 $markup = this._$markup,
-                ui = this._ui;
+                ui = {};
 
             this._enhanceList($el);
 
-            ui.wrapper = $el.wrap( "<div class='ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content'></div>" )
+            ui.wrapper = $el.wrap( '<div class="ui-editable ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content"></div>' )
 
             ui.header = $markup.header(this, opts);
 
@@ -109,7 +110,9 @@
             inEditState = !inEditState;
 
             // Keeps the list expanded when you exit Edit Mode
-            this._handleExpandCollapse( true )
+            inEditState
+            ? this._handleExpandCollapse( false )
+            : this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
 
             this._updateHeader()
             this._insertTextInputBox()
@@ -118,7 +121,10 @@
 
         },
 
-        _onHeaderTapped: function() {
+        _onHeaderTapped: function(e) {
+            // returns immediately if list is empty
+            if (this._isListEmpty()) return;
+
             inEditState
             ? this._handleExpandCollapse( false )
             : this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
@@ -141,13 +147,16 @@
         },
 
         _enableInsertListItemEvent: function() {
-            inEditState
-            ? this._on( this._ui.content.find('li#temp button#item-add'), { "tap": "_insertListItem" })
-            : this._off( this._ui.content.find('li#temp button#item-add'), "tap")
+            var $addBtn = this._ui.content.find('li.ui-editable-temp button#item-add'),
+                $textField = this._ui.content.find('input[type=text]');
 
-            inEditState
-            ? this._on( this._ui.content.find('input[type=text]'), { "keyup": "_insertListItem" })
-            : this._off( this._ui.content.find('input[type=text]'), "keyup")
+            if ( inEditState ) {
+                this._on( $addBtn, { "tap": "_insertListItem" })
+                this._on( $textField, { "keyup": "_insertListItem" })
+            } else {
+                this._off( $addBtn, "tap")
+                this._off( $textField, "keyup")
+            }
         },
 
         _enableListItemDeleteEvent: function() {
@@ -187,6 +196,7 @@
                                         : isCollapsed
                                           ? 'ui-btn-icon-left ui-icon-' + opts.collapsedIcon
                                           : 'ui-btn-icon-left ui-icon-' + opts.expandedIcon )
+
         },
 
         // TODO v0.2
@@ -217,7 +227,7 @@
                 $target.parents('ul')
                            .children('li')
                            .first()
-                           .css( "border-bottom-width", "0") // QUICK FIX for li#temp: setting List Text Input bottom border width to zero
+                           .css( "border-bottom-width", "0") // QUICK FIX for li.ui-editable-temp: setting List Text Input bottom border width to zero
                            .after($li)
 
                 this.refresh();
@@ -243,7 +253,7 @@
             ? this._ui.content  // true
                       .prepend( $markup.listTextInput().css( /* QUICK FIX */ "border-width", borderWidth) )   // true
             : this._ui.content  // false
-                      .find( 'li#temp' )
+                      .find( 'li.ui-editable-temp' )
                       .remove()
         },
 
@@ -262,7 +272,7 @@
         // --(end)-- Event Handler Helper Functions --
 
         _isListEmpty: function() {
-              return (this.element.find('li').not('li#temp').length === 0) ? true : false
+              return (this.element.find('li').not('li.ui-editable-temp').length === 0) ? true : false
         },
 
         _addToolbarButton: function($el) {
@@ -313,14 +323,6 @@
               .toggleClass( "ui-collapsible-content-collapsed", isCollapsed )
               .attr( "aria-hidden", isCollapsed )
               .trigger( "updatelayout" );
-
-            // QUICK FIX: adjusting margin and padding for content when list is empty
-            if (this._isListEmpty() && !inEditState) {
-                ui.header.addClass( "ui-corner-all" )
-                ui.content.parent().removeClass("ui-collapsible-content")
-            } else {
-                ui.content.parent().addClass("ui-collapsible-content")
-            }
 
             this.options.collapsed = isCollapsed;
             this._trigger( isCollapsed ? "collapse" : "expand" );
@@ -394,7 +396,7 @@
 
             listTextInput: function() {
                 return $(
-                    '<li id="temp" class="ui-btn" style="padding: 0.3em 0.8em;">' +
+                    '<li class="ui-editable-temp ui-btn" style="padding: 0.3em 0.8em;">' +
                         '<div class="ui-editable-flex">' +
                             '<div style="background-color: white; padding: 0;" class="ui-editable-flex-item-left ui-editable-border-left ui-input-text ui-btn ui-shadow-inset">' +
                                 '<input type="text">' +
@@ -448,7 +450,7 @@
 
 }(jQuery));
 
-// Auto-initialize on pagecreate
+/* Auto-initialize on pagecreate */
 $(document).bind("pagecreate", function (e) {
     $(":jqmData(role='editablelistview'), :jqmData(role='editable-listview')", e.target).editablelistview();
 });
