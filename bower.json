@@ -15,6 +15,7 @@
         "js",
         "node_modules",
         ".gitignore",
+        "bower.json",
         "README.md",
         "package.json",
         "gulpfile.js"
