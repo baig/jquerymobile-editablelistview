@@ -1,19 +1,12 @@
 /**
- *  gulp [Task | Target]
+ *  gulp [Task]
  *
  *  Available Build Task(s)
  *    - clean
  *    - concat
  *    - minify
- *    - compress
- *    - prefix
- *    - copy
- *    - deconsole
- *
- *  Available Build Target(s)
+ *    - minify-css
  *    - build
- *    - dist
- *    - test
  */
 
 var gulp = require('gulp');

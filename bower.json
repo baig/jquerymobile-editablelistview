@@ -8,7 +8,7 @@
     "main": [
         "build/jquery.mobile.editablelistview.js",
         "build/jquery.mobile.editablelistview.min.js",
-        "build/jquery.mobile.editablelistview.css"
+        "build/jquery.mobile.editablelistview.css",
         "build/jquery.mobile.editablelistview.min.css"
     ],
 
@@ -16,10 +16,10 @@
         "demo",
         "css",
         "js",
-        "node_modules"
+        "node_modules",
         ".gitignore",
         "README.md",
-        "package.json"
+        "package.json",
         "gulpfile.js"
     ],
 
@@ -38,7 +38,7 @@
         "jqm",
         "listview",
         "editable",
-        "editablelistview"
+        "editablelistview",
         "list"
     ],
 }
