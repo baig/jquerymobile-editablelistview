@@ -89,7 +89,7 @@
 
             this._enhanceList($el);
 
-            ui.wrapper = $el.wrap( '<div class="ui-editable ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content"></div>' )
+            ui.wrapper = $el.wrap( '<div class="ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content"></div>' )
 
             ui.header = $markup.header(this, opts);
 
@@ -210,6 +210,7 @@
         _editListItem: function(e) {},
 
         _insertListItem: function(e) {
+            e.stopPropagation();
             // returning immediately if keyup keycode does not match keyCode.ENTER i.e. 13
             if (e.type !== "tap"  && e.keyCode !== $.mobile.keyCode.ENTER)
                 return;
@@ -241,6 +242,7 @@
             $(e.currentTarget).parent().remove();
             this._updateHeader();
             e.preventDefault();
+            e.stopPropagation();
         },
 
         _insertTextInputBox: function() {
