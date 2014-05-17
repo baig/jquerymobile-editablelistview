@@ -147,7 +147,7 @@
         },
 
         _enableInsertListItemEvent: function() {
-            var $addBtn = this._ui.content.find('li.ui-editable-temp button#item-add'),
+            var $addBtn = this._ui.content.find('li.ui-editable-temp a#item-add'),
                 $textField = this._ui.content.find('input[type=text]');
 
             if ( inEditState ) {
@@ -210,7 +210,7 @@
         _editListItem: function(e) {},
 
         _insertListItem: function(e) {
-            e.stopPropagation();
+            e.preventDefault();
             // returning immediately if keyup keycode does not match keyCode.ENTER i.e. 13
             if (e.type !== "tap"  && e.keyCode !== $.mobile.keyCode.ENTER)
                 return;
@@ -403,7 +403,7 @@
                             '<div style="background-color: white; padding: 0;" class="ui-editable-flex-item-left ui-editable-border-left ui-input-text ui-btn ui-shadow-inset">' +
                                 '<input type="text">' +
                             '</div>' +
-                            '<button id="item-add" style="height: auto" class="ui-editable-flex-item-right ui-editable-border-right ui-btn ui-shadow ui-btn-icon-notext ui-icon-plus">Add</button>' +
+                            '<a id="item-add" style="height: auto" class="ui-editable-flex-item-right ui-editable-border-right ui-btn ui-shadow ui-btn-icon-notext ui-icon-plus">Add</a>' +
                         '</div>' +
                     '</li>'
                 );

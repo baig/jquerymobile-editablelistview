@@ -1,7 +1,8 @@
+/*
 .ui-editable {
     padding: 0 20px;
-/*    margin: 0 0 2em;*/
 }
+*/
 .ui-editable-listview-corner {
     -webkit-border-top-right-radius: .3125em /*{global-radii-buttons}*/;
     -webkit-border-top-left-radius: .3125em /*{global-radii-buttons}*/;
