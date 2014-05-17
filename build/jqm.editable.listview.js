@@ -120,19 +120,18 @@
             this._attachDetachEventHandlers()
 
             if (!inEditState) {
-                this._triggerListChange()
+                this._triggerListChange(e);
             }
 
         },
 
-        _triggerListChange: function () {
+        _triggerListChange: function (e) {
             var items = this.items(),
                 length = this.length();
 
-            $.event.trigger({
-                type: "listchange",
+            this._trigger('listchange', e, {
                 items: items,
-                length: length
+                length: length,
             });
         },
 

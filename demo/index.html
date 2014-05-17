@@ -27,12 +27,10 @@
     </ul>
 
     <ul id="list2" data-role="editable-listview" data-list-title="Activities" data-list-empty-title="No Activities" data-button-label="Add">
-<!--
         <li>Running</li>
         <li>Cycling</li>
         <li>Surfing</li>
         <li>Jogging</li>
--->
     </ul>
 
     <!-- static data-enhance=true -->
@@ -62,12 +60,10 @@
 	    var $list = $( "#list" ).editablelistview({
 	        listTitle: "Fruits",
 	        listEmptyTitle: "No Fruits"
-//	        buttonEditLabel: "Add",
-//	        buttonAddLabel: "Yes!!!"
         });
 
-        $(document).on('listchange', function(e) {
-            console.log(e)
+        $list.on('editablelistviewlistchange', function(e, data) {
+            console.log(data)
         })
 	</script>
 </body>
