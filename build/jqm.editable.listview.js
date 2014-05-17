@@ -119,7 +119,28 @@
             this._toggleSplitIcon()
             this._attachDetachEventHandlers()
 
+            if (!inEditState) {
+                this._triggerListChange()
+            }
+
         },
+
+        _triggerListChange: function () {
+            var items = this.items(),
+                length = this.length();
+
+            $.event.trigger({
+                type: "listchange",
+                items: items,
+                length: length
+            });
+        },
+
+        // TODO
+        _trigerListAdd: function() {},
+
+        // TODO
+        _trigerListRemove: function() {},
 
         _onHeaderTapped: function(e) {
             // returns immediately if list is empty

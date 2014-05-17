@@ -7,13 +7,13 @@
 	<title>jQM Editable Listview Demo</title>
 	
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.css" />
-	<link rel="stylesheet" href="../build/jqm.editable.listview.css">
+<!--	<link rel="stylesheet" href="../build/jqm.editable.listview.css">-->
 	<link rel="stylesheet" href="../css/editable-listview.css">
 	<link rel="stylesheet" href="demo.css">
 	
 	<script src="http://code.jquery.com/jquery-2.1.1.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.js"></script>
-	<script src="../build/jqm.editable.listview.js"></script>
+<!--	<script src="../build/jqm.editable.listview.js"></script>-->
 	<script src="../js/editable-listview.js"></script>
 </head>
 
@@ -65,6 +65,10 @@
 //	        buttonEditLabel: "Add",
 //	        buttonAddLabel: "Yes!!!"
         });
+
+        $(document).on('listchange', function(e) {
+            console.log(e)
+        })
 	</script>
 </body>
 </html>
