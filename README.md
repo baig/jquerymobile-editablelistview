@@ -2,7 +2,7 @@ Editable Listview (jQuery Mobile Plugin)
 ========================================
 A customized version of the [jQuery Mobile Listview Widget](http://demos.jquerymobile.com/1.4.2/listview/) that supports insertion of new list items and removal of existing list items out of the box.
 
-![Editable Listview Plugin](https://raw.githubusercontent.com/baig/jquerymobile-editablelistview/master/editable-listview.png)
+![Editable Listview Plugin](editable-listview.png?raw=true =350x308)
 
 ## Why
 Many a times, you come across a situation where you want to allow editing of list items. To do this simple task, you have to build extra functionality around the Listview widget to allow for insertion of new list items and removal of existing list items. **Editable Listview** plugin is designed to take the pain out of this situaiton by having all this functionality baked-in.
