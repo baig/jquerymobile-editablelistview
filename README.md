@@ -2,10 +2,10 @@ Editable Listview (jQuery Mobile Plugin)
 ========================================
 A customized version of the [jQuery Mobile Listview Widget](http://demos.jquerymobile.com/1.4.2/listview/) that supports insertion of new list items and removal of existing list items out of the box.
 
-![Editable Listview Plugin](C:\Users\Baig\Desktop\editable-listview.png)
+![Editable Listview Plugin](https://github.com/baig/jquerymobile-editablelistview/blob/gh-pages/images/editable-listview.png)
 
 ## Why
-Many a times, you come across a situation where you want to allow editing of list items. To do this simple task, you have to build extra functionality around the Listview widget to allow for insertion of new list items and removal of existing list items. **Editable Listview** widget is designed to take the pain out of this situaiton by having all this functionality baked-in.
+Many a times, you come across a situation where you want to allow editing of list items. To do this simple task, you have to build extra functionality around the Listview widget to allow for insertion of new list items and removal of existing list items. **Editable Listview** plugin is designed to take the pain out of this situaiton by having all this functionality baked-in.
 
 ## Features
 
@@ -40,7 +40,7 @@ There are two ways you can install the plugin.
     See [below](#attributes) for a full list of available "`data-`" attributes
 
 ## Roadmap
-This is a preliminary of planned fatures
+This is a preliminary list of planned fatures.
 
 1. In-place editing of existing list items.
 2. Re-ordering of list items tap and hold on the list item and drag it back and forth. 
@@ -59,7 +59,7 @@ This is a preliminary of planned fatures
 
     Title of the list when the lis tis empty. Default is "No items to view"
     
-4. data-button-add-label: "Add"
+4. data-button-add-label
 
     Label of the button when the list is empty. Default is "Add"
     
@@ -75,7 +75,7 @@ This is a preliminary of planned fatures
 
     Icon of the button when the list is not empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "edit"
     
-8. data-button-done-label: "Done",
+8. data-button-done-label
 
     Label of the button when the list is in edit mode. Default is "Done"
     
@@ -101,7 +101,7 @@ This is a preliminary of planned fatures
     
 
 ## Author
-Wasif Hasan Baig
+<a href="mailto:pr.wasif@gmail.com?subject=About%20Editable%20Listview%20Plugin">Wasif Hasan Baig</a>
 
-## LICENSE
-This plugin is released under the Terms and Conditions of [MIT License](http://opensource.org/licenses/MIT). Please refer to LICENSE.txt in the root of the project directory.
+## License
+This plugin is released under the Terms and Conditions of [MIT License](http://opensource.org/licenses/MIT). Please refer to the [License file](https://github.com/baig/jquerymobile-editablelistview/blob/master/LICENSE.txt) in the root of the project directory.
