@@ -104,6 +104,6 @@ A boolean value indicating whether the DOM has already been enhanced or not. If 
 <a href="mailto:pr.wasif@gmail.com?subject=About%20Editable%20Listview%20Plugin">Wasif Hasan Baig</a>
 
 ## License
-Copyright &copy; Wasif Hasan Baig
+Copyright &copy; 2014 Wasif Hasan Baig
 
 This plugin is released under the Terms and Conditions of [MIT License](http://opensource.org/licenses/MIT). Please refer to the [License file](https://github.com/baig/jquerymobile-editablelistview/blob/master/LICENSE.txt) in the source code project directory.
