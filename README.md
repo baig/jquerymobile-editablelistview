@@ -32,9 +32,9 @@ There are two ways you can install the plugin.
     ```
     <ul data-role="editable-listview">
         <li>Apple</li>
-        <li>Apple</li>
-        <li>Apple</li>
-        <li>Apple</li>
+        <li>Banana</li>
+        <li>Cranberry</li>
+        <li>Cherry</li>
     </ul>
     ```
     See [below](#attributes) for a full list of available "`data-`" attributes
@@ -45,63 +45,65 @@ This is a preliminary list of planned fatures.
 1. In-place editing of existing list items.
 2. Re-ordering of list items tap and hold on the list item and drag it back and forth. 
 
-## List of "`data-`" Attributes<a name="attributes"></a>
+## List of `data-` Attributes<a name="attributes"></a>
 
-1. data-role
+**`data-role`**
     
-    Required on the `ul` tag for it to be initialized as **Editable Listview**. The value can either be "editable-listview" or "editablelistview"
+Required on the `ul` tag for it to be initialized as **Editable Listview**. The value can either be "editable-listview" or "editablelistview"
     
-2. data-list-title
+**`data-list-title`**
 
-    Title of the list when the list has at least one item to show. Default is "View list items"
+Title of the list when the list has at least one item to show. Default is "View list items"
     
-3. data-list-empty-title
+**`data-list-empty-title`**
 
-    Title of the list when the lis tis empty. Default is "No items to view"
+Title of the list when the lis tis empty. Default is "No items to view"
     
-4. data-button-add-label
+**`data-button-add-label`**
 
-    Label of the button when the list is empty. Default is "Add"
+Label of the button when the list is empty. Default is "Add"
     
-5. data-button-add-icon
+**`data-button-add-icon`**
 
-    Icon of the button when the list is empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "plus"
+Icon of the button when the list is empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "plus"
     
-6. data-button-edit-label
+**`data-button-edit-label`**
 
-    Label of the Edit button. Default is "Edit"
+Label of the Edit button. Default is "Edit"
     
-7. data-button-edit-icon
+**`data-button-edit-icon`**
 
-    Icon of the button when the list is not empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "edit"
+Icon of the button when the list is not empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "edit"
+
+**`data-button-done-label`**
+
+Label of the button when the list is in edit mode. Default is "Done"
     
-8. data-button-done-label
+**`data-button-done-icon`**
 
-    Label of the button when the list is in edit mode. Default is "Done"
+Icon of the button when the list is in **edit** mode empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "check"
     
-9. data-button-done-icon
+**`data-collapsed`**
 
-    Icon of the button when the list is in **edit** mode empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "check"
+A boolean value indicating whether the list will be collapsed or not when initialized. Default is "true"
     
-10. data-collapsed
+**`data-collapsed-icon`**
 
-    A boolean value indicating whether the list will be collapsed or not when initialized. Default is "true"
+Icon next to list title when the list is collapsed. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "carat-r"
     
-11. data-collapsed-icon
+**`data-expanded-icon`**
 
-    Icon next to list title when the list is collapsed. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "carat-r"
+Icon next to list title when the list is expanded. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "carat-d"
     
-12. data-expanded-icon: "carat-d"
+**`data-enhanced`**
 
-    Icon next to list title when the list is expanded. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "carat-d"
-    
-13. data-enhanced
-
-    A boolean value indicating whether the DOM has already been enhanced or not. If so, then all the required DOM structure along with relevant CSS classes and corresponding data attributes must be present. Default is "false"
+A boolean value indicating whether the DOM has already been enhanced or not. If so, then all the required DOM structure along with relevant CSS classes and corresponding data attributes must be present. Default is "false"
     
 
 ## Author
 <a href="mailto:pr.wasif@gmail.com?subject=About%20Editable%20Listview%20Plugin">Wasif Hasan Baig</a>
 
 ## License
-This plugin is released under the Terms and Conditions of [MIT License](http://opensource.org/licenses/MIT). Please refer to the [License file](https://github.com/baig/jquerymobile-editablelistview/blob/master/LICENSE.txt) in the root of the project directory.
+Copyright &copy; Wasif Hasan Baig
+
+This plugin is released under the Terms and Conditions of [MIT License](http://opensource.org/licenses/MIT). Please refer to the [License file](https://github.com/baig/jquerymobile-editablelistview/blob/master/LICENSE.txt) in the source code project directory.
