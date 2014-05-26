@@ -156,6 +156,8 @@
         _counter: 1,
         _dataItemName: "item",
         _itemNames: [],
+        _evt: null,
+        _clickHandler: null,
 
         options: {
             editable: false,
@@ -178,30 +180,41 @@
         _beforeListviewRefresh: function () {
             var $el = this.element,
                 opts = this.options,
+                $origDom = this._origDom,
+                dataItemName = this._dataItemName,
+                counter = this._counter,
+//                created = this._created,
+//                editMode = this._editMode,
                 ui, $orig, $origLis,
+                evt = this._evt,
                 $lis = $el.find("li"),
                 $markup = this._$markup;
 
             // saving original DOM structure
-            if (this._origDom === null) {
-                this._origDom = $el.clone();
+            if ($origDom === null) {
+                $origDom = $el.clone();
                 // Assign each list item a unique number value
-                $.each(this._origDom.children('li'), function (idx, val) {
-                    $(val).attr("data-" + this._dataItemName, this._counter);
-                    this._counter++;
+                $.each($origDom.children('li'), function (idx, val) {
+                    $(val).attr("data-" + dataItemName, counter);
+                    counter++;
                 });
 
-                this._origDom.removeClass("ui-listview ui-shadow ui-corner-all ui-listview-inset ui-group-theme-" + this.options.theme)
+                this._counter = counter;
+
+                $origDom.removeClass("ui-listview ui-shadow ui-corner-all ui-listview-inset ui-group-theme-" + this.options.theme)
+                    .find("li")
+                    .removeClass("ui-li-static ui-body-inherit ui-first-child ui-last-child")
+                    .end()
                     .find("a")
                     .removeClass("ui-link")
                     .end();
+
+                this._origDom = $origDom;
             }
 
-            console.log(this._created);
-
             if (!this._created) {
-                var wrapper = this._wrapCollapsible(),
-                    ui = {};
+                var wrapper = this._wrapCollapsible();
+//                    ui = {};
 
                 ui = {
                     wrapper: wrapper,
@@ -226,15 +239,17 @@
 
                 ui.header.addClass('ui-btn-icon-left');
 
+                evt = this._evt = $._data(ui.header.parent()[0], "events");
+                this._clickHandler = evt.click[0].handler;
+
                 this._attachEditEventButtons();
-                this._modifyHeaderClickEvent();
 
                 this._created = true;
             }
 
             if (this._editMode) {
                 ui = this._ui;
-                $orig = this._origDom.clone();
+                $orig = $origDom.clone();
                 $origLis = $orig.find('li');
 
                 if ($orig.find('a').length === 0) {
@@ -254,8 +269,11 @@
 
                 $lis.remove();
                 $el.append($orig.find('li'));
+
+                evt.click[0].handler = $.noop; // disabling header click event
             } else {
-                $lis.remove().end().append(this._origDom.clone().find('li'));
+                evt.click[0].handler = this._clickHandler;  // enabling header click event
+                $lis.remove().end().append($origDom.clone().find('li'));
             }
 
             this._updateHeader();
@@ -263,16 +281,6 @@
 
         _afterListviewRefresh: function () {
             this._attachDetachEventHandlers();
-        },
-
-        // Modify the Header Click Event Handler based on Edit Mode
-        _modifyHeaderClickEvent: function () {
-            var evt = $._data(this._ui.header.parent()[0], "events");
-            var origHandler = evt.click[0].handler;
-            //            console.log(evt.click[0].handler)
-            evt.click[0].handler = function (e) {
-                !this._editMode ? origHandler.call(this, e) : null;
-            };
         },
 
         _wrapCollapsible: function () {
@@ -310,9 +318,10 @@
         // --(start)-- Event Handlers --
 
         _onEditButtonTapped: function (e) {
-            var editMode = this._editMode = !this._editMode;
+            var editMode = this._editMode = !this._editMode,
+                $collapsible = this.element.parents(":jqmData(role='collapsible')");
 
-            editMode ? this.element.parents(":jqmData(role='collapsible')").collapsible("expand") : this.element.parents(":jqmData(role='collapsible')").collapsible("collapse");
+            editMode ? $collapsible.collapsible("expand") : $collapsible.collapsible("collapse");
 
             this.refresh();
 
@@ -330,7 +339,6 @@
                 isListEmpty = this._isListEmpty();
 
             // Update List Header Title
-            console.log(ui);
             ui.header.text(isListEmpty ? opts.listEmptyTitle : opts.listTitle);
 
             // Change "Edit" button state, icon and label
@@ -416,7 +424,6 @@
 
             // returning immediately if keyup keycode does not match keyCode.ENTER i.e. 13
             if (e.type !== "tap" && e.keyCode !== $.mobile.keyCode.ENTER) return;
-            console.log("INSERT");
 
             if (this.options.editableType === 'complex') {
                 var liTemplate = '',
