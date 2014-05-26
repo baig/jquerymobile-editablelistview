@@ -1,0 +1,4 @@
+{
+    "strict": true,
+    "predef": [ "jQuery", "console" ]
+}

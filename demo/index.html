@@ -7,12 +7,14 @@
 	<title>jQM Editable Listview Demo</title>
 	
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.css" />
+<!--	<link rel="stylesheet" href="../../jquery-mobile/dist/jquery.mobile.css" />-->
 <!--	<link rel="stylesheet" href="../build/jqm.editable.listview.css">-->
 	<link rel="stylesheet" href="../css/editable-listview.css">
 	<link rel="stylesheet" href="demo.css">
 	
 	<script src="http://code.jquery.com/jquery-2.1.1.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.js"></script>
+<!--	<script src="../../jquery-mobile/dist/jquery.mobile.js"></script>-->
 <!--	<script src="../build/jqm.editable.listview.js"></script>-->
 	<script src="../js/editable-listview.js"></script>
 </head>
@@ -20,52 +22,103 @@
 <body style="padding: 20px">
 
     <div style="padding: 20px">
-        <ul id="list">
+        <p>Delete <strong>"Orange"</strong> from the following list of <strong>"Fruits"</strong></p>
+        <ul id="list" data-role="listview">
             <li>Apple</li>
             <li>Orange</li>
             <li>Banana</li>
             <li>Mango</li>
         </ul>
-    </div>
 
-    <ul id="list2" data-role="editable-listview" data-list-title="Activities" data-list-empty-title="No Activities" data-button-label="Add">
-        <li>Running</li>
-        <li>Cycling</li>
-        <li>Surfing</li>
-        <li>Jogging</li>
-    </ul>
+        <br>
 
-    <!-- static data-enhance=true -->
-    <div class="ui-editable ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content">
-        <div role="banner" class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ui-btn-icon-left ui-icon-carat-d ui-editable-listview-corner" style="margin-bottom: 0px;">
-            <div class="ui-bar ui-editable-listview-title">
-                <span>Books</span>
+        <p>Add <strong>"Running"</strong> and <strong>"Surfing"</strong> in the following list</p>
+        <ul id="list2" data-role="listview" data-editable="true" data-editable-type="simple" data-list-title="Activities" data-list-empty-title="No Activities" data-button-label="Add">
+            <li>Running</li>
+            <li>Cycling</li>
+            <li>Surfing</li>
+            <li>Jogging</li>
+        </ul>
+
+        <br>
+
+<!--
+        <p>Delete <strong>"Async JavaScript"</strong> from the following list of books</p>
+        <div class="ui-editable ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content">
+            <div role="banner" class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ui-btn-icon-left ui-icon-carat-d ui-editable-listview-corner" style="margin-bottom: 0px;">
+                <div class="ui-bar ui-editable-listview-title">
+                    <span>Books</span>
+                </div>
+                <a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right ui-icon-edit ui-icon-carat-u">Edit </a>
             </div>
-            <a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right ui-icon-edit ui-icon-carat-u">Edit </a>
+            <div class="ui-collapsible-content ui-editable-content ui-body-inherit" aria-hidden="false">
+                <ul data-role="editable-listview" data-enhanced="true" data-list-title="Books" data-list-empty-title="No Books" data-button-label="Add a Book" class="ui-listview ui-corner-all ui-shadow">
+                    <li class="ui-first-child">
+                        <a class="ui-btn">Async Javascript</a>
+                    </li>
+                    <li>
+                        <a class="ui-btn">Eloquent Javascript</a>
+                    </li>
+                    <li class="ui-last-child">
+                        <a class="ui-btn">JavaScript, the Good Parts</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="ui-collapsible-content ui-editable-content ui-body-inherit" aria-hidden="false">
-            <ul data-role="editable-listview" data-enhanced="true" data-list-title="Books" data-list-empty-title="No Books" data-button-label="Add a Book" class="ui-listview ui-corner-all ui-shadow">
-                <li class="ui-first-child">
-                    <a class="ui-btn">Async Javascript</a>
-                </li>
-                <li>
-                    <a class="ui-btn">Eloquent Javascript</a>
-                </li>
-                <li class="ui-last-child">
-                    <a class="ui-btn">JavaScript, the Good Parts</a>
-                </li>
-            </ul>
-        </div>
+-->
+
+        <p>An example of <strong>Complex Editable Listview</strong></p>
+        <form id="hit">
+            <input name="textinput-f" id="textinput-f" placeholder="Name of the Drug" value="" type="text" data-item-name="prescribedMedication" data-item-element="h3">
+            <input name="textinput-g" id="textinput-g" placeholder="Dose" value="" type="text" data-item-name="prescribedMedicationQuantity" data-item-element="p">
+            <input name="textinput-h" id="textinput-h" placeholder="Strength" value="" type="text" data-item-name="prescribedMedicationRoute" data-item-element="p">
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <button class="ui-btn ui-corner-all" data-add-button="true">Add</button>
+                </div>
+                <div class="ui-block-b">
+                    <button class="ui-btn ui-corner-all" data-clear-button="true">Clear</button>
+                </div>
+            </div>
+        </form>
+
+        <ul data-role="listview" data-editable="true" data-editable-form="hit" data-editable-type="complex">
+            <li>
+                <a href="#">
+                    <h3 data-item-name="prescribedMedication">Xanax</h3>
+                    <p data-item-name="prescribedMedicationQuantity">1 mg</p>
+                    <p data-item-name="prescribedMedicationRoute">Injection</p>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <h3>Prozac</h3>
+                    <p>0.5 mg</p>
+                    <p>Pill</p>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <h3>Diazepam</h3>
+                    <p>10mg</p>
+                    <p>Pill</p>
+                </a>
+            </li>
+        </ul>
+
     </div>
 
     <script>
-	    var $list = $( "#list" ).editablelistview({
+	    var $list = $( "#list" ).listview({
+            editable: true,
+//            editableType: "simple",
+//            collapsed: false,
 	        listTitle: "Fruits",
 	        listEmptyTitle: "No Fruits"
         });
 
-        $list.on('editablelistviewlistchange', function(e, data) {
-            console.log(data)
+        $list.on('listviewchange', function(e, data) {
+            console.log('listviewchange fired', data)
         })
 	</script>
 </body>

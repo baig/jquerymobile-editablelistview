@@ -1,28 +1,15 @@
-/*
-.ui-editable {
-    padding: 0 20px;
+/* Collapsible CSS Patch */
+.ui-collapsible-heading.ui-header,
+.ui-collapsible-heading.ui-header > .ui-btn {
+    cursor: pointer;
+    -webkit-border-radius: .3125em;
+    border-radius: .3125em;
 }
-*/
-.ui-editable-listview-corner {
-    -webkit-border-top-right-radius: .3125em /*{global-radii-buttons}*/;
-    -webkit-border-top-left-radius: .3125em /*{global-radii-buttons}*/;
-    border-top-right-radius: .3125em /*{global-radii-buttons}*/;
-    border-top-left-radius: .3125em /*{global-radii-buttons}*/;
-}
+/* --- End of Patch ---- */
 
-.ui-editable-listview-title {
-    padding-left: 3px;
-    padding-top: 5px;
-    padding-bottom: 3px;
-    font-size: 1.1em;
+.ui-collapsible-heading.ui-header > h1,h2,h3,h4,h5,h6 {
     text-align: left;
-}
-.controlgroup-textinput {
-    padding-top:.22em;
-    padding-bottom:.22em;
-}
-.ui-editable-list-empty {
-    padding-bottom: 0;
+    margin-left: 40px;
 }
 .ui-editable-flex {
     width: 100%;
@@ -37,7 +24,6 @@
     border-top-left-radius: .3125em;
     border-bottom-left-radius: .3125em;
 }
-
 .ui-editable-flex-item-right {
     flex: 1 1 auto;
 }
