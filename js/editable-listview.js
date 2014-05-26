@@ -14,6 +14,7 @@
 
     $.widget("mobile.listview", $.mobile.listview, {
 
+        // Declaring some private instace state variables
         _created: false,
         _origDom: null,
         _editMode: false,
@@ -23,6 +24,7 @@
         _evt: null,
         _clickHandler: null,
 
+        // The options hash
         options: {
             editable: false,
             editableType: 'simple',
@@ -39,6 +41,9 @@
 
             expandedIcon: "carat-d",
             collapsedIcon: "carat-r",
+            buttonTheme: 'a',
+            buttonCorner: true,
+            buttonShadow: true,
         },
 
         _beforeListviewRefresh: function () {
@@ -47,8 +52,6 @@
                 $origDom = this._origDom,
                 dataItemName = this._dataItemName,
                 counter = this._counter,
-//                created = this._created,
-//                editMode = this._editMode,
                 ui, $orig, $origLis,
                 evt = this._evt,
                 $lis = $el.find("li"),
@@ -63,8 +66,10 @@
                     counter++;
                 });
 
+                // Incrementing the counter that is used to assign unique value to `data-item` attribute on each list item
                 this._counter = counter;
 
+                // Removing all css classes to get the original DOM structure
                 $origDom.removeClass("ui-listview ui-shadow ui-corner-all ui-listview-inset ui-group-theme-" + this.options.theme)
                     .find("li")
                     .removeClass("ui-li-static ui-body-inherit ui-first-child ui-last-child")
@@ -73,12 +78,14 @@
                     .removeClass("ui-link")
                     .end();
 
+                // Caching the original DOM to the widget instance
                 this._origDom = $origDom;
             }
 
+            // ## Creation
             if (!this._created) {
+                // Wrapping the list structure inside Collapsible
                 var wrapper = this._wrapCollapsible();
-//                    ui = {};
 
                 ui = {
                     wrapper: wrapper,
@@ -134,12 +141,15 @@
                 $lis.remove();
                 $el.append($orig.find('li'));
 
-                evt.click[0].handler = $.noop; // disabling header click event
+                // Disabling the click event on header when list is in `Edit` mode
+                evt.click[0].handler = $.noop;
             } else {
-                evt.click[0].handler = this._clickHandler;  // enabling header click event
+                // Re-enabling the click event handler when the list is in `View` mode
+                evt.click[0].handler = this._clickHandler;
                 $lis.remove().end().append($origDom.clone().find('li'));
             }
 
+            // Updating the header title, header button label and icon based on the list contents and its state (`Edit` or `View`)
             this._updateHeader();
         },
 
@@ -152,13 +162,8 @@
                 opts = this.options,
                 isListEmpty = this._isListEmpty();
 
-            if (opts.editable) {
-                $el.wrap('<div data-role="collapsible"></div>');
-                $el.parent().prepend('<div data-role="header">' +
-                    '<h1>List Items</h1>' +
-                    '<button class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-edit">Edit</button>' +
-                    '</div>');
-            }
+            $el.wrap('<div data-role="collapsible"></div>');
+            $el.parent().prepend(this._$markup.header(opts));
 
             $el.parents($.mobile['collapsible'].initSelector)
                 .not($.mobile.page.prototype.keepNativeSelector())['collapsible']({
@@ -401,7 +406,18 @@
                 "</div>" +
                 "<a id='item-add' style='height: auto' class='ui-editable-flex-item-right ui-editable-border-right ui-btn ui-shadow ui-btn-icon-notext ui-icon-plus'>Add</a>" +
                 "</div>" +
-                "</li>"
+                "</li>",
+
+            header: function (opts) {
+                return "<div data-role='header'>" +
+                    "<h1>List Items</h1>" +
+                    "<button class='ui-btn ui-mini ui-btn-inline ui-btn-right ui-btn-icon-right ui-icon-edit " +
+                    "ui-btn-" + opts.buttonTheme + " " +
+                    (opts.buttonCorner ? "ui-corner-all " : "") +
+                    (opts.buttonShadow ? "ui-shadow " : "") +
+                    "'>Edit</button>" +
+                    "</div>";
+            }
         },
 
         // Public API
@@ -455,11 +471,11 @@
             var elem = this.element,
                 ui = {
                     accordion: elem
-                    .closest(":jqmData(role='collapsible-set')," +
-                             ":jqmData(role='collapsibleset')" +
-                             ($.mobile.collapsibleset ? ", :mobile-collapsibleset" :
-                              ""))
-                    .addClass("ui-collapsible-set")
+                        .closest(":jqmData(role='collapsible-set')," +
+                            ":jqmData(role='collapsibleset')" +
+                            ($.mobile.collapsibleset ? ", :mobile-collapsibleset" :
+                                ""))
+                        .addClass("ui-collapsible-set")
                 };
 
             this._ui = ui;
@@ -504,16 +520,16 @@
                 contentThemeClass = this._themeClassFromOption("ui-body-", opts.contentTheme);
 
             elem.addClass("ui-collapsible " +
-                          (opts.inset ? "ui-collapsible-inset " : "") +
-                          (opts.inset && opts.corners ? "ui-corner-all " : "") +
-                          (contentThemeClass ? "ui-collapsible-themed-content " : ""));
+                (opts.inset ? "ui-collapsible-inset " : "") +
+                (opts.inset && opts.corners ? "ui-corner-all " : "") +
+                (contentThemeClass ? "ui-collapsible-themed-content " : ""));
             ui.originalHeading = elem.children(this.options.heading).first(),
-                ui.content = elem
-            .wrapInner("<div " +
-                       "class='ui-collapsible-content " +
-                       contentThemeClass + "'></div>")
-            .children(".ui-collapsible-content"),
-                ui.heading = ui.originalHeading;
+            ui.content = elem
+                .wrapInner("<div " +
+                    "class='ui-collapsible-content " +
+                    contentThemeClass + "'></div>")
+                .children(".ui-collapsible-content"),
+            ui.heading = ui.originalHeading;
 
             // Replace collapsibleHeading if it's a legend
             if (ui.heading.is("legend")) {
@@ -523,23 +539,23 @@
             }
 
             iconclass = (opts.collapsed ? (opts.collapsedIcon ? "ui-icon-" + opts.collapsedIcon : "") :
-                         (opts.expandedIcon ? "ui-icon-" + opts.expandedIcon : ""));
+                (opts.expandedIcon ? "ui-icon-" + opts.expandedIcon : ""));
 
             ui.status = $("<span class='ui-collapsible-heading-status'></span>");
             ui.anchor = ui.heading
-            .detach()
+                .detach()
             //modify markup & attributes
             .addClass("ui-collapsible-heading")
-            .append(ui.status)
-            .wrapInner(ui.heading.is(":jqmData(role='header')") ? "" : "<a href='#'></a>")
-            .find(ui.heading.is(":jqmData(role='header')") ? "h1,h2,h3,h4,h5,h6" : "a")
-            .first()
-            .addClass("ui-collapsible-heading-toggle" +
-                      (ui.heading.is(":jqmData(role='header')") ? "" : " ui-btn " +
-                       (iconclass ? iconclass + " " : "") +
-                       (iconclass ? iconposClass(opts.iconpos) + " " : "") +
-                       this._themeClassFromOption("ui-btn-", opts.theme) + " " +
-                       (opts.mini ? "ui-mini " : "")));
+                .append(ui.status)
+                .wrapInner(ui.heading.is(":jqmData(role='header')") ? "" : "<a href='#'></a>")
+                .find(ui.heading.is(":jqmData(role='header')") ? "h1,h2,h3,h4,h5,h6" : "a")
+                .first()
+                .addClass("ui-collapsible-heading-toggle" +
+                    (ui.heading.is(":jqmData(role='header')") ? "" : " ui-btn " +
+                        (iconclass ? iconclass + " " : "") +
+                        (iconclass ? iconposClass(opts.iconpos) + " " : "") +
+                        this._themeClassFromOption("ui-btn-", opts.theme) + " " +
+                        (opts.mini ? "ui-mini " : "")));
 
             //drop heading in before content
             ui.heading.insertBefore(ui.content);
@@ -555,19 +571,19 @@
 
             ui.status.text(isCollapse ? opts.expandCueText : opts.collapseCueText);
             ui.heading
-            .toggleClass("ui-collapsible-heading-collapsed", isCollapse)
-            .find(".ui-collapsible-heading-toggle")
-            .toggleClass("ui-icon-" + opts.expandedIcon, !isCollapse)
+                .toggleClass("ui-collapsible-heading-collapsed", isCollapse)
+                .find(".ui-collapsible-heading-toggle")
+                .toggleClass("ui-icon-" + opts.expandedIcon, !isCollapse)
 
             // logic or cause same icon for expanded/collapsed state would remove the ui-icon-class
             .toggleClass("ui-icon-" + opts.collapsedIcon, (isCollapse || opts.expandedIcon === opts.collapsedIcon))
-            .removeClass($.mobile.activeBtnClass);
+                .removeClass($.mobile.activeBtnClass);
 
             this.element.toggleClass("ui-collapsible-collapsed", isCollapse);
             ui.content
-            .toggleClass("ui-collapsible-content-collapsed", isCollapse)
-            .attr("aria-hidden", isCollapse)
-            .trigger("updatelayout");
+                .toggleClass("ui-collapsible-content-collapsed", isCollapse)
+                .attr("aria-hidden", isCollapse)
+                .trigger("updatelayout");
             this.options.collapsed = isCollapse;
             this._trigger(isCollapse ? "collapse" : "expand");
         },
@@ -576,4 +592,3 @@
 
 })(jQuery);
 /* --- End of Patch --- */
-
