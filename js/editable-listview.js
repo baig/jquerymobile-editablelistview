@@ -39,8 +39,6 @@
             editIcon: "edit",
             doneIcon: "check",
 
-            expandedIcon: "carat-d",
-            collapsedIcon: "carat-r",
             buttonTheme: 'a',
             buttonCorner: true,
             buttonShadow: true,
@@ -316,6 +314,7 @@
                         elem = $input.data("item-element"),
                         value = $input.val();
 
+                    console.log($input)
                     if (!value) {
                         proceed = false;
                     }
