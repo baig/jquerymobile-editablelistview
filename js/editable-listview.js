@@ -95,7 +95,7 @@
                 };
 
                 if (this.options.editableType === 'complex') {
-                    ui.form = wrapper.closest(':jqmData(role="page")').find('#' + this.options.editableForm).detach();
+//                    ui.form = wrapper.closest(':jqmData(role="page")').find('#' + this.options.editableForm).detach();
                     var inputs = ui.content.find('li:first-child').find('[data-item-name]');
 
                     var itemNames = this._itemNames;
@@ -155,6 +155,19 @@
 
         _afterListviewRefresh: function () {
             this._attachDetachEventHandlers();
+        },
+
+        // Detaching form from the DOM if the listview is initialized programmatically
+        _init: function() {
+            var $el = this.element,
+                opts = this.options,
+                ui = this._ui;
+
+                if (this.options.editableType === 'complex') {
+                    ui.form = $el.closest(':jqmData(role="page")')
+                                 .find('#' + opts.editableForm)
+                                 .detach();
+                    }
         },
 
         _wrapCollapsible: function () {
@@ -427,7 +440,8 @@
         },
 
         items: function () {
-            var arr = [];
+            var arr = [],
+                itemNames = this._itemNames;
 
             if (this.options.editableType === 'simple') {
                 this.element.find('li').each(function (idx, el) {
@@ -439,7 +453,7 @@
                 this.element.find('a').each(function (idx, el) {
                     var obj = {};
                     $(el).children().each(function (idx, val) {
-                        obj[this._itemNames[idx]] = $(val).text();
+                        obj[itemNames[idx]] = $(val).text();
                     });
                     arr.push(obj);
                 });

@@ -82,7 +82,7 @@
             </div>
         </form>
 
-        <ul data-role="listview" data-editable="true" data-editable-form="hit" data-editable-type="complex">
+        <ul id="list3" data-role="listview" data-editable="true" data-editable-form="hit" data-editable-type="complex">
             <li>
                 <a href="#">
                     <h3 data-item-name="prescribedMedication">Xanax</h3>
@@ -117,7 +117,10 @@
 	        listEmptyTitle: "No Fruits"
         });
 
-        $list.on('listviewchange', function(e, data) {
+//        $("#list3").listview().listview("disable")
+//        console.log($("#list3").listview().listview("dis")[0])
+
+        $("#list3").on('listviewchange', function(e, data) {
             console.log('listviewchange fired', data)
         })
 	</script>
