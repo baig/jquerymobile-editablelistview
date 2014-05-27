@@ -1,363 +1,384 @@
 /*!
-* jQuery Mobile Editable Listview Plugin
-* https://github.com/baig/jquerymobile-editablelistview
-*
-* Copyright 2014 (c) Wasif Hasan Baig
-*
-* Released under the MIT license
-* https://github.com/baig/jquerymobile-editablelistview/blob/master/LICENSE.txt
-*/
+ * jQuery Mobile Editable Listview Plugin
+ * https://github.com/baig/jquerymobile-editablelistview
+ *
+ * Copyright 2014 (c) Wasif Hasan Baig
+ *
+ * Released under the MIT license
+ * https://github.com/baig/jquerymobile-editablelistview/blob/master/LICENSE.txt
+ */
 
-(function ($, undefined ) {
+(function ($, undefined) {
 
-    // Whether the widget is already present on the page or not
-    var isCreated = false;
-    var inEditState = false;
-    var liInsertion = true;
+    "use strict";
 
-    // Plugin Definition
-    $.widget("mobile.editablelistview", $.extend( {
+    $.widget("mobile.listview", $.mobile.listview, {
 
-        initSelector: ":jqmData(role='editablelistview'), :jqmData(role='editable-listview')",
+        // Declaring some private instace state variables
+        _created: false,
+        _origDom: null,
+        _editMode: false,
+        _counter: 1,
+        _dataItemName: "item",
+        _itemNames: [],
+        _evt: null,
+        _clickHandler: null,
 
+        // The options hash
         options: {
+            editable: false,
+            editableType: 'simple',
+            editableForm: '',
+
             listTitle: "View list items",
             listEmptyTitle: "No items to view",
-            buttonEditLabel: "Edit",
-            buttonAddLabel: "Add",
-            buttonDoneLabel: "Done",
-            buttonAddIcon: "plus",
-            buttonEditIcon: "edit",
-            buttonDoneIcon: "check",
-            collapsed: true,
-            enhanced: false,
-            collapsedIcon: "carat-r",
-            expandedIcon: "carat-d",
+            editLabel: "Edit",
+            addLabel: "Add",
+            doneLabel: "Done",
+            addIcon: "plus",
+            editIcon: "edit",
+            doneIcon: "check",
 
-//            expandCueText: null,
-//            collapseCueText: null,
-//            iconpos: null,
-//            theme: null,
-//            contentTheme: null,
-//            inset: null,
-//            corners: null,
-//            mini: null
+            buttonTheme: 'a',
+            buttonCorner: true,
+            buttonShadow: true,
         },
 
-        _create: function() {
-            var $elem = this.element,   // jQuery Object
-                opts = this.options,    // POJO
-                ui = {},
-                isEnhanced = opts.enhanced; // To be jQuery Object; null initially
-
-            $.extend( this, {
-                _ui: null,
-                _initialRefresh: true
-            });
-
-            if ( isEnhanced ) {
-                this._ui = {
-                    wrapper: $elem.parent().parent(),
-                    header: $elem.parent().prev(),
-                    button: $elem.parent().prev().children('a.ui-btn'),
-                    content: $elem,
-                 }
-            } else {
-                this._ui = this._enhance();
-            }
-
-            this._handleExpandCollapse( opts.collapsed );
-
-            this._on( this._ui.header, {
-                "tap": "_onHeaderTapped"
-            });
-
-            this._on( this._ui.button, {
-                "tap": "_onEditButtonTapped",
-            });
-
-            this.refresh();
-        },
-
-        // Add Wrapper DOM and all the relevant Classes returning ui hash containing references
-        // to elements that we need later for behvaior manipulation
-        _enhance: function() {
+        _beforeListviewRefresh: function () {
             var $el = this.element,
                 opts = this.options,
-                $markup = this._$markup,
-                ui = {};
+                $origDom = this._origDom,
+                dataItemName = this._dataItemName,
+                counter = this._counter,
+                ui, $orig, $origLis,
+                evt = this._evt,
+                $lis = $el.find("li"),
+                $markup = this._$markup;
 
-            this._enhanceList($el);
+            // saving original DOM structure
+            if ($origDom === null) {
+                $origDom = $el.clone();
+                // Assign each list item a unique number value
+                $.each($origDom.children('li'), function (idx, val) {
+                    $(val).attr("data-" + dataItemName, counter);
+                    counter++;
+                });
 
-            ui.wrapper = $el.wrap( '<div class="ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content"></div>' )
+                // Incrementing the counter that is used to assign unique value to `data-item` attribute on each list item
+                this._counter = counter;
 
-            ui.header = $markup.header(this, opts);
+                // Removing all css classes to get the original DOM structure
+                $origDom.removeClass("ui-listview ui-shadow ui-corner-all ui-listview-inset ui-group-theme-" + this.options.theme)
+                    .find("li")
+                    .removeClass("ui-li-static ui-body-inherit ui-first-child ui-last-child")
+                    .end()
+                    .find("a")
+                    .removeClass("ui-link")
+                    .end();
 
-            ui.content = $el.wrap( "<div class='ui-collapsible-content ui-body-inherit'></div>" );
-
-            ui.button = ui.header.find('a')
-
-            //drop heading in before content
-            ui.header.insertBefore( ui.content.parent() );
-
-            return ui;
-        },
-
-
-        // --(start)-- Event Handlers --
-        _onEditButtonTapped: function(e) {
-            // Toggling Edit State
-            inEditState = !inEditState;
-
-            // Keeps the list expanded when you exit Edit Mode
-            inEditState
-            ? this._handleExpandCollapse( false )
-            : this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
-
-            this._updateHeader()
-            this._insertTextInputBox()
-            this._toggleSplitIcon()
-            this._attachDetachEventHandlers()
-
-            if (!inEditState) {
-                this._triggerListChange(e);
+                // Caching the original DOM to the widget instance
+                this._origDom = $origDom;
             }
 
+            // ## Creation
+            if (!this._created) {
+                // Wrapping the list structure inside Collapsible
+                var wrapper = this._wrapCollapsible();
+
+                ui = {
+                    wrapper: wrapper,
+                    header: wrapper.find('h1'),
+                    button: wrapper.find('h1 + a, h1 + button'),
+                    content: wrapper.find('div.ui-collapsible-content'),
+                };
+
+                if (this.options.editableType === 'complex') {
+//                    ui.form = wrapper.closest(':jqmData(role="page")').find('#' + this.options.editableForm).detach();
+                    var inputs = ui.content.find('li:first-child').find('[data-item-name]');
+
+                    var itemNames = this._itemNames;
+                    $.each(inputs, function (idx, val) {
+                        itemNames.push($(val).data("item-name"));
+                    });
+                }
+
+                $.extend(this, {
+                    _ui: ui
+                });
+
+                ui.header.addClass('ui-btn-icon-left');
+
+                evt = this._evt = $._data(ui.header.parent()[0], "events");
+                this._clickHandler = evt.click[0].handler;
+
+                this._attachEditEventButtons();
+
+                this._created = true;
+            }
+
+            if (this._editMode) {
+                ui = this._ui;
+                $orig = $origDom.clone();
+                $origLis = $orig.find('li');
+
+                if ($orig.find('a').length === 0) {
+                    $origLis.wrapInner('<a></a>').append('<a class="ui-editable-btn-del">Delete</a>');
+                } else {
+                    $origLis.append('<a class="ui-editable-btn-del">Delete</a>');
+                }
+
+                this.option("splitIcon", "minus");
+
+                if (opts.editableType === 'complex') {
+                    $orig.prepend($('<li>' + ui.form[0].innerHTML + '</li>'));
+                }
+                if (opts.editableType === 'simple') {
+                    $orig.prepend($markup.listTextInput);
+                }
+
+                $lis.remove();
+                $el.append($orig.find('li'));
+
+                // Disabling the click event on header when list is in `Edit` mode
+                evt.click[0].handler = $.noop;
+            } else {
+                // Re-enabling the click event handler when the list is in `View` mode
+                evt.click[0].handler = this._clickHandler;
+                $lis.remove().end().append($origDom.clone().find('li'));
+            }
+
+            // Updating the header title, header button label and icon based on the list contents and its state (`Edit` or `View`)
+            this._updateHeader();
         },
 
+        _afterListviewRefresh: function () {
+            this._attachDetachEventHandlers();
+        },
+
+        // Detaching form from the DOM if the listview is initialized programmatically
+        _init: function() {
+            var $el = this.element,
+                opts = this.options,
+                ui = this._ui;
+
+                if (this.options.editableType === 'complex') {
+                    ui.form = $el.closest(':jqmData(role="page")')
+                                 .find('#' + opts.editableForm)
+                                 .detach();
+                    }
+        },
+
+        _wrapCollapsible: function () {
+            var $el = this.element,
+                opts = this.options,
+                isListEmpty = this._isListEmpty();
+
+            $el.wrap('<div data-role="collapsible"></div>');
+            $el.parent().prepend(this._$markup.header(opts));
+
+            $el.parents($.mobile['collapsible'].initSelector)
+                .not($.mobile.page.prototype.keepNativeSelector())['collapsible']({
+                    expandedIcon: this.options.expandedIcon,
+                    collapsedIcon: this.options.collapsedIcon
+                });
+
+            return $el.parent().parent();
+        },
+
+        _attachEditEventButtons: function () {
+            if (this._isListEmpty()) {
+                this._ui.header.off("click");
+            }
+
+            this._on(this.element.parent().parent().find('.ui-collapsible-heading a, .ui-collapsible-heading button'), {
+                "click": "_onEditButtonTapped"
+            });
+        },
+
+        // --(start)-- Event Handlers --
+
+        _onEditButtonTapped: function (e) {
+            var editMode = this._editMode = !this._editMode,
+                $collapsible = this.element.parents(":jqmData(role='collapsible')");
+
+            editMode ? $collapsible.collapsible("expand") : $collapsible.collapsible("collapse");
+
+            this.refresh();
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (!editMode) {
+                this._triggerListChange(e);
+            }
+        },
+
+        _updateHeader: function () {
+            var ui = this._ui,
+                opts = this.options,
+                isListEmpty = this._isListEmpty();
+
+            // Update List Header Title
+            ui.header.text(isListEmpty ? opts.listEmptyTitle : opts.listTitle);
+
+            // Change "Edit" button state, icon and label
+            ui.button.removeClass('ui-icon-minus ui-icon-' + opts.doneIcon + ' ui-icon-' + opts.addIcon + ' ui-icon-' + opts.editIcon)
+                .addClass('ui-icon-' + (this._editMode ? opts.doneIcon : isListEmpty ? opts.addIcon : opts.editIcon))
+                .text(this._editMode ? opts.doneLabel : isListEmpty ? opts.addLabel : opts.editLabel);
+
+        },
+
+        // _triggerListChange
         _triggerListChange: function (e) {
             var items = this.items(),
                 length = this.length();
-
-            this._trigger('listchange', e, {
+            this._trigger('change', e, {
                 items: items,
                 length: length,
             });
         },
 
-        // TODO
-        _trigerListAdd: function() {},
-
-        // TODO
-        _trigerListRemove: function() {},
-
-        _onHeaderTapped: function(e) {
-            // returns immediately if list is empty
-            if (this._isListEmpty()) return;
-
-            inEditState
-            ? this._handleExpandCollapse( false )
-            : this._handleExpandCollapse( !this._ui.header.hasClass( "ui-collapsible-heading-collapsed" ) )
-
-            // QUICK FIX: fixed ul margin after dynamic li insertion
-            !liInsertion
-            ? inEditState
-              ? this._ui.content.filter('ul').css("margin", "-0.5em -1em")
-              : this._ui.content.filter('ul').css("margin", "-0.6em -1em")
-            : this._ui.content.filter('ul').css("margin", "-0.5em -1em")
-        },
         // --(end)-- Event Handlers --
 
         // --(start)-- Event Handler Helper Functions --
-        _attachDetachEventHandlers: function() {
-            this._enableInsertListItemEvent()
-            this._enableListItemDeleteEvent()
 
-            this._enableListItemEditing() // v0.2
+        _attachDetachEventHandlers: function () {
+            this._enableInsertListItemEvent();
+            this._enableListItemDeleteEvent();
+
+            //            this._enableListItemEditing() // v0.2
         },
 
-        _enableInsertListItemEvent: function() {
-            var $addBtn = this._ui.content.find('li.ui-editable-temp a#item-add'),
-                $textField = this._ui.content.find('input[type=text]');
 
-            if ( inEditState ) {
-                this._on( $addBtn, { "tap": "_insertListItem" })
-                this._on( $textField, { "keyup": "_insertListItem" })
-            } else {
-                this._off( $addBtn, "tap")
-                this._off( $textField, "keyup")
+        _enableInsertListItemEvent: function () {
+            var $addBtn, $clearBtn, $textField,
+                opts = this.options,
+                editableType = opts.editableType,
+                $content = this._ui.content;
+
+            if (this._editMode) {
+                $addBtn = (editableType === 'simple') ? $content.find('li.ui-editable-temp a#item-add') : $content.find("li:first-child [data-add-button='true']"),
+                $clearBtn = (editableType === 'complex') ? $content.find("li:first-child [data-clear-button='true']") : null,
+                $textField = (editableType === 'simple') ? $content.find('input[type=text]') : null;
+
+                this._on($addBtn, {
+                    "tap": "_insertListItem"
+                });
+
+                if ($clearBtn !== null) {
+                    this._on($clearBtn, {
+                        "tap": "_clearTextFields"
+                    });
+                }
+
+                if ($textField !== null) {
+                    this._on($textField, {
+                        "keyup": "_insertListItem"
+                    });
+                }
             }
         },
 
-        _enableListItemDeleteEvent: function() {
-            inEditState
-            ? this._on( this._ui.content.find('li.ui-li-has-alt a.ui-editable-temp'), { "tap": "_deleteListItem" })
-            : this._off( this._ui.content.find('li.ui-li-has-alt a.ui-editable-temp'), "tap")
+        _clearTextFields: function (e) {
+            var inputs = $(e.target).parents('li').find('[data-item-name]');
+
+            $.each(inputs, function (idx, val) {
+                $(val).val("");
+            });
         },
 
-        // updates header label and show/hide icon based on whether list is empty or not
-        _updateHeader: function() {
-            var opts = this.options,
-                isListEmpty = this._isListEmpty(),
-                isCollapsed = this.options.collapsed;
-
-            this._ui.header.find('span').text( isListEmpty? opts.listEmptyTitle : opts.listTitle )
-
-            // Change "Edit" button state, icon and label
-            this._ui.button.removeClass('ui-icon-' + opts.buttonDoneIcon + ' ui-icon-' + opts.buttonAddIcon + ' ui-icon-' + opts.buttonEditIcon)
-                           .addClass( inEditState
-                                      ? 'ui-icon-' + opts.buttonDoneIcon
-                                      : isListEmpty
-                                        ? 'ui-icon-' + opts.buttonAddIcon
-                                        : 'ui-icon-' + opts.buttonEditIcon )
-                           .text( inEditState
-                                  ? opts.buttonDoneLabel
-                                  : isListEmpty
-                                    ? opts.buttonAddLabel
-                                    : opts.buttonEditLabel )
-
-            this._ui.header.removeClass('ui-btn-icon-left ui-icon-' + opts.expandedIcon + ' ui-icon-' + opts.expandedIcon)
-                           .addClass( inEditState
-                                      ? isListEmpty
-                                        ? ''
-                                        : 'ui-btn-icon-left ui-icon-' + opts.expandedIcon
-                                      : isListEmpty
-                                        ? ''
-                                        : isCollapsed
-                                          ? 'ui-btn-icon-left ui-icon-' + opts.collapsedIcon
-                                          : 'ui-btn-icon-left ui-icon-' + opts.expandedIcon )
-
+        _enableListItemDeleteEvent: function () {
+            this._editMode ? this._on(this._ui.content.find('a.ui-editable-btn-del'), {
+                "click": "_deleteListItem"
+            }) : this._off(this._ui.content.find('a.ui-editable-btn-del'), "click");
         },
+
 
         // TODO v0.2
-        _enableListItemEditing: function() {
-            inEditState
-            ? this._on( this._ui.content.find('li a.ui-btn'), { "tap": "_editListItem" })
-            : this._off( this._ui.content.find('li a.ui-btn'), "tap")
-        },
+        /*_enableListItemEditing: function() {},*/
 
-        // TODO v0.2
-        _editListItem: function(e) {},
-
-        _insertListItem: function(e) {
+        _insertListItem: function (e) {
             e.preventDefault();
+
             // returning immediately if keyup keycode does not match keyCode.ENTER i.e. 13
-            if (e.type !== "tap"  && e.keyCode !== $.mobile.keyCode.ENTER)
-                return;
+            if (e.type !== "tap" && e.keyCode !== $.mobile.keyCode.ENTER) return;
 
-            var $target = $(e.target),
-                $input = (e.type === "keyup")
-                         ? $target
-                         : $target.prev().find('input'),
-                inputTextString = $input.val();
+            if (this.options.editableType === 'complex') {
+                var liTemplate = '',
+                    proceed = true,
+                    inputs = $(e.target).parents('li').find('[data-item-name]');
 
-            // Inserting list item only if input string is not empty
-            if (!!inputTextString) {
-                var $li = this._attachDeleteListItemEvent(this._enhanceListItem('<li>' + inputTextString + '</li>'))
-                $input.val("")  // Clearing the input text field
-                $target.parents('ul')
-                           .children('li')
-                           .first()
-                           .css( "border-bottom-width", "0") // QUICK FIX for li.ui-editable-temp: setting List Text Input bottom border width to zero
-                           .after($li)
 
+                $.each(inputs, function (idx, val) {
+                    var $input = $(val),
+                        elem = $input.data("item-element"),
+                        value = $input.val();
+
+                    console.log($input)
+                    if (!value) {
+                        proceed = false;
+                    }
+
+                    liTemplate += "<" + elem + ">" + value + "</" + elem + ">";
+                });
+
+                // Not proceeding to add if any input value is empty
+                if (!proceed) return;
+
+                liTemplate = $("<li><a>" + liTemplate + "</a></li>");
+
+                liTemplate.attr("data-" + this._dataItemName, this._counter);
+                this._counter++;
+
+                this._origDom.prepend(liTemplate);
                 this.refresh();
 
-                // QUICK FIX
-                liInsertion = false;
+            }
+
+            if (this.options.editableType === 'simple') {
+
+                var $target = $(e.target),
+                    $input = (e.type === "keyup") ? $target : $target.prev().find('input'),
+                    inputTextString = $input.val();
+
+                // Inserting list item only if input string is not empty
+                if (!!inputTextString) {
+                    $input.val(""); // Clearing the input text field
+
+                    var liTemplate = this._isListEmpty() ? $('<li></li>') // simple static list template is list is empty
+                        : this._origDom.find('li').first().clone(); //
+
+                    liTemplate.attr("data-" + this._dataItemName, this._counter);
+                    this._counter++;
+
+                    if (liTemplate.children().length === 0) {
+                        liTemplate.text(inputTextString);
+                    } else {
+                        liTemplate.children('a').text(inputTextString);
+                    }
+
+                    this._origDom.prepend(liTemplate);
+                    this.refresh();
+                }
             }
         },
 
-        _deleteListItem: function(e) {
-            $(e.currentTarget).parent().remove();
+        _deleteListItem: function (e) {
+            var $parentTarget = $(e.currentTarget).parent(),
+                itemNum = $parentTarget.data(this._dataItemName);
+
+            this._origDom.find("li[data-" + this._dataItemName + "=\"" + itemNum + "\"]")
+                .remove();
+
+            $parentTarget.remove();
             this._updateHeader();
             e.preventDefault();
             e.stopPropagation();
         },
 
-        _insertTextInputBox: function() {
-            var $markup = this._$markup;
-
-            // QUICK CSS FIX
-            var borderWidth = liInsertion ? "0 0 1px 0" : "0"
-
-            inEditState
-            ? this._ui.content  // true
-                      .prepend( $markup.listTextInput().css( /* QUICK FIX */ "border-width", borderWidth) )   // true
-            : this._ui.content  // false
-                      .find( 'li.ui-editable-temp' )
-                      .remove()
-        },
-
-        _toggleSplitIcon: function() {
-            inEditState
-            ? this._ui.content.find('li')   // true
-                              .next()
-                              .addClass( 'ui-li-has-alt' )
-                              .append( '<a class="ui-editable-temp ui-btn ui-btn-icon-notext ui-icon-minus ui-btn-a"></a>' )
-            : this._ui.content.find('li')   // false
-                              .removeClass( 'ui-li-has-alt' )
-                              .find( 'a.ui-editable-temp' )
-                              .remove()
-        },
-
         // --(end)-- Event Handler Helper Functions --
 
-        _isListEmpty: function() {
-              return (this.element.find('li').not('li.ui-editable-temp').length === 0) ? true : false
-        },
-
-        _addToolbarButton: function($el) {
-            return $('<button class="ui-btn-right ui-btn ui-btn-b ui-btn-inline ui-mini ui-corner-all ui-btn-icon-right ui-icon-check">' + this.options.buttonLabel + '</button>' + $el[0].outerHTML );
-        },
-
-        _enhanceList: function($el) {
-            var $ul = $el.filter('ul'),
-                $li = $ul.children();
-
-            $ul.addClass( 'ui-listview ui-corner-all ui-shadow' )
-            $li.each( function() {
-                !$(this).children().length ? $(this).wrapInner( '<a class="ui-btn"></a>' ) : 0;
-            })
-        },
-
-        _enhanceListItem: function( li ) {
-            var $li = $( li );
-
-            // Building DOM
-            $li.wrapInner( '<a class="ui-btn"></a>' );
-            $li.first().addClass( 'ui-li-has-alt' )
-            $li.append('<a class="ui-editable-temp ui-btn ui-btn-icon-notext ui-icon-minus ui-btn-a"></a>')
-
-            return $li;
-        },
-
-        _attachDeleteListItemEvent: function( $li ) {
-            this._on( $li.find('a.ui-editable-temp'), { "tap": "_deleteListItem" });
-            return $li;
-        },
-
-        _handleExpandCollapse: function( isCollapsed ) {
-            var opts = this.options,
-                ui = this._ui;
-
-            ui.header
-              .toggleClass( "ui-collapsible-heading-collapsed ui-corner-all", isCollapsed )
-              .toggleClass( "ui-editable-listview-corner", !isCollapsed )
-              .css( "margin-bottom", "0" )
-              .toggleClass( "ui-icon-" + opts.expandedIcon, !isCollapsed )
-              .toggleClass( "ui-icon-" + opts.collapsedIcon, isCollapsed )
-
-            this.element.toggleClass( "ui-collapsible-collapsed", isCollapsed );
-
-            ui.content
-              .parent()
-              .toggleClass( "ui-collapsible-content-collapsed", isCollapsed )
-              .attr( "aria-hidden", isCollapsed )
-              .trigger( "updatelayout" );
-
-            this.options.collapsed = isCollapsed;
-            this._trigger( isCollapsed ? "collapse" : "expand" );
-        },
-
-        expand: function() {
-            this._handleExpandCollapse( false );
-        },
-
-        collapse: function() {
-            this._handleExpandCollapse( true );
-        },
-
+        /*
         _destroy: function() {
             var ui = this._ui,
                 opts = this.options,
@@ -382,97 +403,205 @@
             })
 
             return ui
-        },
+        },*/
 
-        // Public API
-
-        length: function() {
-            return this.element.find('li').length
-        },
-
-        items: function() {
-            var arr = [];
-            this.element.find('li').each( function(idx, el) {
-                arr.push(el.textContent)
-            })
-            return arr
-        },
-
-        widget: function() {
-            return this._ui.wrapper;
-        },
-
-        refresh: function() {
-            var $el = this._ui.content,
-                opts = this.options,
-                create = this._initialRefresh,
-                $li = $el.find( "li" );
-
-            this._updateHeader();
-            this._enhanceList($el)
-            this._addFirstLastClasses( $li, ( opts.excludeInvisible ? this._getVisibles($li ,create) : $li ), create );
-            this._initialRefresh = false;
+        _isListEmpty: function () {
+            return (this.element.find('li').not('li.ui-editable-temp').length === 0) ? true : false;
         },
 
         _$markup: {
 
-            listTextInput: function() {
-                return $(
-                    '<li class="ui-editable-temp ui-btn" style="padding: 0.3em 0.8em;">' +
-                        '<div class="ui-editable-flex">' +
-                            '<div style="background-color: white; padding: 0;" class="ui-editable-flex-item-left ui-editable-border-left ui-input-text ui-btn ui-shadow-inset">' +
-                                '<input type="text">' +
-                            '</div>' +
-                            '<a id="item-add" style="height: auto" class="ui-editable-flex-item-right ui-editable-border-right ui-btn ui-shadow ui-btn-icon-notext ui-icon-plus">Add</a>' +
-                        '</div>' +
-                    '</li>'
-                );
-            },
+            listTextInput: "<li class='ui-editable-temp ui-btn' style='padding: 0.3em 0.8em;'>" +
+                "<div class='ui-editable-flex'>" +
+                "<div style='background-color: white; padding: 0;' class='ui-editable-flex-item-left ui-editable-border-left ui-input-text ui-btn ui-shadow-inset'>" +
+                "<input type='text'>" +
+                "</div>" +
+                "<a id='item-add' style='height: auto' class='ui-editable-flex-item-right ui-editable-border-right ui-btn ui-shadow ui-btn-icon-notext ui-icon-plus'>Add</a>" +
+                "</div>" +
+                "</li>",
 
-            header: function(context, opts) {
-                var listTitle = ( context._isListEmpty() ? opts.listEmptyTitle : opts.listTitle );
-                var buttonLabel = ( context._isListEmpty() ? opts.buttonAddLabel : opts.buttonEditLabel );
-                var buttonIcon = ( context._isListEmpty() ? opts.buttonAddIcon : opts.buttonEditIcon );;
-                var listIcon = (function(ctx) {
-                    if (ctx._isListEmpty()) {
-                        return '';
-                    } else {
-                        return 'ui-icon-' + opts.collapsedIcon;
-                    }
-                } (context) );
+            header: function (opts) {
+                return "<div data-role='header'>" +
+                    "<h1>List Items</h1>" +
+                    "<button class='ui-btn ui-mini ui-btn-inline ui-btn-right ui-btn-icon-right ui-icon-edit " +
+                    "ui-btn-" + opts.buttonTheme + " " +
+                    (opts.buttonCorner ? "ui-corner-all " : "") +
+                    (opts.buttonShadow ? "ui-shadow " : "") +
+                    "'>Edit</button>" +
+                    "</div>";
+            }
+        },
 
-                return $(
-                    '<div role="banner" class="ui-collapsible-heading-toggle ui-btn ui-btn-inherit ui-btn-icon-left ' + listIcon + '">' +
-                        '<div class="ui-bar ui-editable-listview-title">' +
-                            '<span>' + listTitle + '</span>' +
-                        '</div>' +
-                        '<a class="ui-btn ui-btn-right ui-btn-inline ui-corner-all ui-mini ui-btn-icon-right">' + buttonLabel + '</a>' +
-                    '</div>'
-                );
-            },
+        // Public API
 
-            // For v0.2
-            /*listItemTextInput: function() {
-                return $(
-                    '<div style="width: 100%" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">' +
-                        '<div style="width: inherit" class="ui-controlgroup-controls ">' +
-                            '<div style="width: 91%" class="ui-input-text ui-body-inherit ui-corner-all controlgroup-textinput ui-btn ui-shadow-inset ui-first-child">' +
-                                '<input type="text">' +
-                            '</div>' +
-                            '<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-check ui-btn-a">Add</button>' +
-                            '<button class="ui-btn ui-shadow ui-corner-all ui-btn-icon-notext ui-icon-delete ui-last-child">Dismiss</button>' +
-                        '</div>' +
-                    '</div>'
-                );
-            }*/
+        length: function () {
+            return this.element.find('li').length;
+        },
 
+        items: function () {
+            var arr = [],
+                itemNames = this._itemNames;
+
+            if (this.options.editableType === 'simple') {
+                this.element.find('li').each(function (idx, el) {
+                    arr.push(el.textContent);
+                });
+            }
+
+            if (this.options.editableType === 'complex') {
+                this.element.find('a').each(function (idx, el) {
+                    var obj = {};
+                    $(el).children().each(function (idx, val) {
+                        obj[itemNames[idx]] = $(val).text();
+                    });
+                    arr.push(obj);
+                });
+            }
+
+            return arr;
+        },
+
+        widget: function () {
+            return this._ui.wrapper;
         }
 
-    }, $.mobile.behaviors.addFirstLastClasses) );
+    });
 
 }(jQuery));
 
-/* Auto-initialize on pagecreate */
-$(document).bind("pagecreate", function (e) {
-    $(":jqmData(role='editablelistview'), :jqmData(role='editable-listview')", e.target).editablelistview();
-});
+
+/* -- Patching collapsible -- */
+(function ($, undefined) {
+    "use strict";
+
+    $.widget("mobile.collapsible", $.mobile.collapsible, {
+
+        options: {
+            heading: "h1,h2,h3,h4,h5,h6,legend,:jqmData(role='header')",
+        },
+
+        _create: function () {
+            var elem = this.element,
+                ui = {
+                    accordion: elem
+                        .closest(":jqmData(role='collapsible-set')," +
+                            ":jqmData(role='collapsibleset')" +
+                            ($.mobile.collapsibleset ? ", :mobile-collapsibleset" :
+                                ""))
+                        .addClass("ui-collapsible-set")
+                };
+
+            this._ui = ui;
+            this._renderedOptions = this._getOptions(this.options);
+
+            $.each(this._childWidgets, $.proxy(function (number, widgetName) {
+                if ($.mobile[widgetName]) {
+                    this.element.find($.mobile[widgetName].initSelector).not($.mobile.page.prototype.keepNativeSelector())[widgetName]();
+                }
+            }, this));
+
+            if (this.options.enhanced) {
+                ui.heading = $(".ui-collapsible-heading", this.element[0]);
+                ui.content = ui.heading.next();
+                ui.anchor = $("a", ui.heading[0]).first();
+                ui.status = ui.anchor.children(".ui-collapsible-heading-status");
+            } else {
+                this._enhance(elem, ui);
+            }
+
+            this._on(ui.heading, {
+                "tap": function () {
+                    ui.heading.find("a").first().addClass($.mobile.activeBtnClass);
+                },
+
+                "click": function (event) {
+                    var $target = $(event.target);
+                    if ($target.hasClass("ui-collapsible-heading") || $target.hasClass("ui-collapsible-heading-toggle")) {
+                        this._handleExpandCollapse(!ui.heading.hasClass("ui-collapsible-heading-collapsed"));
+                    }
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            });
+        },
+
+        _childWidgets: ["toolbar"],
+
+        _enhance: function (elem, ui) {
+            var iconclass,
+                opts = this._renderedOptions,
+                contentThemeClass = this._themeClassFromOption("ui-body-", opts.contentTheme);
+
+            elem.addClass("ui-collapsible " +
+                (opts.inset ? "ui-collapsible-inset " : "") +
+                (opts.inset && opts.corners ? "ui-corner-all " : "") +
+                (contentThemeClass ? "ui-collapsible-themed-content " : ""));
+            ui.originalHeading = elem.children(this.options.heading).first(),
+            ui.content = elem
+                .wrapInner("<div " +
+                    "class='ui-collapsible-content " +
+                    contentThemeClass + "'></div>")
+                .children(".ui-collapsible-content"),
+            ui.heading = ui.originalHeading;
+
+            // Replace collapsibleHeading if it's a legend
+            if (ui.heading.is("legend")) {
+                ui.heading = $("<div role='heading'>" + ui.heading.html() + "</div>");
+                ui.placeholder = $("<div><!-- placeholder for legend --></div>").insertBefore(ui.originalHeading);
+                ui.originalHeading.remove();
+            }
+
+            iconclass = (opts.collapsed ? (opts.collapsedIcon ? "ui-icon-" + opts.collapsedIcon : "") :
+                (opts.expandedIcon ? "ui-icon-" + opts.expandedIcon : ""));
+
+            ui.status = $("<span class='ui-collapsible-heading-status'></span>");
+            ui.anchor = ui.heading
+                .detach()
+            //modify markup & attributes
+            .addClass("ui-collapsible-heading")
+                .append(ui.status)
+                .wrapInner(ui.heading.is(":jqmData(role='header')") ? "" : "<a href='#'></a>")
+                .find(ui.heading.is(":jqmData(role='header')") ? "h1,h2,h3,h4,h5,h6" : "a")
+                .first()
+                .addClass("ui-collapsible-heading-toggle" +
+                    (ui.heading.is(":jqmData(role='header')") ? "" : " ui-btn " +
+                        (iconclass ? iconclass + " " : "") +
+                        (iconclass ? iconposClass(opts.iconpos) + " " : "") +
+                        this._themeClassFromOption("ui-btn-", opts.theme) + " " +
+                        (opts.mini ? "ui-mini " : "")));
+
+            //drop heading in before content
+            ui.heading.insertBefore(ui.content);
+
+            this._handleExpandCollapse(this.options.collapsed);
+
+            return ui;
+        },
+
+        _handleExpandCollapse: function (isCollapse) {
+            var opts = this._renderedOptions,
+                ui = this._ui;
+
+            ui.status.text(isCollapse ? opts.expandCueText : opts.collapseCueText);
+            ui.heading
+                .toggleClass("ui-collapsible-heading-collapsed", isCollapse)
+                .find(".ui-collapsible-heading-toggle")
+                .toggleClass("ui-icon-" + opts.expandedIcon, !isCollapse)
+
+            // logic or cause same icon for expanded/collapsed state would remove the ui-icon-class
+            .toggleClass("ui-icon-" + opts.collapsedIcon, (isCollapse || opts.expandedIcon === opts.collapsedIcon))
+                .removeClass($.mobile.activeBtnClass);
+
+            this.element.toggleClass("ui-collapsible-collapsed", isCollapse);
+            ui.content
+                .toggleClass("ui-collapsible-content-collapsed", isCollapse)
+                .attr("aria-hidden", isCollapse)
+                .trigger("updatelayout");
+            this.options.collapsed = isCollapse;
+            this._trigger(isCollapse ? "collapse" : "expand");
+        },
+
+    });
+
+})(jQuery);
+/* --- End of Patch --- */
