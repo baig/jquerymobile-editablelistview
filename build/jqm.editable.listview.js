@@ -45,6 +45,10 @@
         },
 
         _beforeListviewRefresh: function () {
+            
+            // Returning immediately if `data-editable="false"`
+            if (!this.options.editable) return;
+            
             var $el = this.element,
                 opts = this.options,
                 $origDom = this._origDom,
@@ -152,11 +156,19 @@
         },
 
         _afterListviewRefresh: function () {
+            
+            // Returning immediately if `data-editable="false"`
+            if (!this.options.editable) return;
+            
             this._attachDetachEventHandlers();
         },
 
         // Detaching form from the DOM if the listview is initialized programmatically
         _init: function() {
+            
+            // Returning immediately if `data-editable="false"`
+            if (!this.options.editable) return;
+            
             var $el = this.element,
                 opts = this.options,
                 ui = this._ui;
