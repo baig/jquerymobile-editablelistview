@@ -31,12 +31,12 @@ There are two ways you can install the plugin.
 Use the following HTML/DOM structure
 
 ```
-    <ul data-role="listview" data-editable="true">
-        <li>Apple</li>
-        <li>Banana</li>
-        <li>Cranberry</li>
-        <li>Cherry</li>
-    </ul>
+<ul data-role="listview" data-editable="true">
+    <li>Apple</li>
+    <li>Banana</li>
+    <li>Cranberry</li>
+    <li>Cherry</li>
+</ul>
 ```
 
 See [below](#attributes) for a full list of available "`data-`" attributes
@@ -45,37 +45,37 @@ See [below](#attributes) for a full list of available "`data-`" attributes
 For complex type, link a form to the listview through `data-editable-form` attribute by putting in the id of the form as the value. That form will be shown embedded in the collapsible listview in `Edit` Mode. The user is at liberty to make the form look however they feel like, but they are supposed to add some specific `data` attributes to form elements. See the working example below.
 
 ```
-    <ul data-role="listview" data-editable="true" data-editable-type="complex" data-editable-form="editing-form">
-        <li>
-            <a>
-                <h3>Apple</h3>
-                <p>round</p>
-                <p>Red</p>
-            </a>
-        </li>
-        <li>
-            <a>
-                <h3>Pineapple</h3>
-                <p>oval</p>
-                <p>Yellow</p>
-            </a>
-        </li>
-        <li>
-            <a>
-                <h3>Orange</h3>
-                <p>round</p>
-                <p>Orange</p>
-            </a>
-        </li>
-    </ul>
-    
-    <form id="editing-form">
-        <input type="text" data-item-name="fruitName" data-item-element="h3">
-        <input type="text" data-item-name="fruitShape" data-item-element="p">
-        <input type="text" data-item-name="fruitColor" data-item-element="p">
-        <button class="ui-btn ui-corner-all" data-add-button="true">Add</button>
-        <button class="ui-btn ui-corner-all" data-clear-button="true">Clear</button>
-    </form>
+<ul data-role="listview" data-editable="true" data-editable-type="complex" data-editable-form="editing-form">
+    <li>
+        <a>
+            <h3>Apple</h3>
+            <p>round</p>
+            <p>Red</p>
+        </a>
+    </li>
+    <li>
+        <a>
+            <h3>Pineapple</h3>
+            <p>oval</p>
+            <p>Yellow</p>
+        </a>
+    </li>
+    <li>
+        <a>
+            <h3>Orange</h3>
+            <p>round</p>
+            <p>Orange</p>
+        </a>
+    </li>
+</ul>
+
+<form id="editing-form">
+    <input type="text" data-item-name="fruitName" data-item-element="h3">
+    <input type="text" data-item-name="fruitShape" data-item-element="p">
+    <input type="text" data-item-name="fruitColor" data-item-element="p">
+    <button class="ui-btn ui-corner-all" data-add-button="true">Add</button>
+    <button class="ui-btn ui-corner-all" data-clear-button="true">Clear</button>
+</form>
 ```
 
 `data-item-name` is the name of the variable to hold the value of the input field. `data-item-element` signifies the HTML Element that value will be rendered inside. `data-add-button` indicates the button that can be clicked/tapped/pressed to insert the new list item having values specified in the input fields. `data-clear-button` clears all the text from the input fields.
@@ -147,15 +147,19 @@ Icon next to list title when the list is expanded. See [this](http://api.jquerym
 A boolean value indicating whether the DOM has already been enhanced or not. If so, then all the required DOM structure along with relevant CSS classes and corresponding data attributes must be present. Default is "false"
 
 **`data-item-name`**
+
 The name of the variable to hold the value of input fields of the linked form.
 
 **`data-item-element`**
+
 The type of HTML element to be used to render the form input values inside list item
 
 **`data-add-button`**
+
 Indicates the button to insert the new list items in complex type.
 
 **`data-clear-button`**
+
 Indicates the button to clear input fields in the form in complex type.
     
 
