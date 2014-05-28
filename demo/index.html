@@ -70,9 +70,9 @@
 
         <p>An example of <strong>Complex Editable Listview</strong></p>
         <form id="hit" data-editable-form="true">
-            <input placeholder="Name of the Drug" value="" type="text" data-item-name="prescribedMedication" data-item-element="h3">
-            <input placeholder="Dose" value="" type="text" data-item-name="prescribedMedicationQuantity" data-item-element="p">
-            <input placeholder="Strength" value="" type="text" data-item-name="prescribedMedicationRoute" data-item-element="p">
+            <input placeholder="Name of the Drug" value="" type="text" data-item-name="prescribedMedication" data-item-template="<h3><em>Drug name is:</em> <strong>%%</strong></h3>">
+            <input placeholder="Dose" value="" type="text" data-item-name="prescribedMedicationQuantity" data-item-template="<p><em>Quantity per day:</em> <strong>%%</strong></p>">
+            <input placeholder="Strength" value="" type="text" data-item-name="prescribedMedicationRoute" data-item-template="<p><em>Route: </em> <strong>%%</strong></p>">
             <div class="ui-grid-a">
                 <div class="ui-block-a">
                     <button class="ui-btn ui-corner-all" data-add-button="true">Add</button>

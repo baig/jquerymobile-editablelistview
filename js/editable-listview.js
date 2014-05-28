@@ -335,7 +335,7 @@
 
                 $.each(inputs, function (idx, val) {
                     var $input = $(val),
-                        elem = $input.data("item-element"),
+                        template = $input.data("item-template"),
                         value = $input.val();
 
                     console.log($input)
@@ -343,7 +343,7 @@
                         proceed = false;
                     }
 
-                    liTemplate += "<" + elem + ">" + value + "</" + elem + ">";
+                    liTemplate += template.replace(/%%/, value)
                 });
 
                 // Not proceeding to add if any input value is empty
