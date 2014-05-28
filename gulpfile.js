@@ -31,7 +31,7 @@ gulp.task('clean', 'Cleans the build folder.', [], function () {
 
 gulp.task("concat", 'Joins all the script files putting them in build folder.', [], function () {
     "use strict";
-    gulp.src('js/**/*.js')
+    gulp.src(['js/editable-listview.js', 'js/**/*.js'])
         .pipe(concat('jqm.editable.listview.js'))
         .pipe(gulp.dest('build/'));
 }, {
@@ -40,7 +40,7 @@ gulp.task("concat", 'Joins all the script files putting them in build folder.', 
 
 gulp.task("minify", 'Minifies all the script files.', [], function () {
     "use strict";
-    gulp.src('js/**/*.js')
+    gulp.src(['js/editable-listview.js', 'js/**/*.js'])
         .pipe(concat('jqm.editable.listview.js'))
         .pipe(rename('jqm.editable.listview.min.js'))
         .pipe(uglify({
