@@ -173,6 +173,8 @@
                 opts = this.options,
                 ui = this._ui;
 
+            if (!ui.form) {
+
                 if (this.options.editableType === 'complex') {
 
                     if (opts.editableForm.length === 0) {
@@ -187,6 +189,7 @@
                         throw new Error("Reference Error: the form's id should match the \"data-editable-form\" attribute on ul and the form element itself should have data-editable-form=\"true\" attribute.")
                     }
                 }
+            }
         },
 
         _wrapCollapsible: function () {
