@@ -174,10 +174,19 @@
                 ui = this._ui;
 
                 if (this.options.editableType === 'complex') {
-                    ui.form = $el.closest(':jqmData(role="page")')
-                                 .find('#' + opts.editableForm)
-                                 .detach();
+
+                    if (opts.editableForm.length === 0) {
+                        throw new Error("Form not specified for the Complex Editable Listview type.")
                     }
+
+                    var form = $el.closest(':jqmData(role="page")').find('#' + opts.editableForm);
+
+                    if (form.is("form, div") && form.attr("data-editable-form")) {
+                        ui.form = form.detach();
+                    } else {
+                        throw new Error("Reference Error: the form's id should match the \"data-editable-form\" attribute on ul and the form element itself should have data-editable-form=\"true\" attribute.")
+                    }
+                }
         },
 
         _wrapCollapsible: function () {
