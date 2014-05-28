@@ -19,9 +19,10 @@ var clean = require('gulp-clean');
 
 /** gulp tasks */
 
-help(gulp)
+help(gulp);
 
 gulp.task('clean', 'Cleans the build folder.', [], function () {
+    "use strict";
     gulp.src('build/**/*', { read: false })
         .pipe(clean({ force: true }));
 }, {
@@ -29,6 +30,7 @@ gulp.task('clean', 'Cleans the build folder.', [], function () {
 });
 
 gulp.task("concat", 'Joins all the script files putting them in build folder.', [], function () {
+    "use strict";
     gulp.src('js/**/*.js')
         .pipe(concat('jqm.editable.listview.js'))
         .pipe(gulp.dest('build/'));
@@ -37,47 +39,52 @@ gulp.task("concat", 'Joins all the script files putting them in build folder.', 
 });
 
 gulp.task("minify", 'Minifies all the script files.', [], function () {
-   gulp.src('js/**/*.js')
+    "use strict";
+    gulp.src('js/**/*.js')
         .pipe(concat('jqm.editable.listview.js'))
         .pipe(rename('jqm.editable.listview.min.js'))
         .pipe(uglify({
             preserveComments: 'some'
         }))
-        .pipe(gulp.dest('build/'))
+        .pipe(gulp.dest('build/'));
 }, {
     aliases: ['m', 'M']
 });
 
 gulp.task("minify-css", 'Minifies the CSS stylesheets.', [], function() {
+    "use strict";
     gulp.src('css/**/*.css')
         .pipe(concat('jqm.editable.listview.min.css'))
         .pipe(minifyCss({
             noAdvanced: false
         }))
-        .pipe(gulp.dest('build'))
+        .pipe(gulp.dest('build'));
 }, {
     aliases: ['s', 'S']
-})
+});
 
 gulp.task("assets", 'Copies all assets (css stylesheets, images etc.) to the build folder.', [], function(){
+    "use strict";
     gulp.src("css/**/*")
         .pipe(concat("jqm.editable.listview.css"))
-        .pipe(gulp.dest('build'))
+        .pipe(gulp.dest('build'));
 }, {
     aliases: ['a', 'A']
-})
+});
 
 gulp.task("build", '(default task) Cleans, concatenates and minifies all script files into build folder.', [], function () {
-    gulp.run('clean')
-    gulp.run('concat')
-    gulp.run('minify')
-    gulp.run('assets')
-    gulp.run('minify-css')
+    "use strict";
+    gulp.run('clean');
+    gulp.run('concat');
+    gulp.run('minify');
+    gulp.run('assets');
+    gulp.run('minify-css');
 }, {
     aliases: ['b', 'B']
 });
 
 gulp.task('default', function () {
-    gulp.run('build')
+    "use strict";
+    gulp.run('build');
 });
 
