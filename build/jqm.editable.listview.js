@@ -173,11 +173,23 @@
                 opts = this.options,
                 ui = this._ui;
 
+            if (!ui.form) {
+
                 if (this.options.editableType === 'complex') {
-                    ui.form = $el.closest(':jqmData(role="page")')
-                                 .find('#' + opts.editableForm)
-                                 .detach();
+
+                    if (opts.editableForm.length === 0) {
+                        throw new Error("Form not specified for the Complex Editable Listview type.")
                     }
+
+                    var form = $el.closest(':jqmData(role="page")').find('#' + opts.editableForm);
+
+                    if (form.is("form, div") && form.attr("data-editable-form")) {
+                        ui.form = form.detach();
+                    } else {
+                        throw new Error("Reference Error: the form's id should match the \"data-editable-form\" attribute on ul and the form element itself should have data-editable-form=\"true\" attribute.")
+                    }
+                }
+            }
         },
 
         _wrapCollapsible: function () {
@@ -323,7 +335,7 @@
 
                 $.each(inputs, function (idx, val) {
                     var $input = $(val),
-                        elem = $input.data("item-element"),
+                        template = $input.data("item-template"),
                         value = $input.val();
 
                     console.log($input)
@@ -331,7 +343,7 @@
                         proceed = false;
                     }
 
-                    liTemplate += "<" + elem + ">" + value + "</" + elem + ">";
+                    liTemplate += template.replace(/%%/, value)
                 });
 
                 // Not proceeding to add if any input value is empty
