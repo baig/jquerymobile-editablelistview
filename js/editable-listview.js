@@ -43,6 +43,8 @@
             buttonCorner: true,
             buttonShadow: true,
 
+            itemIcon: false,
+
             expandedIcon: 'carat-d',
             collapsedIcon: 'carat-r'
         },
@@ -150,7 +152,15 @@
             } else {
                 // Re-enabling the click event handler when the list is in `View` mode
                 evt.click[0].handler = this._clickHandler;
-                $lis.remove().end().append($origDom.clone().find('li'));
+
+                // Removing `Edit` mode `Li`s
+                $lis.remove()
+
+                if (opts.itemIcon) {
+                    $el.append($origDom.clone().find('li'));
+                } else {
+                    $el.append($origDom.clone().find('li').attr( "data-icon", "false"));
+                }
             }
 
             // Updating the header title, header button label and icon based on the list contents and its state (`Edit` or `View`)
