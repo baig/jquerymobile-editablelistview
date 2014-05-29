@@ -49,30 +49,30 @@ For complex type, link a form to the listview through `data-editable-form` attri
     <li>
         <a>
             <h3>Apple</h3>
-            <p>round</p>
-            <p>Red</p>
+            <p><em>Shape:</em> <strong>round</strong></p>
+            <p><em>Color:</em> <strong>red</strong></p>
         </a>
     </li>
     <li>
         <a>
             <h3>Pineapple</h3>
-            <p>oval</p>
-            <p>Yellow</p>
+            <p><em>Shape:</em> <strong>oval</strong></p>
+            <p><em>Color:</em> <strong>yellow</strong></p>
         </a>
     </li>
     <li>
         <a>
             <h3>Orange</h3>
-            <p>round</p>
-            <p>Orange</p>
+            <p><em>Shape:</em> <strong>round</strong></p>
+            <p><em>Color:</em> <strong>orange</strong></p>
         </a>
     </li>
 </ul>
 
-<form id="editing-form">
+<form id="editing-form" data-editable-form="true">
     <input type="text" data-item-name="fruitName" data-item-template="<h3>%%</h3>">
     <input type="text" data-item-name="fruitShape" data-item-template="<p><em>Shape:</em> <strong>%%</strong></p>">
-    <input type="text" data-item-name="fruitColor" data-item-template="<p><em>Color: </em> <strong>%%</strong></p>">
+    <input type="text" data-item-name="fruitColor" data-item-template="<p><em>Color:</em> <strong>%%</strong></p>">
     <button class="ui-btn ui-corner-all" data-add-button="true">Add</button>
     <button class="ui-btn ui-corner-all" data-clear-button="true">Clear</button>
 </form>
@@ -102,11 +102,11 @@ Default value is `simple`
 
 ID of the form to be used for the complex type. The value is required.
     
-**`data-list-title`**
+**`data-title`**
 
 Title of the list when the list has at least one item to show. Default is "View list items"
     
-**`data-list-empty-title`**
+**`data-empty-title`**
 
 Title of the list when the lis tis empty. Default is "No items to view"
     
