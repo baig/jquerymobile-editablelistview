@@ -30,8 +30,8 @@
             editableType: 'simple',
             editableForm: '',
 
-            listTitle: "View list items",
-            listEmptyTitle: "No items to view",
+            title: "View list items",
+            emptyTitle: "No items to view",
             editLabel: "Edit",
             addLabel: "Add",
             doneLabel: "Done",
@@ -255,7 +255,7 @@
                 isListEmpty = this._isListEmpty();
 
             // Update List Header Title
-            ui.header.text(isListEmpty ? opts.listEmptyTitle : opts.listTitle);
+            ui.header.text(isListEmpty ? opts.emptyTitle : opts.title);
 
             // Change "Edit" button state, icon and label
             ui.button.removeClass('ui-icon-minus ui-icon-' + opts.doneIcon + ' ui-icon-' + opts.addIcon + ' ui-icon-' + opts.editIcon)
