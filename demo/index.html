@@ -34,7 +34,7 @@
         <br>
 
         <p>Add <strong>"Running"</strong> and <strong>"Surfing"</strong> in the following list</p>
-        <ul id="list2" data-role="listview" data-editable="true" data-editable-type="simple" data-list-title="Activities" data-list-empty-title="No Activities" data-button-theme="b" data-button-shadow="false" data-button-corner="false">
+        <ul id="list2" data-role="listview" data-editable="true" data-editable-type="simple" data-title="Activities" data-empty-title="No Activities" data-button-theme="b" data-button-shadow="false" data-button-corner="false">
             <li>Running</li>
             <li>Cycling</li>
             <li>Surfing</li>
@@ -69,45 +69,37 @@
 -->
 
         <p>An example of <strong>Complex Editable Listview</strong></p>
-        <form id="hit" data-editable-form="true">
-            <input placeholder="Name of the Drug" value="" type="text" data-item-name="prescribedMedication" data-item-template="<h3><em>Drug name is:</em> <strong>%%</strong></h3>">
-            <input placeholder="Dose" value="" type="text" data-item-name="prescribedMedicationQuantity" data-item-template="<p><em>Quantity per day:</em> <strong>%%</strong></p>">
-            <input placeholder="Strength" value="" type="text" data-item-name="prescribedMedicationRoute" data-item-template="<p><em>Route: </em> <strong>%%</strong></p>">
-            <div class="ui-grid-a">
-                <div class="ui-block-a">
-                    <button class="ui-btn ui-corner-all" data-add-button="true">Add</button>
-                </div>
-                <div class="ui-block-b">
-                    <button class="ui-btn ui-corner-all" data-clear-button="true">Clear</button>
-                </div>
-            </div>
-        </form>
-
-        <form id="hita"></form>
-
-        <ul id="list3" data-role="listview" data-editable="true" data-editable-form="hit" data-editable-type="complex">
+        <ul data-role="listview" data-editable="true" data-editable-type="complex" data-editable-form="editing-form" data-title="Fruits" data-empty-title="No Fruits">
             <li>
-                <a href="#">
-                    <h3 data-item-name="prescribedMedication">Xanax</h3>
-                    <p data-item-name="prescribedMedicationQuantity">1 mg</p>
-                    <p data-item-name="prescribedMedicationRoute">Injection</p>
+                <a>
+                    <h3>Apple</h3>
+                    <p><em>Shape:</em> <strong>round</strong></p>
+                    <p><em>Color:</em> <strong>red</strong></p>
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <h3>Prozac</h3>
-                    <p>0.5 mg</p>
-                    <p>Pill</p>
+                <a>
+                    <h3>Pineapple</h3>
+                    <p><em>Shape:</em> <strong>oval</strong></p>
+                    <p><em>Color:</em> <strong>yellow</strong></p>
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <h3>Diazepam</h3>
-                    <p>10mg</p>
-                    <p>Pill</p>
+                <a>
+                    <h3>Orange</h3>
+                    <p><em>Shape:</em> <strong>round</strong></p>
+                    <p><em>Color:</em> <strong>orange</strong></p>
                 </a>
             </li>
         </ul>
+
+        <form id="editing-form" data-editable-form="true">
+            <input type="text" data-item-name="fruitName" data-item-template="<h3>%%</h3>">
+            <input type="text" data-item-name="fruitShape" data-item-template="<p><em>Shape:</em> <strong>%%</strong></p>">
+            <input type="text" data-item-name="fruitColor" data-item-template="<p><em>Color:</em> <strong>%%</strong></p>">
+            <button class="ui-btn ui-corner-all" data-add-button="true">Add</button>
+            <button class="ui-btn ui-corner-all" data-clear-button="true">Clear</button>
+        </form>
 
     </div>
 
@@ -116,8 +108,8 @@
             editable: true,
 //            editableType: "simple",
 //            collapsed: false,
-	        listTitle: "Fruits",
-	        listEmptyTitle: "No Fruits"
+	        title: "Fruits",
+	        emptyTitle: "No Fruits"
         });
 
 //        $("#list3").listview().listview("disable")
