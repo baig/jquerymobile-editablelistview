@@ -42,6 +42,9 @@
             buttonTheme: 'a',
             buttonCorner: true,
             buttonShadow: true,
+
+            expandedIcon: 'carat-d',
+            collapsedIcon: 'carat-r'
         },
 
         _beforeListviewRefresh: function () {
@@ -97,7 +100,6 @@
                 };
 
                 if (this.options.editableType === 'complex') {
-//                    ui.form = wrapper.closest(':jqmData(role="page")').find('#' + this.options.editableForm).detach();
                     var inputs = ui.content.find('li:first-child').find('[data-item-name]');
 
                     var itemNames = this._itemNames;
