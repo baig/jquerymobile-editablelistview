@@ -70,15 +70,15 @@ For complex type, link a form to the listview through `data-editable-form` attri
 </ul>
 
 <form id="editing-form">
-    <input type="text" data-item-name="fruitName" data-item-element="h3">
-    <input type="text" data-item-name="fruitShape" data-item-element="p">
-    <input type="text" data-item-name="fruitColor" data-item-element="p">
+    <input type="text" data-item-name="fruitName" data-item-template="<h3>%%</h3>">
+    <input type="text" data-item-name="fruitShape" data-item-template="<p><em>Shape:</em> <strong>%%</strong></p>">
+    <input type="text" data-item-name="fruitColor" data-item-template="<p><em>Color: </em> <strong>%%</strong></p>">
     <button class="ui-btn ui-corner-all" data-add-button="true">Add</button>
     <button class="ui-btn ui-corner-all" data-clear-button="true">Clear</button>
 </form>
 ```
 
-`data-item-name` is the name of the variable to hold the value of the input field. `data-item-element` signifies the HTML Element that value will be rendered inside. `data-add-button` indicates the button that can be clicked/tapped/pressed to insert the new list item having values specified in the input fields. `data-clear-button` clears all the text from the input fields.
+`data-item-name` is the name of the variable to hold the value of the input field. `data-item-template` holds the HTML template that will be used to render the new value. Use `%%` as placeholder for the variable. `data-add-button` indicates the button that can be clicked/tapped/pressed to insert the new list item having values specified in the input fields. `data-clear-button` clears all the text from the input fields.
 
 ## Roadmap
 This is a preliminary list of planned fatures.
@@ -97,6 +97,10 @@ A boolean value required on the `ul` tag with `data-role="listview"` for the lis
     
 Indicates the type of the editable listview. The value can either be `simple` or `complex`. Simple Editable Listview has only one value per list item. Complex Editable Listview can have multiple values per list item and user is required to provide a custom form for entry of new list items.
 Default value is `simple`
+
+**`data-editable-form`**
+
+ID of the form to be used for the complex type. The value is required.
     
 **`data-list-title`**
 
@@ -150,9 +154,13 @@ A boolean value indicating whether the DOM has already been enhanced or not. If 
 
 The name of the variable to hold the value of input fields of the linked form.
 
-**`data-item-element`**
+**`data-item-icon`**
 
-The type of HTML element to be used to render the form input values inside list item
+A boolean value indicating whether to show default `carat-r` icon for list items. Default value is `false`.
+
+**`data-item-template`**
+
+HTML string to be used to render list item. Use `%%` as a placeholder for the value.
 
 **`data-add-button`**
 
