@@ -30,8 +30,8 @@
             editableType: 'simple',
             editableForm: '',
 
-            listTitle: "View list items",
-            listEmptyTitle: "No items to view",
+            title: "View list items",
+            emptyTitle: "No items to view",
             editLabel: "Edit",
             addLabel: "Add",
             doneLabel: "Done",
@@ -42,6 +42,11 @@
             buttonTheme: 'a',
             buttonCorner: true,
             buttonShadow: true,
+
+            itemIcon: false,
+
+            expandedIcon: 'carat-d',
+            collapsedIcon: 'carat-r'
         },
 
         _beforeListviewRefresh: function () {
@@ -97,7 +102,6 @@
                 };
 
                 if (this.options.editableType === 'complex') {
-//                    ui.form = wrapper.closest(':jqmData(role="page")').find('#' + this.options.editableForm).detach();
                     var inputs = ui.content.find('li:first-child').find('[data-item-name]');
 
                     var itemNames = this._itemNames;
@@ -148,7 +152,15 @@
             } else {
                 // Re-enabling the click event handler when the list is in `View` mode
                 evt.click[0].handler = this._clickHandler;
-                $lis.remove().end().append($origDom.clone().find('li'));
+
+                // Removing `Edit` mode `Li`s
+                $lis.remove()
+
+                if (opts.itemIcon) {
+                    $el.append($origDom.clone().find('li'));
+                } else {
+                    $el.append($origDom.clone().find('li').attr( "data-icon", "false"));
+                }
             }
 
             // Updating the header title, header button label and icon based on the list contents and its state (`Edit` or `View`)
@@ -243,7 +255,7 @@
                 isListEmpty = this._isListEmpty();
 
             // Update List Header Title
-            ui.header.text(isListEmpty ? opts.listEmptyTitle : opts.listTitle);
+            ui.header.text(isListEmpty ? opts.emptyTitle : opts.title);
 
             // Change "Edit" button state, icon and label
             ui.button.removeClass('ui-icon-minus ui-icon-' + opts.doneIcon + ' ui-icon-' + opts.addIcon + ' ui-icon-' + opts.editIcon)
