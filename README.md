@@ -172,7 +172,7 @@ Indicates the button to clear input fields in the form in complex type.
     
 
 ## Author
-[Wasif Hasan Baig](https://github.com/baig)
+[Wasif Hasan Baig](https://twitter.com/wasifhasanbaig)
 
 ## License
 Copyright &copy; 2014 Wasif Hasan Baig
