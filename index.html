@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="https://cdn.rawgit.com/baig/jquerymobile-editablelistview/master/build/jqm.editable.listview.min.css">
     <link rel="stylesheet" href="stylesheets/custom.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        $( document ).on( "mobileinit", function() {
+            $.extend( $.mobile , {
+                autoInitializePage : false
+            });
+        });
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.js"></script>
     <script src="https://cdn.rawgit.com/baig/jquerymobile-editablelistview/master/build/jqm.editable.listview.min.js"></script>
     <script src="javascripts/main.js"></script>
@@ -268,7 +275,7 @@
             <p>This plugin is released under the Terms and Conditions of <a href="http://opensource.org/licenses/MIT">MIT License</a>. Please refer to LICENSE.txt in the root of the project directory.</p>
         </section>
         <footer>
-            <p>Project maintained by <a href="https://github.com/baig">Wasif Hasan Baig</a>
+            <p>Project maintained by <a href="https://twitter.com/wasifhasanbaig">Wasif Hasan Baig</a>
             </p>
             <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small>
             </p>
