@@ -228,7 +228,7 @@
     <script type='text/javascript'>
         $(document).ready(function (){
             var doc = $('#demo-frame').contents();
-            console.log(doc.html());
+            console.log(doc.children().html());
             doc.on('load', function() {
                 console.log("clicked on iFrame");
             });
