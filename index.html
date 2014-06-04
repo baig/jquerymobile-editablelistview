@@ -227,7 +227,7 @@
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     <script type='text/javascript'>
         $(document).ready(function (){
-            $('iframe#demo-frame').click(function() {
+            $('#demo-frame').contents().click(function() {
                 console.log("clicked on iFrame");
             });
         });
