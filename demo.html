@@ -67,6 +67,15 @@
         </form>
 
     <script>
+
+        $(document).ready(function () {
+            $("body").click(function () {
+                var frame = $('#demo-frame', window.parent.document);
+                var height = $("#IDofContainerInsideiFrame").height();
+                frame.height(height + 15);
+            });
+        });
+
 	    var $list = $( "#list" ).listview({
             editable: true,
 //            editableType: "simple",
