@@ -72,6 +72,56 @@
             <h2>
                 <a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo
 
+                <ul id="list" data-role="listview">
+                    <li>Apple</li>
+                    <li>Orange</li>
+                    <li>Banana</li>
+                    <li>Mango</li>
+                </ul>
+
+                <br>
+
+                <ul id="list2" data-role="listview" data-editable="true" data-editable-type="simple" data-title="Activities" data-empty-title="No Activities" data-button-theme="b" data-button-shadow="false" data-button-corner="false">
+                    <li>Running</li>
+                    <li>Cycling</li>
+                    <li>Surfing</li>
+                    <li>Jogging</li>
+                </ul>
+
+                <br>
+
+                <ul data-role="listview" data-editable="true" data-editable-type="complex" data-editable-form="editing-form" data-title="Fruits" data-empty-title="No Fruits">
+                    <li>
+                        <a>
+                            <h3>Apple</h3>
+                            <p><em>Shape:</em> <strong>round</strong></p>
+                            <p><em>Color:</em> <strong>red</strong></p>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <h3>Pineapple</h3>
+                            <p><em>Shape:</em> <strong>oval</strong></p>
+                            <p><em>Color:</em> <strong>yellow</strong></p>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <h3>Orange</h3>
+                            <p><em>Shape:</em> <strong>round</strong></p>
+                            <p><em>Color:</em> <strong>orange</strong></p>
+                        </a>
+                    </li>
+                </ul>
+
+                <form id="editing-form" data-editable-form="true">
+                    <input type="text" data-item-name="fruitName" data-item-template="<h3>%%</h3>">
+                    <input type="text" data-item-name="fruitShape" data-item-template="<p><em>Shape:</em> <strong>%%</strong></p>">
+                    <input type="text" data-item-name="fruitColor" data-item-template="<p><em>Color:</em> <strong>%%</strong></p>">
+                    <button class="ui-btn ui-corner-all" data-add-button="true">Add</button>
+                    <button class="ui-btn ui-corner-all" data-clear-button="true">Clear</button>
+                </form>
+
             </h2>
 
             <h2>
