@@ -11,13 +11,6 @@
     <link rel="stylesheet" href="https://cdn.rawgit.com/baig/jquerymobile-editablelistview/master/build/jqm.editable.listview.min.css">
     <link rel="stylesheet" href="stylesheets/custom.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script>
-        $( document ).on( "mobileinit", function() {
-            $.extend( $.mobile , {
-                autoInitializePage : false
-            });
-        });
-    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.js"></script>
     <script src="https://cdn.rawgit.com/baig/jquerymobile-editablelistview/master/build/jqm.editable.listview.min.js"></script>
     <script src="javascripts/main.js"></script>
@@ -67,7 +60,7 @@
     <!-- end banner -->
 
     <div class="wrapper">
-        <nav>
+        <nav data-role="none">
             <ul></ul>
         </nav>
         <section>
@@ -264,21 +257,13 @@
                     <p>A boolean value indicating whether the DOM has already been enhanced or not. If so, then all the required DOM structure along with relevant CSS classes and corresponding data attributes must be present. Default is "false"</p>
                 </li>
             </ol>
-            <h2>
-<a name="author" class="anchor" href="#author"><span class="octicon octicon-link"></span></a>Author</h2>
 
-            <p>Wasif Hasan Baig</p>
-
-            <h2>
-<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>LICENSE</h2>
-
-            <p>This plugin is released under the Terms and Conditions of <a href="http://opensource.org/licenses/MIT">MIT License</a>. Please refer to LICENSE.txt in the root of the project directory.</p>
         </section>
+
         <footer>
-            <p>Project maintained by <a href="https://twitter.com/wasifhasanbaig">Wasif Hasan Baig</a>
-            </p>
-            <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small>
-            </p>
+            <p>Project maintained by <a href="https://twitter.com/wasifhasanbaig">Wasif Hasan Baig</a></p>
+            <p>Released under <a href="http://opensource.org/licenses/MIT">MIT License</a></p>
+            <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
         </footer>
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
