@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.css">
     <link rel="stylesheet" href="https://cdn.rawgit.com/baig/jquerymobile-editablelistview/master/build/jqm.editable.listview.min.css">
     <link rel="stylesheet" href="stylesheets/custom.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.js"></script>
+    <script src="https://cdn.rawgit.com/baig/jquerymobile-editablelistview/master/build/jqm.editable.listview.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <script>
         (function (i, s, o, g, r, a, m) {
@@ -70,7 +77,7 @@
                 <a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo
             </h2>
 
-                <ul id="list" data-role="listview">
+                <ul id="demo-list-1" data-role="listview" data-editable="true">
                     <li>Apple</li>
                     <li>Orange</li>
                     <li>Banana</li>
@@ -79,7 +86,7 @@
 
                 <br>
 
-                <ul id="list2" data-role="listview" data-editable="true" data-editable-type="simple" data-title="Activities" data-empty-title="No Activities" data-button-theme="b" data-button-shadow="false" data-button-corner="false">
+                <ul id="demo-list-2" data-role="listview" data-editable="true" data-editable-type="simple" data-title="Activities" data-empty-title="No Activities" data-button-theme="b" data-button-shadow="false" data-button-corner="false">
                     <li>Running</li>
                     <li>Cycling</li>
                     <li>Surfing</li>
@@ -88,7 +95,7 @@
 
                 <br>
 
-                <ul data-role="listview" data-editable="true" data-editable-type="complex" data-editable-form="editing-form" data-title="Fruits" data-empty-title="No Fruits">
+                <ul id="demo-list-3" data-role="listview" data-editable="true" data-editable-type="complex" data-editable-form="editing-form" data-title="Fruits" data-empty-title="No Fruits">
                     <li>
                         <a>
                             <h3>Apple</h3>
@@ -268,13 +275,7 @@
         </footer>
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.2/jquery.mobile.js"></script>
-    <script src="https://cdn.rawgit.com/baig/jquerymobile-editablelistview/master/build/jqm.editable.listview.min.js"></script>
-    <script src="javascripts/main.js"></script>
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+
 </body>
 
 </html>
