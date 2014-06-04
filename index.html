@@ -227,6 +227,8 @@
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     <script type='text/javascript'>
         $(document).ready(function (){
+            var doc = $('#demo-frame').contents();
+            console.log(doc instanceof $);
             $('#demo-frame').contents().click(function() {
                 console.log("clicked on iFrame");
             });
