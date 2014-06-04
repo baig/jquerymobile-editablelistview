@@ -71,7 +71,7 @@
         $(document).ready(function () {
             $("body").click(function () {
                 var frame = $('#demo-frame', window.parent.document);
-                var height = $("#IDofContainerInsideiFrame").height();
+                var height = $("jqmData(role='page')").height();
                 frame.height(height + 15);
             });
         });
