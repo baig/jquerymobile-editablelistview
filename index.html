@@ -75,9 +75,13 @@
                 <a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo
             </h2>
 
+            <div id="demo"></div>
+
+<!--
             <iframe src="demo.html" seamless width="100%" height="auto">
                 <p>Your browser does not support iframes.</p>
             </iframe>
+-->
 
 <!--
                 <ul id="demo-list-1" data-role="listview" data-editable="true">
@@ -265,13 +269,17 @@
         </section>
 
         <footer>
-            <p>Project maintained by <a href="https://twitter.com/wasifhasanbaig">Wasif Hasan Baig</a></p>
+            <p>Project maintained by<br><a href="https://twitter.com/wasifhasanbaig">Wasif Hasan Baig</a></p>
             <p>Released under <a href="http://opensource.org/licenses/MIT">MIT License</a></p>
             <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
         </footer>
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-
+    <script type='text/javascript'>
+        $(document).ready(function (){
+            $('#demo').load("demo.html");
+        });
+    </script>
 </body>
 
 </html>
