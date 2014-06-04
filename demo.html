@@ -69,10 +69,10 @@
     <script>
 
         $(document).ready(function () {
-            $("body").click(function () {
+            $(":jqmData(role='page')").on('resize', function () {
                 var frame = $('#demo-frame', window.parent.document);
                 var height = $(":jqmData(role='page')").height();
-                frame.height(height + 15);
+                frame.height(height);
             });
         });
 
