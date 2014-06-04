@@ -226,11 +226,12 @@
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     <script type='text/javascript'>
-        $(document).ready(function (){
-            var doc = $('#demo-frame').contents();
-            console.log(doc.children().html());
-            doc.find(on('load', function() {
-                console.log("clicked on iFrame");
+        $(document).ready(function () {
+            $("body").click(function () {
+                console.log("Resized!")
+                var frame = $('#demo-frame');
+                var height = frame.contents()[0].body.scrollHeight
+                frame.height(height);
             });
         });
     </script>
