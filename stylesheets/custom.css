@@ -2,3 +2,34 @@ img[alt="Editable Listview Plugin"] {
     width: 55%;
     height: auto;
 }
+
+p.credits {
+    line-height: 1.8em;
+}
+
+.github-btns {
+    margin-bottom: 10px;
+}
+
+.github-btn-right {
+    float: right;
+}
+
+@media print, screen and (max-width: 1060px) {
+
+}
+@media print, screen and (max-width: 720px) {
+
+}
+@media print, screen and (max-width: 480px) {
+
+}
+@media print {
+
+}
+@media print, screen and (max-height: 680px) {
+
+}
+@media print, screen and (max-height: 480px) {
+
+}
