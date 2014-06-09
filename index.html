@@ -118,43 +118,21 @@
             <!-- /DEMO -->
 
             <h2>
-<a name="how-to-use-it" class="anchor" href="#how-to-use-it"><span class="octicon octicon-link"></span></a>How to Use it!</h2>
+<a name="how-to-use-it" class="anchor" href="#how-to-use-it"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-            <p>There are two ways you can install the plugin.</p>
+            <p>There are two ways to proceed with the installation.</p>
 
             <ol>
                 <li>
-                    <p>Download and unzip the package into your project folder OR install using bower</p>
-
-                    <p><code>bower install jqm-editable-istview</code>
-                    </p>
+                    <p>Download the package, uncompress it and use the files in the build folder.</p>
                 </li>
                 <li>
-                    <p>Include the plugin script after the jQuery Mobile source file</p>
-
-                    <p><code>&lt;script src="jquery.mobile.editablelistview.js" type="text/javascript"&gt;&lt;/script&gt;</code>
-                    </p>
+                    <p>Install using bower</p>
+                    <p><code>bower install jqm-editable-istview</code></p>
                 </li>
-                <li>
-                    <p>Include the plugin stylesheet right after the jQuery Mobile stylesheet</p>
 
-                    <p><code>&lt;link href="../jquery.mobile.editablelistview.css" rel="stylesheet" type="text/css"&gt;</code>
-                    </p>
-                </li>
-                <li>
-                    <p>Use the following HTML/DOM structure</p>
-
-                    <pre><code>&lt;ul data-role="editable-listview"&gt;
-    &lt;li&gt;Apple&lt;/li&gt;
-    &lt;li&gt;Apple&lt;/li&gt;
-    &lt;li&gt;Apple&lt;/li&gt;
-    &lt;li&gt;Apple&lt;/li&gt;
-&lt;/ul&gt;
-</code></pre>
-
-                    <p>See <a href="#attributes">below</a> for a full list of available "<code>data-</code>" attributes</p>
-                </li>
             </ol>
+            <p>Include the plugin script after the jQuery Mobile script tag. Include the plugin stylesheet right after the jQuery Mobile stylesheet</p>
             <h2>
 <a name="roadmap" class="anchor" href="#roadmap"><span class="octicon octicon-link"></span></a>Roadmap</h2>
 
@@ -170,69 +148,43 @@
 
             <ol>
                 <li>
-                    <p>data-role</p>
-
-                    <p>Required on the <code>ul</code> tag for it to be initialized as <strong>Editable Listview</strong>. The value can either be "editable-listview" or "editablelistview"</p>
+                    <p><code>data-editable</code> - A Boolean value indicating whether to initialize the listview as editable or not. Default value is <code>true</code></p>
                 </li>
                 <li>
-                    <p>data-list-title</p>
-
-                    <p>Title of the list when the list has at least one item to show. Default is "View list items"</p>
+                    <p><code>data-title</code> - A String used as the title of the list when the list contains at least one item. Default value is <code>"View list items"</code></p>
                 </li>
                 <li>
-                    <p>data-list-empty-title</p>
-
-                    <p>Title of the list when the lis tis empty. Default is "No items to view"</p>
+                    <p><code>data-empty-title</code> - A String used as the title of the list when the list is empty. Default is <code>"No items to view"</code></p>
                 </li>
                 <li>
-                    <p>data-button-add-label: "Add"</p>
-
-                    <p>Label of the button when the list is empty. Default is "Add"</p>
+                    <p><code>data-add-label</code> - A String used as the label of the button when the list is empty. Default value is <code>"Add"</code></p>
                 </li>
                 <li>
-                    <p>data-button-add-icon</p>
-
-                    <p>Icon of the button when the list is empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "plus"</p>
+                    <p><code>data-add-icon</code> - Icon of the button when the list is empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "plus"</p>
                 </li>
                 <li>
-                    <p>data-button-edit-label</p>
-
-                    <p>Label of the Edit button. Default is "Edit"</p>
+                    <p><code>data-edit-label</code> - Label of the Edit button. Default is "Edit"</p>
                 </li>
                 <li>
-                    <p>data-button-edit-icon</p>
-
-                    <p>Icon of the button when the list is not empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "edit"</p>
+                    <p><code>data-edit-icon</code> - Icon of the button when the list is not empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "edit"</p>
                 </li>
                 <li>
-                    <p>data-button-done-label: "Done",</p>
-
-                    <p>Label of the button when the list is in edit mode. Default is "Done"</p>
+                    <p><code>data-done-label: "Done"</code> - Label of the button when the list is in edit mode. Default is "Done"</p>
                 </li>
                 <li>
-                    <p>data-button-done-icon</p>
-
-                    <p>Icon of the button when the list is in <strong>edit</strong> mode empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "check"</p>
+                    <p><code>data-done-icon</code> - Icon of the button when the list is in <strong>edit</strong> mode empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "check"</p>
                 </li>
                 <li>
-                    <p>data-collapsed</p>
-
-                    <p>A boolean value indicating whether the list will be collapsed or not when initialized. Default is "true"</p>
+                    <p><code>data-collapsed</code> - A boolean value indicating whether the list will be collapsed or not when initialized. Default is "true"</p>
                 </li>
                 <li>
-                    <p>data-collapsed-icon</p>
-
-                    <p>Icon next to list title when the list is collapsed. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "carat-r"</p>
+                    <p><code>data-collapsed-icon</code> - Icon next to list title when the list is collapsed. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "carat-r"</p>
                 </li>
                 <li>
-                    <p>data-expanded-icon: "carat-d"</p>
-
-                    <p>Icon next to list title when the list is expanded. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "carat-d"</p>
+                    <p><code>data-expanded-icon: "carat-d"</code> - Icon next to list title when the list is expanded. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "carat-d"</p>
                 </li>
                 <li>
-                    <p>data-enhanced</p>
-
-                    <p>A boolean value indicating whether the DOM has already been enhanced or not. If so, then all the required DOM structure along with relevant CSS classes and corresponding data attributes must be present. Default is "false"</p>
+                    <p><code>data-enhanced</code> - A boolean value indicating whether the DOM has already been enhanced or not. If so, then all the required DOM structure along with relevant CSS classes and corresponding data attributes must be present. Default is "false"</p>
                 </li>
             </ol>
 
