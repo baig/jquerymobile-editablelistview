@@ -45,6 +45,7 @@
 
             itemIcon: false,
 
+            collapsed: false,
             expandedIcon: 'carat-d',
             collapsedIcon: 'carat-r'
         },
@@ -214,8 +215,9 @@
 
             $el.parents($.mobile['collapsible'].initSelector)
                 .not($.mobile.page.prototype.keepNativeSelector())['collapsible']({
-                    expandedIcon: this.options.expandedIcon,
-                    collapsedIcon: this.options.collapsedIcon
+                    collapsed: opts.collapsed,
+                    expandedIcon: opts.expandedIcon,
+                    collapsedIcon: opts.collapsedIcon
                 });
 
             return $el.parent().parent();
