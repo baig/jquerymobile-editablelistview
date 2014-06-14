@@ -1,0 +1,35 @@
+{
+    "name": "editable-listview",
+    "title": "Editable Listview",
+    "description": "A jQuery Mobile Listview Widget that supports insertion of new list items and removal of existing ones through an intuitive UI.",
+    "keywords": [
+        "listview",
+        "editable-listview",
+        "touch",
+        "mobile"
+    ],
+    "version": "0.2.4",
+    "author": {
+        "name": "Wasif Hasan Baig",
+        "email": "pr.wasif@gmail.com",
+        "url": "http://about.me/wasifhasanbaig"
+    },
+    "maintainers": [{
+        "name": "Wasif Hasan Baig",
+        "email": "pr.wasif@gmail.com",
+        "url": "http://about.me/wasifhasanbaig"
+    }],
+    "licenses": [{
+        "type": "MIT",
+        "url": "https://github.com/baig/jquerymobile-editablelistview/blob/master/LICENSE.txt"
+    }],
+    "demo": "http://baig.github.io/jquerymobile-editablelistview/",
+    "bugs": "https://github.com/baig/jquerymobile-editablelistview/issues",
+    "homepage": "http://baig.github.io/jquerymobile-editablelistview/",
+    "docs": "http://baig.github.io/jquerymobile-editablelistview/",
+    "download": "https://github.com/baig/jquerymobile-editablelistview/archive/master.zip",
+    "dependencies": {
+        "jquery-mobile": ">=1.4.2",
+        "jquery": ">=2.1"
+    }
+}
