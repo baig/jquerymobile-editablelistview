@@ -7,22 +7,45 @@ p.credits {
     line-height: 1.8em;
 }
 
-.github-btns {
-    margin-bottom: 10px;
-}
 
-.github-btn-right {
-    float: right;
+.github-btns {
+    position: fixed;
+    margin-left: -150px;
+    margin-top: 150px;
+}
+.github-btns > iframe {
+    display: block;
+    margin: 15px;
 }
 
 @media print, screen and (max-width: 1060px) {
-
+    .github-btns {
+        position: absolute;
+        margin-left: 375px;
+        margin-top: 5px;
+    }
+    .github-btns > iframe {
+        display: inline;
+        margin-left: 15px;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-right: 0;
+    }
 }
 @media print, screen and (max-width: 720px) {
-
 }
 @media print, screen and (max-width: 480px) {
-
+    .github-btns {
+        position: static;
+        margin-left: 0;
+        margin-top: 0;
+        padding: 0;
+        margin-bottom: 10px;
+    }
+    .github-btns > iframe {
+        display: inline;
+        margin: 0;
+    }
 }
 @media print {
 

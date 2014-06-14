@@ -7,12 +7,6 @@
     <title>Editable Listview by Wasif Hasan Baig</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <!-- START COPYING HERE -->
-    <link rel="stylesheet" href="stylesheets/gh-fork-ribbon.css">
-    <!--[if lt IE 9]>
-    <link rel="stylesheet" href="gh-fork-ribbon.ie.css">
-    <![endif]-->
-    <!-- END COPYING HERE -->
     <link rel="stylesheet" href="stylesheets/custom.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="javascripts/main.js"></script>
@@ -44,14 +38,6 @@
         <h1>Editable Listview</h1>
         <p>A jQuery Mobile Plugin with an intuitive UI to add new list items and remove existing ones.</p>
     </header>
-
-    <!-- TOP RIGHT RIBBON: START COPYING HERE -->
-    <div class="github-fork-ribbon-wrapper right fixed">
-        <div class="github-fork-ribbon">
-            <a href="https://github.com/baig/jquerymobile-editablelistview">Fork me on GitHub</a>
-        </div>
-    </div>
-    <!-- TOP RIGHT RIBBON: END COPYING HERE -->
 
     <div id="banner">
         <span id="logo"></span>
@@ -96,7 +82,7 @@
             <h2>
                 <a name="why" class="anchor" href="#why"><span class="octicon octicon-link"></span></a>Why</h2>
 
-            <p>Many a times, you come across a situation where you want to allow editing of list items. To do this simple task, you have to build extra functionality around the Listview widget to allow for insertion of new list items and removal of existing list items. <strong>Editable Listview</strong> widget is designed to take the pain out of this situaiton by having all this functionality baked-in.</p>
+            <p>Many times you encounter a situation where you want to allow editing of list items. You code extra functionality around the Listview widget to allow for insertion of new list items and removal of the existing ones. <strong>Editable Listview</strong> widget is designed to take the pain out of this situaiton by having all this functionality baked-in. Just specify appropriate <code>data-</code> attributes and you are good to go.</p>
             <!-- /Why -->
 
             <!-- DEMO -->
@@ -104,15 +90,15 @@
                 <a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo
             </h2>
 
-            <p>A simple editable list of fruits. Go ahead and try adding the fruit you love.</p>
+            <p>A simple editable list of fruits. Go ahead and try adding the fruit you love having for breakfast.</p>
             <p data-height="329" data-theme-id="0" data-slug-hash="AeyJq" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/baig/pen/AeyJq/'>Editable Listview in Action</a> by Wasif Hasan Baig (<a href='http://codepen.io/baig'>@baig</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
             <script async src="http://codepen.io/assets/embed/ei.js"></script>
 
-            <p>A complex editable list of fruits also having information about shape and color. Go ahead and try adding the fruit you love.</p>
+            <p>A complex editable list of fruits having extra information about the shape and color of the fruit. A complex list embeds a full form to allow for insertion of new list items. You can design and style the form to your liking. Browse through the HTML in the following example to understand how it works.</p>
             <p data-height="400" data-theme-id="0" data-slug-hash="cnawv" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/baig/pen/cnawv/'>cnawv</a> by Wasif Hasan Baig (<a href='http://codepen.io/baig'>@baig</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
             <script async src="http://codepen.io/assets/embed/ei.js"></script>
 
-            <p>An example showing programmatic instantiation of editable listview and also demonstrating more <code>data-</code> attribute examples</p>
+            <p>An example showing programmatic instantiation of editable listview and also demonstrating more <code>data-</code> attributes.</p>
             <p data-height="329" data-theme-id="0" data-slug-hash="ubFat" data-default-tab="result" class='codepen'>See the Pen <a href='http://codepen.io/baig/pen/ubFat/'>Editable Listview in Action (Programmatic Instantiation)</a> by Wasif Hasan Baig (<a href='http://codepen.io/baig'>@baig</a>) on <a href='http://codepen.io'>CodePen</a>.</p>
             <script async src="http://codepen.io/assets/embed/ei.js"></script>
             <!-- /DEMO -->
@@ -124,67 +110,66 @@
 
             <ol>
                 <li>
-                    <p>Download the package, uncompress it and use the files in the build folder.</p>
+                    <p><a href="https://github.com/baig/jquerymobile-editablelistview/archive/master.zip">Download</a> the package, uncompress it and use the files in the build folder.</p>
                 </li>
                 <li>
-                    <p>Install using bower</p>
+                    <p>The most convenient option is to install using bower</p>
                     <p><code>bower install jqm-editable-istview</code></p>
                 </li>
 
             </ol>
-            <p>Include the plugin script after the jQuery Mobile script tag. Include the plugin stylesheet right after the jQuery Mobile stylesheet</p>
+            <p>Include the plugin script tag after the jQuery Mobile script tag. Include the plugin stylesheet right after the jQuery Mobile stylesheet.</p>
+
             <h2>
-<a name="roadmap" class="anchor" href="#roadmap"><span class="octicon octicon-link"></span></a>Roadmap</h2>
+                <a name="note" class="anchor" href="#note"><span class="octicon octicon-link"></span></a>Important Note
+            </h2>
 
-            <p>This is a preliminary of planned fatures</p>
+            <p>This plugin patches the default <a href="http://demos.jquerymobile.com/1.4.2/collapsible/">Collapsible Widget</a> to allow using <a href="http://demos.jquerymobile.com/1.4.2/toolbar/">Toolbar Widget</a> inside the collapsible widget. The patch will be made available as a pull request to the jQuery Mobile project and this plugin will be updated accordingly.</p>
 
-            <ol>
-                <li>In-place editing of existing list items.</li>
-                <li>Re-ordering of list items tap and hold on the list item and drag it back and forth.</li>
-            </ol>
+
             <h2>
 <a name="list-of-data--attributes" class="anchor" href="#list-of-data--attributes"><span class="octicon octicon-link"></span></a>List of "<code>data-</code>" Attributes<a name="attributes"></a>
 </h2>
 
             <ol>
                 <li>
-                    <p><code>data-editable</code> - A Boolean value indicating whether to initialize the listview as editable or not. Default value is <code>true</code></p>
+                    <p><code>data-editable</code> - A Boolean value indicating whether to initialize the listview as editable or not. Default value is <code>true</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-title</code> - A String used as the title of the list when the list contains at least one item. Default value is <code>"View list items"</code></p>
+                    <p><code>data-title</code> - A String used as the title of the list when the list contains at least one item. Default value is <code>"View list items"</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-empty-title</code> - A String used as the title of the list when the list is empty. Default is <code>"No items to view"</code></p>
+                    <p><code>data-empty-title</code> - A String used as the title of the list when the list is empty. Default value is <code>"No items to view"</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-add-label</code> - A String used as the label of the button when the list is empty. Default value is <code>"Add"</code></p>
+                    <p><code>data-add-label</code> - A String used as the label of the button when the list is empty. Default value is <code>"Add"</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-add-icon</code> - Icon of the button when the list is empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "plus"</p>
+                    <p><code>data-add-icon</code> - Icon of the button when the list is empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default value is <code>"plus"</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-edit-label</code> - Label of the Edit button. Default is "Edit"</p>
+                    <p><code>data-edit-label</code> - Label of the Edit button. Default value is <code>"Edit"</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-edit-icon</code> - Icon of the button when the list is not empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "edit"</p>
+                    <p><code>data-edit-icon</code> - Icon of the button when the list is not empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default value is <code>"edit"</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-done-label: "Done"</code> - Label of the button when the list is in edit mode. Default is "Done"</p>
+                    <p><code>data-done-label</code> - Label of the button when the list is in edit mode. Default value is <code>"Done"</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-done-icon</code> - Icon of the button when the list is in <strong>edit</strong> mode empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "check"</p>
+                    <p><code>data-done-icon</code> - Icon of the button when the list is in <strong>edit</strong> mode empty. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default value is <code>"check"</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-collapsed</code> - A boolean value indicating whether the list will be collapsed or not when initialized. Default is "true"</p>
+                    <p><code>data-collapsed</code> - A boolean value indicating whether the list will be collapsed or not when initialized. Default is value <code>"true"</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-collapsed-icon</code> - Icon next to list title when the list is collapsed. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "carat-r"</p>
+                    <p><code>data-collapsed-icon</code> - Icon next to list title when the list is collapsed. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default value is <code>"carat-r"</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-expanded-icon: "carat-d"</code> - Icon next to list title when the list is expanded. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default is "carat-d"</p>
+                    <p><code>data-expanded-icon</code> - Icon next to list title when the list is expanded. See <a href="http://api.jquerymobile.com/icons/">this</a> page for the list of available icons. Default value is <code>"carat-d"</code>.</p>
                 </li>
                 <li>
-                    <p><code>data-enhanced</code> - A boolean value indicating whether the DOM has already been enhanced or not. If so, then all the required DOM structure along with relevant CSS classes and corresponding data attributes must be present. Default is "false"</p>
+                    <p><code>data-enhanced</code> - <strong><em>(Not implemented yet!)</em></strong> A boolean value indicating whether the DOM has already been enhanced or not. If so, then all the required DOM structure along with relevant CSS classes and corresponding data attributes must be present. Default value is <code>"false"</code>.</p>
                 </li>
             </ol>
 
