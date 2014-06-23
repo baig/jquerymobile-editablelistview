@@ -14,6 +14,9 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script type="text/javascript">var switchTo5x=true;</script>
+    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+    <script type="text/javascript">stLight.options({publisher: "1327276b-e4c5-4f9d-845e-f0758489f6a3", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -23,7 +26,6 @@
         ga('create', 'UA-51047247-7', 'baig.github.io');
         ga('require', 'displayfeatures');
         ga('send', 'pageview');
-
     </script>
 </head>
 
@@ -167,7 +169,6 @@
                     <p><code>data-enhanced</code> - <strong><em>(Not implemented yet!)</em></strong> A boolean value indicating whether the DOM has already been enhanced or not. If so, then all the required DOM structure along with relevant CSS classes and corresponding data attributes must be present. Default value is <code>"false"</code>.</p>
                 </li>
             </ol>
-
         </section>
 
         <footer>
@@ -180,19 +181,22 @@
             </p>
             <p>Released under <a href="http://opensource.org/licenses/MIT">MIT License</a></p>
             <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+            <div class="sharethis">
+                <span class='st_facebook_large' displayText='Facebook'></span>
+                <span class='st_googleplus_large' displayText='Google +'></span>
+                <span class='st_twitter_large' displayText='Tweet'></span>
+                <span class='st_linkedin_large' displayText='LinkedIn'></span>
+                <span class='st_pinterest_large' displayText='Pinterest'></span>
+                <span class='st_delicious_large' displayText='Delicious'></span>
+                <span class='st_tumblr_large' displayText='Tumblr'></span>
+                <span class='st_sharethis_large' displayText='ShareThis'></span>
+                <span class='st_digg_large' displayText='Digg'></span>
+                <span class='st_reddit_large' displayText='Reddit'></span>
+                <span class='st_stumbleupon_large' displayText='StumbleUpon'></span>
+                <span class='st_email_large' displayText='Email'></span>
+            </div>
         </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    <script type='text/javascript'>
-        $(document).ready(function () {
-            $("body").click(function () {
-                console.log("Resized!")
-                var frame = $('#demo-frame');
-                var height = frame.contents()[0].body.scrollHeight
-                frame.height(height);
-            });
-        });
-    </script>
 </body>
 
 </html>
