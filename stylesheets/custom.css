@@ -12,15 +12,10 @@ p.credits {
     margin-left: -210px;
     margin-top: 195px;
 }
-.facebook-btns-1 {
+.facebook-btns {
     position: fixed;
     margin-left: -165px;
     margin-top: -410px;
-}
-.facebook-btns-2 {
-    position: fixed;
-    margin-left: -176px;
-    margin-top: -370px;
 }
 .google-btns {
     position: fixed;
@@ -40,7 +35,7 @@ p.credits {
 /*    display: inline-flex;*/
     float: right;
     width: 200%;
-    margin-bottom: 30px;
+/*    margin-bottom: 30px;*/
 /*    margin-top: -20px;*/
 }
 .share > div {
