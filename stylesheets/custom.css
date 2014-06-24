@@ -9,12 +9,27 @@ p.credits {
 
 .github-btns {
     position: fixed;
-    margin-left: -150px;
-    margin-top: 175px;
+    margin-left: -210px;
+    margin-top: 195px;
+}
+.facebook-btns {
+    position: fixed;
+    margin-left: -140px;
+    margin-top: -390px;
+}
+.google-btns {
+    position: fixed;
+    margin-left: -140px;
+    margin-top: -345px;
+}
+.twitter-btns {
+    position: fixed;
+    margin-left: -80px;
+    margin-top: -295px;
 }
 .github-btns > iframe {
-    display: block;
-    margin: 15px;
+/*    display: block;*/
+/*    margin: 15px;*/
 }
 .share {
 /*    display: inline-flex;*/
