@@ -27,6 +27,11 @@ p.credits {
     margin-left: -73px;
     margin-top: -360px;
 }
+.follow {
+    margin-top: -20px;
+    margin-bottom: 25px;
+    line-height: 1.5em;
+}
 .github-btns > iframe {
 /*    display: block;*/
 /*    margin: 15px;*/
