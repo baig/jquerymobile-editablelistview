@@ -17,12 +17,15 @@ p.credits {
     margin: 15px;
 }
 .share {
-    display: inline-flex;
+/*    display: inline-flex;*/
     float: right;
+    width: 200%;
     margin-bottom: 30px;
+    vertical-align: baseline;
 }
 .share > div {
-    margin: 0 3px !important;
+    display: inline;
+/*    margin: 0 3px !important;*/
 }
 @media print, screen and (max-width: 1060px) {
     .github-btns {
