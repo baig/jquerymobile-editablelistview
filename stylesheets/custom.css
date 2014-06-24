@@ -19,6 +19,7 @@ p.credits {
 .share {
     display: inline-flex;
     float: right;
+    margin-bottom: 30px;
 }
 .share > div {
     margin: 0 3px !important;
@@ -53,6 +54,7 @@ p.credits {
     }
     .share {
         float: none;
+        margin-bottom: 0px;
     }
     .share > div {
         display: inline;
