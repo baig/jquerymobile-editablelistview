@@ -18,6 +18,7 @@ p.credits {
 }
 .share {
     display: inline-flex;
+    float: right;
 }
 .share > div {
     margin: 0 3px !important;
