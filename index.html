@@ -14,6 +14,7 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -24,21 +25,22 @@
         ga('require', 'displayfeatures');
         ga('send', 'pageview');
     </script>
-    <script type="text/javascript">var switchTo5x=true;</script>
-    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-    <script type="text/javascript">
-        stLight.options({
-            publisher: "1327276b-e4c5-4f9d-845e-f0758489f6a3",
-            publisherGA:"UA-51047247-7",
-            doNotHash: false,
-            doNotCopy: false,
-            hashAddressBar: false
-        });
-    </script>
 </head>
 
 <body>
-
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({ cache: true });
+            $.getScript('//connect.facebook.net/en_UK/all.js', function(){
+                FB.init({
+                    appId: '1523898714505099',
+                });
+                $('#loginbutton,#feedbutton').removeAttr('disabled');
+                FB.getLoginStatus(updateStatusCallback);
+                console.log(FB);
+            });
+        });
+    </script>
     <header>
         <h1>Editable Listview</h1>
         <p>A jQuery Mobile Plugin with an intuitive UI to add new list items and remove existing ones.</p>
@@ -177,6 +179,7 @@
                     <p><code>data-enhanced</code> - <strong><em>(Not implemented yet!)</em></strong> A boolean value indicating whether the DOM has already been enhanced or not. If so, then all the required DOM structure along with relevant CSS classes and corresponding data attributes must be present. Default value is <code>"false"</code>.</p>
                 </li>
             </ol>
+            <div class="fb-comments" data-href="http://baig.github.io/jquerymobile-editablelistview/" data-numposts="10" data-colorscheme="light"></div>
         </section>
 
         <footer>
@@ -189,20 +192,6 @@
             </p>
             <p>Released under <a href="http://opensource.org/licenses/MIT">MIT License</a></p>
             <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
-            <div class="sharethis">
-                <span class='st_facebook_large' displayText='Facebook'></span>
-                <span class='st_googleplus_large' displayText='Google +'></span>
-                <span class='st_twitter_large' displayText='Tweet'></span>
-                <span class='st_linkedin_large' displayText='LinkedIn'></span>
-                <span class='st_pinterest_large' displayText='Pinterest'></span>
-                <span class='st_delicious_large' displayText='Delicious'></span>
-                <span class='st_tumblr_large' displayText='Tumblr'></span>
-                <span class='st_sharethis_large' displayText='ShareThis'></span>
-                <span class='st_digg_large' displayText='Digg'></span>
-                <span class='st_reddit_large' displayText='Reddit'></span>
-                <span class='st_stumbleupon_large' displayText='StumbleUpon'></span>
-                <span class='st_email_large' displayText='Email'></span>
-            </div>
         </footer>
     </div>
 </body>
