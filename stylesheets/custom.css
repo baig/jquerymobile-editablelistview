@@ -16,9 +16,6 @@ p.credits {
     display: block;
     margin: 15px;
 }
-.comments > div {
-    width: 100%;
-}
 
 @media print, screen and (max-width: 1060px) {
     .github-btns {
