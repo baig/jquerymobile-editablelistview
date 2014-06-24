@@ -21,6 +21,7 @@ p.credits {
     float: right;
     width: 200%;
     margin-bottom: 30px;
+    margin-top: -20px;
 }
 .share > div {
     display: inline;
