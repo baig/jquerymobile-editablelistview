@@ -51,6 +51,13 @@ p.credits {
         display: inline;
         margin: 0;
     }
+    .share {
+        display: inline-flex;
+        float: none;
+    }
+    .share > div {
+        margin: 0 3px 0 5px !important;
+    }
 }
 @media print {
 
