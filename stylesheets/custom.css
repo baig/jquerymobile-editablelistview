@@ -16,14 +16,11 @@ p.credits {
     display: block;
     margin: 15px;
 }
-.share > li {
-
-/*
-    float: left;
-    line-height: 2em;
-*/
-    list-style-image: none;
-    list-style-type: none;
+.share {
+    display: inline-flex;
+}
+.share > div {
+    margin: 0 3px !important;
 }
 @media print, screen and (max-width: 1060px) {
     .github-btns {
