@@ -61,6 +61,7 @@ p.credits {
         margin: 0;
     }
     .share {
+        width: 100%;
         float: none;
         margin-bottom: 0px;
     }
