@@ -16,7 +16,11 @@ p.credits {
     display: block;
     margin: 15px;
 }
-
+.share > li {
+    float: left;
+    list-style-image: none;
+    list-style-type: none;
+}
 @media print, screen and (max-width: 1060px) {
     .github-btns {
         position: absolute;
