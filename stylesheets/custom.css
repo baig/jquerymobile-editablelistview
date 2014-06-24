@@ -17,7 +17,11 @@ p.credits {
     margin: 15px;
 }
 .share > li {
+
+/*
     float: left;
+    line-height: 2em;
+*/
     list-style-image: none;
     list-style-type: none;
 }
