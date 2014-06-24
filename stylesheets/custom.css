@@ -21,11 +21,15 @@ p.credits {
     float: right;
     width: 200%;
     margin-bottom: 30px;
-    vertical-align: baseline;
 }
 .share > div {
     display: inline;
-/*    margin: 0 3px !important;*/
+    vertical-align: bottom !important;
+}
+.share > iframe {
+    display: inline;
+    vertical-align: bottom;
+    margin-left: -5px;
 }
 @media print, screen and (max-width: 1060px) {
     .github-btns {
