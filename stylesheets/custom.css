@@ -12,15 +12,20 @@ p.credits {
     margin-left: -210px;
     margin-top: 195px;
 }
-.facebook-btns {
+.facebook-btns-1 {
     position: fixed;
-    margin-left: -140px;
-    margin-top: -390px;
+    margin-left: -220px;
+    margin-top: -410px;
+}
+.facebook-btns-2 {
+    position: fixed;
+    margin-left: -220px;
+    margin-top: -370px;
 }
 .google-btns {
     position: fixed;
-    margin-left: -140px;
-    margin-top: -345px;
+    margin-left: -138px;
+    margin-top: -320px;
 }
 .twitter-btns {
     position: fixed;
