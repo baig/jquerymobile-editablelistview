@@ -15,17 +15,17 @@ p.credits {
 .facebook-btns {
     position: fixed;
     margin-left: -165px;
-    margin-top: -410px;
+    margin-top: -440px;
 }
 .google-btns {
     position: fixed;
     margin-left: -143px;
-    margin-top: -330px;
+    margin-top: -400px;
 }
 .twitter-btns {
     position: fixed;
     margin-left: -72px;
-    margin-top: -290px;
+    margin-top: -360px;
 }
 .github-btns > iframe {
 /*    display: block;*/
