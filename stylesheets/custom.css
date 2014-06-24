@@ -14,23 +14,23 @@ p.credits {
 }
 .facebook-btns-1 {
     position: fixed;
-    margin-left: -220px;
+    margin-left: -165px;
     margin-top: -410px;
 }
 .facebook-btns-2 {
     position: fixed;
-    margin-left: -220px;
+    margin-left: -176px;
     margin-top: -370px;
 }
 .google-btns {
     position: fixed;
-    margin-left: -138px;
-    margin-top: -320px;
+    margin-left: -143px;
+    margin-top: -330px;
 }
 .twitter-btns {
     position: fixed;
-    margin-left: -80px;
-    margin-top: -295px;
+    margin-left: -72px;
+    margin-top: -290px;
 }
 .github-btns > iframe {
 /*    display: block;*/
