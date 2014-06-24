@@ -10,7 +10,7 @@ p.credits {
 .github-btns {
     position: fixed;
     margin-left: -150px;
-    margin-top: 150px;
+    margin-top: 175px;
 }
 .github-btns > iframe {
     display: block;
