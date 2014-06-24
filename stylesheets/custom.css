@@ -16,9 +16,6 @@ p.credits {
     display: block;
     margin: 15px;
 }
-.fb-comments > span {
-    height: 80px !important;
-}
 
 @media print, screen and (max-width: 1060px) {
     .github-btns {
