@@ -52,11 +52,10 @@ p.credits {
         margin: 0;
     }
     .share {
-        display: inline-flex;
         float: none;
     }
     .share > div {
-        margin: 0 3px 0 5px !important;
+        display: inline;
     }
 }
 @media print {
