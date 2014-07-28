@@ -68,7 +68,9 @@
             // saving original DOM structure if there is a discrepency in the number
             // of list items between `this.element` and `this._origDom` or if the
             // or if the `this._origDom` is null
-            if ($el.find('li').length !== ($origDom === null ? -1 : $origDom.find('li').length)) {
+            // Note: list item length count ignores the list item housing the
+            //       text box
+            if ($el.find('li').not('li.ui-editable-temp').length !== ($origDom === null ? -1 : $origDom.find('li').length)) {
                 $origDom = $el.clone();
                 // Assign each list item a unique number value
                 $.each($origDom.children('li'), function (idx, val) {
