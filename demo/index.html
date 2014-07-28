@@ -43,6 +43,18 @@
 
         <br>
 
+      <p>Delete <strong>"Orange"</strong> from the following list of <strong>"Fruits"</strong></p>
+      <ul id="list3" data-role="listview" data-editable="true" data-editable-type="simple" data-title="Fruits" data-empty-title="No Fruits">
+        <li>Apple</li>
+        <li>Orange</li>
+        <li>Banana</li>
+        <li>Mango</li>
+      </ul>
+      <p>Press the button below to programmatically insert a list item</p>
+      <input type="button" value="Insert Fruit" onclick="insertFruit()"/>
+
+      <br>
+
 <!--
         <p>Delete <strong>"Async JavaScript"</strong> from the following list of books</p>
         <div class="ui-editable ui-collapsible ui-collapsible-inset ui-corner-all ui-collapsible-themed-content">
@@ -115,9 +127,27 @@
 //        $("#list3").listview().listview("disable")
 //        console.log($("#list3").listview().listview("dis")[0])
 
-        $("#list3").on('listviewchange', function(e, data) {
-            console.log('listviewchange fired', data)
-        })
+//        $("#list3").on('listviewchange', function(e, data) {
+//            console.log('listviewchange fired', data)
+//        })
+
+        // Example 3: Programmatically inserting a list item
+        function insertFruit() {
+            var fruits = ['Cherry', 'Melon', 'Coconut', 'Raspberry',
+                          'Papaya', 'Apricot', 'Guava', 'Cranberry',
+                          'Date', 'Grapefruit', 'Jackfruit', 'Key Lime',
+                          'Plum', 'Pear', 'Pomegranate', 'Strawberry',
+                          'Tangerine', 'Avocado', 'Passionfruit', 'Pineapple']
+
+            var $list = $('#list3')
+            $list.append('<li>' + fruits[getRandomInt(0, 19)] + '</li>')
+            $list.listview('refresh')
+        }
+
+        // Returns a random integer between min (included) and max (excluded)
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
 	</script>
 </body>
 </html>
