@@ -12,20 +12,25 @@ Many a times, you come across a situation where you want to allow editing of lis
 1. Allows insertion of new list items right in the Listview.
 2. Allows easy removal of existing list items.
 
-## How to Use it!
-There are two ways you can install the plugin.
+## Installation
+1. Pick any one of the following way.
 
-1. Download and unzip the package into your project folder OR install using bower
+    * Download and unzip the package into your project folder (Scroll up and you will see the "Download ZIP" button on the right side).
 
-    `bower install jqm-editable-istview`
+    * Install using bower.
     
-2. Include the plugin script after the jQuery Mobile source file
+        `bower install jqm-editable-istview`
     
-    `<script src="jquery.mobile.editablelistview.js" type="text/javascript"></script>`
-    
-3. Include the plugin stylesheet right after the jQuery Mobile stylesheet
+    * Use the CDN hosted version.
 
-    `<link href="../jquery.mobile.editablelistview.css" rel="stylesheet" type="text/css">`
+        __js:__ //cdn.jsdelivr.net/jquery.editable-listview/0.2.6/jqm.editable.listview.min.js
+    
+        __css:__ //cdn.jsdelivr.net/jquery.editable-listview/0.2.6/jqm.editable.listview.min.css
+
+2. Include the javascript file after the jQuery Mobile javascript file. Similarly include the stylesheet after the jQuery Mobile stylesheet
+
+## How to Use it?
+The listview comes in two flavors: __simple__ and __complex__. Their usage is described below.
 
 ### Simple Type
 Use the following HTML/DOM structure
