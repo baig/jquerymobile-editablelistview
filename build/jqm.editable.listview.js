@@ -51,10 +51,10 @@
         },
 
         _beforeListviewRefresh: function () {
-            
+
             // Returning immediately if `data-editable="false"`
             if (!this.options.editable) return;
-            
+
             var $el = this.element,
                 opts = this.options,
                 $origDom = this._origDom,
@@ -65,8 +65,12 @@
                 $lis = $el.find("li"),
                 $markup = this._$markup;
 
-            // saving original DOM structure
-            if ($origDom === null) {
+            // saving original DOM structure if there is a discrepency in the number
+            // of list items between `this.element` and `this._origDom` or if the
+            // or if the `this._origDom` is null
+            // Note: list item length count ignores the list item housing the
+            //       text box
+            if ($el.find('li').not('li.ui-editable-temp').length !== ($origDom === null ? -1 : $origDom.find('li').length)) {
                 $origDom = $el.clone();
                 // Assign each list item a unique number value
                 $.each($origDom.children('li'), function (idx, val) {
@@ -160,7 +164,7 @@
                 if (opts.itemIcon) {
                     $el.append($origDom.clone().find('li'));
                 } else {
-                    $el.append($origDom.clone().find('li').attr( "data-icon", "false"));
+                    $el.append($origDom.clone().find('li').attr("data-icon", "false"));
                 }
             }
 
@@ -169,19 +173,19 @@
         },
 
         _afterListviewRefresh: function () {
-            
+
             // Returning immediately if `data-editable="false"`
             if (!this.options.editable) return;
-            
+
             this._attachDetachEventHandlers();
         },
 
         // Detaching form from the DOM if the listview is initialized programmatically
-        _init: function() {
-            
+        _init: function () {
+
             // Returning immediately if `data-editable="false"`
             if (!this.options.editable) return;
-            
+
             var $el = this.element,
                 opts = this.options,
                 ui = this._ui;
