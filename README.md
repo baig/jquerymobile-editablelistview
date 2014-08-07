@@ -130,9 +130,7 @@ Label of the Edit button. Default is "Edit"
 
 Icon of the button when the list is not empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "edit"
 
-**`data-done-label`**
-
-Label of the button when the list is in edit mode. Default is "Done"
+**`data-done-label`**: Label of the button when the list is in edit mode. Default is "Done"
     
 **`data-done-icon`**
 
