@@ -93,48 +93,28 @@ This is a preliminary list of planned fatures.
 
 ## List of `data-` Attributes<a name="attributes"></a>
 
-**`data-editable`**
-    
-A boolean value required on the `ul` tag with `data-role="listview"` for the list to be initialized as an **Editable Listview**.
+**`data-editable`**: A boolean value required on the `ul` tag with `data-role="listview"` for the list to be initialized as an **Editable Listview**.
 
-**`data-editable-type`**
-    
-Indicates the type of the editable listview. The value can either be `simple` or `complex`. Simple Editable Listview has only one value per list item. Complex Editable Listview can have multiple values per list item and user is required to provide a custom form for entry of new list items.
+**`data-editable-type`**: Indicates the type of the editable listview. The value can either be `simple` or `complex`. Simple Editable Listview has only one value per list item. Complex Editable Listview can have multiple values per list item and user is required to provide a custom form for entry of new list items.
 Default value is `simple`
 
-**`data-editable-form`**
-
-ID of the form to be used for the complex type. The value is required.
+**`data-editable-form`**: ID of the form to be used for the complex type. The value is required.
     
-**`data-title`**
-
-Title of the list when the list has at least one item to show. Default is "View list items"
+**`data-title`**: Title of the list when the list has at least one item to show. Default is "View list items"
     
-**`data-empty-title`**
-
-Title of the list when the lis tis empty. Default is "No items to view"
+**`data-empty-title`**: Title of the list when the lis tis empty. Default is "No items to view"
     
-**`data-add-label`**
-
-Label of the button when the list is empty. Default is "Add"
+**`data-add-label`**: Label of the button when the list is empty. Default is "Add"
     
-**`data-add-icon`**
-
-Icon of the button when the list is empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "plus"
+**`data-add-icon`**: Icon of the button when the list is empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "plus"
     
-**`data-edit-label`**
-
-Label of the Edit button. Default is "Edit"
+**`data-edit-label`**: Label of the Edit button. Default is "Edit"
     
-**`data-edit-icon`**
-
-Icon of the button when the list is not empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "edit"
+**`data-edit-icon`**: Icon of the button when the list is not empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "edit"
 
 **`data-done-label`**: Label of the button when the list is in edit mode. Default is "Done"
     
-**`data-done-icon`**
-
-Icon of the button when the list is in **edit** mode empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "check"
+**`data-done-icon`**: Icon of the button when the list is in **edit** mode empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "check"
     
 **`data-collapsed`**
 
