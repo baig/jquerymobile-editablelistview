@@ -92,7 +92,7 @@ This is a preliminary list of planned fatures.
 3. Deleting item by swiping left or right.
 
 ## List of `data-` Attributes<a name="attributes"></a>
-
+See the [List of data attributes](https://github.com/baig/jquerymobile-editablelistview/wiki/List-of-data-attributes) wiki page.
     
 
 ## Author
