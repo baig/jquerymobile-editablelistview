@@ -93,45 +93,6 @@ This is a preliminary list of planned fatures.
 
 ## List of `data-` Attributes<a name="attributes"></a>
 
-1. **`data-editable`**: A boolean value required on the `ul` tag with `data-role="listview"` for the list to be initialized as an editable Listview.
-
-2. **`data-editable-type`**: Indicates the type of the editable listview. The value can either be `simple` or `complex`. Simple Editable Listview has only one value per list item. Complex Editable Listview can have multiple values per list item and user is required to provide a custom form for entry of new list items. Default value is "simple".
-
-3. **`data-editable-form`**: ID of the form to be used for the complex type. The value is required.
-    
-4. **`data-title`**: Title of the list when the list has at least one item to show. Default value is "View list items".
-    
-5. **`data-empty-title`**: Title of the list when the lis tis empty. Default is "No items to view"
-    
-6. **`data-add-label`**: Label of the button when the list is empty. Default is "Add"
-    
-7. **`data-add-icon`**: Icon of the button when the list is empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "plus"
-    
-8. **`data-edit-label`**: Label of the Edit button. Default is "Edit"
-    
-9. **`data-edit-icon`**: Icon of the button when the list is not empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "edit"
-
-10. **`data-done-label`**: Label of the button when the list is in edit mode. Default is "Done"
-    
-**`data-done-icon`**: Icon of the button when the list is in **edit** mode empty. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "check"
-    
-**`data-collapsed`**: A boolean value indicating whether the list will be collapsed or not when initialized. Default is "true"
-    
-**`data-collapsed-icon`**: Icon next to list title when the list is collapsed. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "carat-r"
-    
-**`data-expanded-icon`**: Icon next to list title when the list is expanded. See [this](http://api.jquerymobile.com/icons/) page for the list of available icons. Default is "carat-d"
-    
-**`data-enhanced`**: A boolean value indicating whether the DOM has already been enhanced or not. If so, then all the required DOM structure along with relevant CSS classes and corresponding data attributes must be present. Default is "false"
-
-**`data-item-name`**: The name of the variable to hold the value of input fields of the linked form.
-
-**`data-item-icon`**: A boolean value indicating whether to show default `carat-r` icon for list items. Default value is `false`.
-
-**`data-item-template`**: HTML string to be used to render list item. Use `%%` as a placeholder for the value.
-
-**`data-add-button`**: Indicates the button to insert the new list items in complex type.
-
-**`data-clear-button`**: Indicates the button to clear input fields in the form in complex type.
     
 
 ## Author
