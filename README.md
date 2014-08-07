@@ -23,7 +23,7 @@ Many a times, you come across a situation where you want to allow editing of lis
     
     * Use the CDN hosted version.
 
-        __js:__ `//cdn.jsdelivr.net/jquery.editable-listview/0.2.6/jqm.editable.listview.min.js`
+        __js:__ `//cdn.jsdelivr.net/jquery.editable-listview/0.2.6/jqm.editable.listview.min.js` 
         __css:__ `//cdn.jsdelivr.net/jquery.editable-listview/0.2.6/jqm.editable.listview.min.css`
 
 2. Include the javascript file after the jQuery Mobile javascript file. Similarly include the stylesheet after the jQuery Mobile stylesheet
