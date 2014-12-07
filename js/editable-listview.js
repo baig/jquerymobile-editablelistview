@@ -70,29 +70,36 @@
             // or if the `this._origDom` is null
             // Note: list item length count ignores the list item housing the
             //       text box
-            if ($el.find('li').not('li.ui-editable-temp').length !== ($origDom === null ? -1 : $origDom.find('li').length)) {
-                $origDom = $el.clone();
-                // Assign each list item a unique number value
-                $.each($origDom.children('li'), function (idx, val) {
-                    $(val).attr("data-" + dataItemName, counter);
-                    counter++;
-                });
+            // Fix for Bug #4
+            if (!this._created) {
+                if ($el.find('li').not('li.ui-editable-temp').length !== ($origDom === null ? -1 : $origDom.find('li').length)) {
 
-                // Incrementing the counter that is used to assign unique value to `data-item` attribute on each list item
-                this._counter = counter;
+                    $origDom = $el.clone();
 
-                // Removing all css classes to get the original DOM structure
-                $origDom.removeClass("ui-listview ui-shadow ui-corner-all ui-listview-inset ui-group-theme-" + this.options.theme)
-                    .find("li")
-                    .removeClass("ui-li-static ui-body-inherit ui-first-child ui-last-child")
-                    .end()
-                    .find("a")
-                    .removeClass("ui-link")
-                    .end();
+                    // Assign each list item a unique number value
+                    $.each($origDom.children('li'), function (idx, val) {
+                        $(val).attr("data-" + dataItemName, counter);
+                        counter++;
+                    });
 
-                // Caching the original DOM to the widget instance
-                this._origDom = $origDom;
+                    // Incrementing the counter that is used to assign unique value to `data-item` attribute on each list item
+                    this._counter = counter;
+
+                    // Removing all css classes to get the original DOM structure
+                    $origDom.removeClass("ui-listview ui-shadow ui-corner-all ui-listview-inset ui-group-theme-" + this.options.theme)
+                        .find("li")
+                        .removeClass("ui-li-static ui-body-inherit ui-first-child ui-last-child ui-li-has-alt")
+                        .end()
+                        .find("a")
+                        .removeClass("ui-link")
+                        .end();
+
+                    // Caching the original DOM to the widget instance
+                    this._origDom = $origDom;
+                }
             }
+            
+            console.log("ORIG-DOM:" + this._origDom[0].outerHTML)
 
             // ## Creation
             if (!this._created) {
@@ -130,34 +137,51 @@
             }
 
             if (this._editMode) {
+                console.log("EDIT MODE TRUE")
                 ui = this._ui;
                 $orig = $origDom.clone();
                 $origLis = $orig.find('li');
+                
+                console.log($orig[0].outerHTML)
+                console.log($origLis[0].outerHTML)
+                
+                if ($orig.find('li.ui-editable-temp').length === 0) {
+                    // Checking if text content of <li> is wrapped inside <a>
+                    if ($orig.find('a').length === 0) {
+                        // wrapping contents of <li> inside <a>
+                        $origLis.wrapInner('<a></a>')
+                        console.log($origLis[0].outerHTML)
+                    }
 
-                if ($orig.find('a').length === 0) {
-                    $origLis.wrapInner('<a></a>').append('<a class="ui-editable-btn-del">Delete</a>');
-                } else {
+                    // appending another <a> inside <li>; this is the delete button
                     $origLis.append('<a class="ui-editable-btn-del">Delete</a>');
-                }
 
-                this.option("splitIcon", "minus");
+                    this.option("splitIcon", "minus");
 
-                if (opts.editableType === 'complex') {
-                    $orig.prepend($('<li>' + ui.form[0].innerHTML + '</li>'));
+                    if (opts.editableType === 'complex') {
+                        $orig.prepend($('<li>' + ui.form[0].innerHTML + '</li>'));
+                    }
+                    if (opts.editableType === 'simple') {
+                        $orig.prepend($markup.listTextInput);
+                    }
                 }
-                if (opts.editableType === 'simple') {
-                    $orig.prepend($markup.listTextInput);
-                }
-
+//                console.log($orig[0].outerHTML)
+//                
+//                console.log($lis[0].outerHTML)
                 $lis.remove();
+//                console.log($el[0].outerHTML)
+//                console.log($orig.find('li')[0].outerHTML)
+//                console.log($origLis[0].outerHTML)
                 $el.append($orig.find('li'));
 
                 // Disabling the click event on header when list is in `Edit` mode
                 evt.click[0].handler = $.noop;
             } else {
+                console.log("EDIT MODE FALSE")
                 // Re-enabling the click event handler when the list is in `View` mode
                 evt.click[0].handler = this._clickHandler;
 
+                console.log($lis[0].outerHTML)
                 // Removing `Edit` mode `Li`s
                 $lis.remove()
 
@@ -341,11 +365,12 @@
 
         _insertListItem: function (e) {
             e.preventDefault();
-
+            
             // returning immediately if keyup keycode does not match keyCode.ENTER i.e. 13
             if (e.type !== "tap" && e.keyCode !== $.mobile.keyCode.ENTER) return;
 
             if (this.options.editableType === 'complex') {
+                console.log("Editable Listview Type: Complex")
                 var liTemplate = '',
                     proceed = true,
                     inputs = $(e.target).parents('li').find('[data-item-name]');
@@ -378,7 +403,7 @@
             }
 
             if (this.options.editableType === 'simple') {
-
+                console.log("Editable Listview Type: Simple")
                 var $target = $(e.target),
                     $input = (e.type === "keyup") ? $target : $target.prev().find('input'),
                     inputTextString = $input.val();
@@ -386,9 +411,11 @@
                 // Inserting list item only if input string is not empty
                 if (!!inputTextString) {
                     $input.val(""); // Clearing the input text field
-
-                    var liTemplate = this._isListEmpty() ? $('<li></li>') // simple static list template is list is empty
-                        : this._origDom.find('li').first().clone(); //
+                    
+                    console.log(this._origDom.find('li').html())
+                    var liTemplate = this._isListEmpty()
+                                     ? $('<li></li>') // simple static list template is list is empty
+                                     : this._origDom.find('li').first().clone(); //
 
                     liTemplate.attr("data-" + this._dataItemName, this._counter);
                     this._counter++;
@@ -400,6 +427,7 @@
                     }
 
                     this._origDom.prepend(liTemplate);
+                    console.log(this._origDom[0].outerHTML)
                     this.refresh();
                 }
             }
