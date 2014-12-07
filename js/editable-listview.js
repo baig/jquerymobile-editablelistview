@@ -99,8 +99,6 @@
                 }
             }
             
-            console.log("ORIG-DOM:" + this._origDom[0].outerHTML)
-
             // ## Creation
             if (!this._created) {
                 // Wrapping the list structure inside Collapsible
@@ -137,20 +135,17 @@
             }
 
             if (this._editMode) {
-                console.log("EDIT MODE TRUE")
+                
                 ui = this._ui;
                 $orig = $origDom.clone();
                 $origLis = $orig.find('li');
-                
-                console.log($orig[0].outerHTML)
-                console.log($origLis[0].outerHTML)
                 
                 if ($orig.find('li.ui-editable-temp').length === 0) {
                     // Checking if text content of <li> is wrapped inside <a>
                     if ($orig.find('a').length === 0) {
                         // wrapping contents of <li> inside <a>
                         $origLis.wrapInner('<a></a>')
-                        console.log($origLis[0].outerHTML)
+                        
                     }
 
                     // appending another <a> inside <li>; this is the delete button
@@ -165,23 +160,19 @@
                         $orig.prepend($markup.listTextInput);
                     }
                 }
-//                console.log($orig[0].outerHTML)
-//                
-//                console.log($lis[0].outerHTML)
+                
                 $lis.remove();
-//                console.log($el[0].outerHTML)
-//                console.log($orig.find('li')[0].outerHTML)
-//                console.log($origLis[0].outerHTML)
+                
                 $el.append($orig.find('li'));
 
                 // Disabling the click event on header when list is in `Edit` mode
                 evt.click[0].handler = $.noop;
             } else {
-                console.log("EDIT MODE FALSE")
+                
                 // Re-enabling the click event handler when the list is in `View` mode
                 evt.click[0].handler = this._clickHandler;
 
-                console.log($lis[0].outerHTML)
+                
                 // Removing `Edit` mode `Li`s
                 $lis.remove()
 
@@ -370,7 +361,7 @@
             if (e.type !== "tap" && e.keyCode !== $.mobile.keyCode.ENTER) return;
 
             if (this.options.editableType === 'complex') {
-                console.log("Editable Listview Type: Complex")
+                
                 var liTemplate = '',
                     proceed = true,
                     inputs = $(e.target).parents('li').find('[data-item-name]');
@@ -381,7 +372,7 @@
                         template = $input.data("item-template"),
                         value = $input.val();
 
-                    console.log($input)
+                    
                     if (!value) {
                         proceed = false;
                     }
@@ -403,7 +394,7 @@
             }
 
             if (this.options.editableType === 'simple') {
-                console.log("Editable Listview Type: Simple")
+                
                 var $target = $(e.target),
                     $input = (e.type === "keyup") ? $target : $target.prev().find('input'),
                     inputTextString = $input.val();
@@ -412,7 +403,7 @@
                 if (!!inputTextString) {
                     $input.val(""); // Clearing the input text field
                     
-                    console.log(this._origDom.find('li').html())
+                    
                     var liTemplate = this._isListEmpty()
                                      ? $('<li></li>') // simple static list template is list is empty
                                      : this._origDom.find('li').first().clone(); //
@@ -427,7 +418,7 @@
                     }
 
                     this._origDom.prepend(liTemplate);
-                    console.log(this._origDom[0].outerHTML)
+                    
                     this.refresh();
                 }
             }
