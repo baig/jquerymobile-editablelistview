@@ -15,7 +15,7 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
-var clean = require('gulp-clean');
+var del = require('del');
 
 /** gulp tasks */
 
@@ -23,8 +23,11 @@ help(gulp);
 
 gulp.task('clean', 'Cleans the build folder.', [], function () {
     "use strict";
-    gulp.src('build/**/*', { read: false })
-        .pipe(clean({ force: true }));
+    
+    del([
+        'build/**'
+    ]);
+    
 }, {
     aliases: ['c', 'C']
 });
