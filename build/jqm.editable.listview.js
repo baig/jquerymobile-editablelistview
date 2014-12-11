@@ -337,6 +337,8 @@
         },
 
         _clearTextFields: function (e) {
+            e.preventDefault();
+            
             var inputs = $(e.target).parents('li').find('[data-item-name]');
 
             $.each(inputs, function (idx, val) {
