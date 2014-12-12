@@ -155,6 +155,7 @@
 
                     if (opts.editableType === 'complex') {
                         $orig.prepend('<li></li>');
+                        $orig.find("li:first-child").append(ui.form);
                     }
                     if (opts.editableType === 'simple') {
                         $orig.prepend($markup.listTextInput);
@@ -188,18 +189,8 @@
         },
 
         _afterListviewRefresh: function () {
-            var $el = this.element,
-                opts = this.options,
-                ui = this._ui;
-            
-            // Returning immediately if `data-editable="false"`
+             // Returning immediately if `data-editable="false"`
             if (!opts.editable) return;
-            
-            if (this._editMode) {
-                if (opts.editableType === 'complex') {
-                    $el.find("li:first-child").append(ui.form.children())
-                }
-            }
 
             this._attachDetachEventHandlers();
         },
