@@ -357,6 +357,8 @@
         /*_enableListItemEditing: function() {},*/
 
         _insertListItem: function (e) {
+            var $el = this.element;
+            
             e.preventDefault();
             
             // returning immediately if keyup keycode does not match keyCode.ENTER i.e. 13
@@ -372,10 +374,27 @@
                 $.each(inputs, function (idx, val) {
                     var $input = $(val),
                         template = $input.data("item-template"),
-                        value = $input.val();
-
+                        inputType = $input.attr("type"),
+                        value = null;
                     
-                    if (!value) {
+                    switch(inputType) {
+                        case "text":
+                        case "number":
+                            value = $input.val()
+                            break
+                        case "checkbox":
+                            value = $input.is(":checked")
+                        case "radio":
+                            var itemName = $input.attr("name")
+                            var $radios = $el.find("li:first-child input[name='" + itemName + "']").filter(":radio")
+                            $radios.each(function(idx) {
+                                var $this = $(this)
+                                if ( $this.prop( "checked" ) ) value = $this.val()
+                            })
+                            break
+                    }
+                    
+                    if (!value && inputType !== "checkbox") {
                         proceed = false;
                     }
 
@@ -389,7 +408,7 @@
 
                 liTemplate.attr("data-" + this._dataItemName, this._counter);
                 this._counter++;
-
+                
                 this._origDom.prepend(liTemplate);
                 this.refresh();
 
