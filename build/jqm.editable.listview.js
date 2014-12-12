@@ -23,6 +23,7 @@
         _itemNames: [],
         _evt: null,
         _clickHandler: null,
+        _liDetachedForm: null,
 
         // The options hash
         options: {
@@ -154,8 +155,8 @@
                     this.option("splitIcon", "minus");
 
                     if (opts.editableType === 'complex') {
-                        $orig.prepend('<li></li>');
-                        $orig.find("li:first-child").append(ui.form);
+                            $orig.prepend('<li class="ui-editable-temp"></li>');
+                            $orig.find("li.ui-editable-temp").append(ui.form);
                     }
                     if (opts.editableType === 'simple') {
                         $orig.prepend($markup.listTextInput);
@@ -172,10 +173,10 @@
                 
                 // Re-enabling the click event handler when the list is in `View` mode
                 evt.click[0].handler = this._clickHandler;
-
                 
                 // Removing `Edit` mode `Li`s
-                $lis.remove()
+                $lis.filter(".ui-editable-temp").hide()
+                $lis.not(".ui-editable-temp").remove()
 
                 if (opts.itemIcon) {
                     $el.append($origDom.clone().find('li'));
@@ -190,8 +191,8 @@
 
         _afterListviewRefresh: function () {
              // Returning immediately if `data-editable="false"`
-            if (!opts.editable) return;
-
+            if (!this.options.editable) return;
+            
             this._attachDetachEventHandlers();
         },
 
@@ -318,17 +319,20 @@
                 $clearBtn = (editableType === 'complex') ? $content.find("li:first-child [data-clear-button='true']") : null,
                 $textField = (editableType === 'simple') ? $content.find('input[type=text]') : null;
 
+                this._off( $addBtn, "tap" );
                 this._on($addBtn, {
                     "tap": "_insertListItem"
                 });
 
                 if ($clearBtn !== null) {
+                    this._off( $clearBtn, "tap" );
                     this._on($clearBtn, {
                         "tap": "_clearTextFields"
                     });
                 }
 
                 if ($textField !== null) {
+                    this._off( $textField, "keyup" );
                     this._on($textField, {
                         "keyup": "_insertListItem"
                     });
@@ -410,6 +414,7 @@
                 this._counter++;
                 
                 this._origDom.prepend(liTemplate);
+                console.log(this._origDom.children())
                 this.refresh();
 
             }

@@ -23,6 +23,7 @@
         _itemNames: [],
         _evt: null,
         _clickHandler: null,
+        _liDetachedForm: null,
 
         // The options hash
         options: {
@@ -154,8 +155,8 @@
                     this.option("splitIcon", "minus");
 
                     if (opts.editableType === 'complex') {
-//                        $orig.prepend('<li></li>');
-                        $orig.find("li:first-child").prepend(ui.form);
+                            $orig.prepend('<li class="ui-editable-temp"></li>');
+                            $orig.find("li.ui-editable-temp").append(ui.form);
                     }
                     if (opts.editableType === 'simple') {
                         $orig.prepend($markup.listTextInput);
@@ -172,10 +173,10 @@
                 
                 // Re-enabling the click event handler when the list is in `View` mode
                 evt.click[0].handler = this._clickHandler;
-
                 
                 // Removing `Edit` mode `Li`s
-                $lis.remove()
+                $lis.filter(".ui-editable-temp").hide()
+                $lis.not(".ui-editable-temp").remove()
 
                 if (opts.itemIcon) {
                     $el.append($origDom.clone().find('li'));
@@ -191,7 +192,7 @@
         _afterListviewRefresh: function () {
              // Returning immediately if `data-editable="false"`
             if (!this.options.editable) return;
-
+            
             this._attachDetachEventHandlers();
         },
 
@@ -378,25 +379,24 @@
                     var $input = $(val),
                         template = $input.data("item-template"),
                         inputType = $input.attr("type"),
-                        value = $input.val();
-//                        value = null;
+                        value = null;
                     
-//                    switch(inputType) {
-//                        case "text":
-//                        case "number":
-//                            value = $input.val()
-//                            break
-//                        case "checkbox":
-//                            value = $input.is(":checked")
-//                        case "radio":
-//                            var itemName = $input.attr("name")
-//                            var $radios = $el.find("li:first-child input[name='" + itemName + "']").filter(":radio")
-//                            $radios.each(function(idx) {
-//                                var $this = $(this)
-//                                if ( $this.prop( "checked" ) ) value = $this.val()
-//                            })
-//                            break
-//                    }
+                    switch(inputType) {
+                        case "text":
+                        case "number":
+                            value = $input.val()
+                            break
+                        case "checkbox":
+                            value = $input.is(":checked")
+                        case "radio":
+                            var itemName = $input.attr("name")
+                            var $radios = $el.find("li:first-child input[name='" + itemName + "']").filter(":radio")
+                            $radios.each(function(idx) {
+                                var $this = $(this)
+                                if ( $this.prop( "checked" ) ) value = $this.val()
+                            })
+                            break
+                    }
                     
                     if (!value && inputType !== "checkbox") {
                         proceed = false;
