@@ -154,8 +154,8 @@
                     this.option("splitIcon", "minus");
 
                     if (opts.editableType === 'complex') {
-                        $orig.prepend('<li></li>');
-                        $orig.find("li:first-child").append(ui.form);
+//                        $orig.prepend('<li></li>');
+                        $orig.find("li:first-child").prepend(ui.form);
                     }
                     if (opts.editableType === 'simple') {
                         $orig.prepend($markup.listTextInput);
@@ -190,7 +190,7 @@
 
         _afterListviewRefresh: function () {
              // Returning immediately if `data-editable="false"`
-            if (!opts.editable) return;
+            if (!this.options.editable) return;
 
             this._attachDetachEventHandlers();
         },
@@ -318,17 +318,20 @@
                 $clearBtn = (editableType === 'complex') ? $content.find("li:first-child [data-clear-button='true']") : null,
                 $textField = (editableType === 'simple') ? $content.find('input[type=text]') : null;
 
+                this._off( $addBtn, "tap" );
                 this._on($addBtn, {
                     "tap": "_insertListItem"
                 });
 
                 if ($clearBtn !== null) {
+                    this._off( $clearBtn, "tap" );
                     this._on($clearBtn, {
                         "tap": "_clearTextFields"
                     });
                 }
 
                 if ($textField !== null) {
+                    this._off( $textField, "keyup" );
                     this._on($textField, {
                         "keyup": "_insertListItem"
                     });
@@ -375,24 +378,25 @@
                     var $input = $(val),
                         template = $input.data("item-template"),
                         inputType = $input.attr("type"),
-                        value = null;
+                        value = $input.val();
+//                        value = null;
                     
-                    switch(inputType) {
-                        case "text":
-                        case "number":
-                            value = $input.val()
-                            break
-                        case "checkbox":
-                            value = $input.is(":checked")
-                        case "radio":
-                            var itemName = $input.attr("name")
-                            var $radios = $el.find("li:first-child input[name='" + itemName + "']").filter(":radio")
-                            $radios.each(function(idx) {
-                                var $this = $(this)
-                                if ( $this.prop( "checked" ) ) value = $this.val()
-                            })
-                            break
-                    }
+//                    switch(inputType) {
+//                        case "text":
+//                        case "number":
+//                            value = $input.val()
+//                            break
+//                        case "checkbox":
+//                            value = $input.is(":checked")
+//                        case "radio":
+//                            var itemName = $input.attr("name")
+//                            var $radios = $el.find("li:first-child input[name='" + itemName + "']").filter(":radio")
+//                            $radios.each(function(idx) {
+//                                var $this = $(this)
+//                                if ( $this.prop( "checked" ) ) value = $this.val()
+//                            })
+//                            break
+//                    }
                     
                     if (!value && inputType !== "checkbox") {
                         proceed = false;
@@ -410,6 +414,7 @@
                 this._counter++;
                 
                 this._origDom.prepend(liTemplate);
+                console.log(this._origDom.children())
                 this.refresh();
 
             }
