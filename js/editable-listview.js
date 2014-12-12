@@ -23,8 +23,7 @@
         _itemNames: [],
         _evt: null,
         _clickHandler: null,
-        _liDetachedForm: null,
-
+        
         // The options hash
         options: {
             editable: false,
@@ -256,16 +255,16 @@
         // --(start)-- Event Handlers --
 
         _onEditButtonTapped: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
             var editMode = this._editMode = !this._editMode,
                 $collapsible = this.element.parents(":jqmData(role='collapsible')");
 
             editMode ? $collapsible.collapsible("expand") : $collapsible.collapsible("collapse");
 
             this.refresh();
-
-            e.preventDefault();
-            e.stopPropagation();
-
+            
             if (!editMode) {
                 this._triggerListChange(e);
             }
@@ -351,9 +350,9 @@
         },
 
         _enableListItemDeleteEvent: function () {
-            this._editMode ? this._on(this._ui.content.find('a.ui-editable-btn-del'), {
-                "click": "_deleteListItem"
-            }) : this._off(this._ui.content.find('a.ui-editable-btn-del'), "click");
+            this._editMode
+            ? this._on(this._ui.content.find('a.ui-editable-btn-del'), { "click": "_deleteListItem" })
+            : this._off(this._ui.content.find('a.ui-editable-btn-del'), "click");
         },
 
 
@@ -361,9 +360,9 @@
         /*_enableListItemEditing: function() {},*/
 
         _insertListItem: function (e) {
-            var $el = this.element;
-            
             e.preventDefault();
+            
+            var $el = this.element;
             
             // returning immediately if keyup keycode does not match keyCode.ENTER i.e. 13
             if (e.type !== "tap" && e.keyCode !== $.mobile.keyCode.ENTER) return;
@@ -372,28 +371,29 @@
                 
                 var liTemplate = '',
                     proceed = true,
-                    inputs = $(e.target).parents('li').find('[data-item-name]');
+                    $inputs = $(e.target).parents('li').find('[data-item-name]');
 
-
-                $.each(inputs, function (idx, val) {
+                $.each($inputs, function (idx, val) {
                     var $input = $(val),
                         template = $input.data("item-template"),
                         inputType = $input.attr("type"),
                         value = null;
-                    
+                        
                     switch(inputType) {
                         case "text":
                         case "number":
                             value = $input.val()
+                            $input.val("")
                             break
                         case "checkbox":
                             value = $input.is(":checked")
+                            break
                         case "radio":
                             var itemName = $input.attr("name")
-                            var $radios = $el.find("li:first-child input[name='" + itemName + "']").filter(":radio")
-                            $radios.each(function(idx) {
+                            var $radios = $el.find("li:first-child input[data-item-name='" + itemName + "']").filter(":radio")
+                            $radios.each(function() {
                                 var $this = $(this)
-                                if ( $this.prop( "checked" ) ) value = $this.val()
+                                if ( $this.is( ":checked" ) ) value = $this.data("item-display-value")
                             })
                             break
                     }
@@ -401,8 +401,12 @@
                     if (!value && inputType !== "checkbox") {
                         proceed = false;
                     }
-
-                    liTemplate += template.replace(/%%/, value)
+                    
+                    var renderedTemplate = template.replace(/%%/, value)
+                    
+                    liTemplate += ( liTemplate.indexOf(renderedTemplate) === -1 )
+                                  ? renderedTemplate    // Add only if not already present
+                                  : ''                  // Skip if value already present in liTemplate
                 });
 
                 // Not proceeding to add if any input value is empty
@@ -414,7 +418,7 @@
                 this._counter++;
                 
                 this._origDom.prepend(liTemplate);
-                console.log(this._origDom.children())
+                
                 this.refresh();
 
             }
