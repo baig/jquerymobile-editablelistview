@@ -154,7 +154,7 @@
                     this.option("splitIcon", "minus");
 
                     if (opts.editableType === 'complex') {
-                        $orig.prepend($('<li>' + ui.form[0].innerHTML + '</li>'));
+                        $orig.prepend('<li></li>');
                     }
                     if (opts.editableType === 'simple') {
                         $orig.prepend($markup.listTextInput);
@@ -188,9 +188,18 @@
         },
 
         _afterListviewRefresh: function () {
-
+            var $el = this.element,
+                opts = this.options,
+                ui = this._ui;
+            
             // Returning immediately if `data-editable="false"`
-            if (!this.options.editable) return;
+            if (!opts.editable) return;
+            
+            if (this._editMode) {
+                if (opts.editableType === 'complex') {
+                    $el.find("li:first-child").append(ui.form.children())
+                }
+            }
 
             this._attachDetachEventHandlers();
         },
