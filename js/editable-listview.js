@@ -446,10 +446,12 @@
                     } else {
                         liTemplate.children('a').text(inputTextString);
                     }
-
-                    this._origDom.prepend(liTemplate);
                     
-                    this.refresh();
+                    this._items.push(inputTextString)
+
+                    this._origDom.prepend(liTemplate)
+                    
+                    this.refresh()
                 }
             }
         },
