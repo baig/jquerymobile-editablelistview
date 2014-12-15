@@ -20,7 +20,6 @@
         _editMode: false,
         _counter: 1,
         _dataItemName: "item",
-        _itemNames: [],
         _evt: null,
         _clickHandler: null,
         
@@ -111,17 +110,9 @@
                     content: wrapper.find('div.ui-collapsible-content'),
                 };
 
-                if (this.options.editableType === 'complex') {
-                    var inputs = ui.content.find('li:first-child').find('[data-item-name]');
-
-                    var itemNames = this._itemNames;
-                    $.each(inputs, function (idx, val) {
-                        itemNames.push($(val).data("item-name"));
-                    });
-                }
-
                 $.extend(this, {
-                    _ui: ui
+                    _ui: ui,
+                    _items: []
                 });
 
                 ui.header.addClass('ui-btn-icon-left');
@@ -362,7 +353,8 @@
         _insertListItem: function (e) {
             e.preventDefault();
             
-            var $el = this.element;
+            var $el = this.element,
+                itemObj = {};
             
             // returning immediately if keyup keycode does not match keyCode.ENTER i.e. 13
             if (e.type !== "tap" && e.keyCode !== $.mobile.keyCode.ENTER) return;
@@ -377,23 +369,29 @@
                     var $input = $(val),
                         template = $input.data("item-template"),
                         inputType = $input.attr("type"),
+                        itemName = $input.data("item-name"),
                         value = null;
                         
                     switch(inputType) {
                         case "text":
                         case "number":
                             value = $input.val()
+                            itemObj[itemName] = value
                             $input.val("")
                             break
                         case "checkbox":
                             value = $input.is(":checked")
+                            itemObj[itemName] = value
                             break
                         case "radio":
                             var itemName = $input.attr("name")
                             var $radios = $el.find("li:first-child input[data-item-name='" + itemName + "']").filter(":radio")
                             $radios.each(function() {
                                 var $this = $(this)
-                                if ( $this.is( ":checked" ) ) value = $this.data("item-display-value")
+                                if ( $this.is( ":checked" ) ) {
+                                    value = $this.data("item-display-value")
+                                    itemObj[itemName] = $this.val()
+                                }
                             })
                             break
                     }
@@ -411,6 +409,8 @@
 
                 // Not proceeding to add if any input value is empty
                 if (!proceed) return;
+                
+                this._items.push(itemObj)
 
                 liTemplate = $("<li><a>" + liTemplate + "</a></li>");
 
@@ -530,26 +530,8 @@
         },
 
         items: function () {
-            var arr = [],
-                itemNames = this._itemNames;
-
-            if (this.options.editableType === 'simple') {
-                this.element.find('li').each(function (idx, el) {
-                    arr.push(el.textContent);
-                });
-            }
-
-            if (this.options.editableType === 'complex') {
-                this.element.find('a').each(function (idx, el) {
-                    var obj = {};
-                    $(el).children().each(function (idx, val) {
-                        obj[itemNames[idx]] = $(val).text();
-                    });
-                    arr.push(obj);
-                });
-            }
-
-            return arr;
+            // stringifying and parsing to returned a cloned copy with no internal object references
+            return JSON.parse(JSON.stringify(this._items));
         },
 
         widget: function () {
