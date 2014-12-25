@@ -112,7 +112,8 @@
 
                 $.extend(this, {
                     _ui: ui,
-                    _items: []
+                    _newItems: [],
+                    _items: [],
                 });
 
                 ui.header.addClass('ui-btn-icon-left');
@@ -278,12 +279,12 @@
 
         // _triggerListChange
         _triggerListChange: function (e) {
-            var items = this.items(),
-                length = this.length();
             this._trigger('change', e, {
-                items: items,
-                length: length,
+                items: this._newItems,
+                length: this.length(),
             });
+            this._items = this._items.concat(this._newItems)
+            this._newItems = []
         },
 
         // --(end)-- Event Handlers --
@@ -410,7 +411,7 @@
                 // Not proceeding to add if any input value is empty
                 if (!proceed) return;
                 
-                this._items.push(itemObj)
+                this._newItems.push(itemObj)
 
                 liTemplate = $("<li><a>" + liTemplate + "</a></li>");
 
@@ -447,7 +448,7 @@
                         liTemplate.children('a').text(inputTextString);
                     }
                     
-                    this._items.push(inputTextString)
+                    this._newItems.push(inputTextString)
 
                     this._origDom.prepend(liTemplate)
                     
@@ -526,9 +527,9 @@
         },
 
         // Public API
-
+        
         length: function () {
-            return this.element.find('li').length;
+            return this.element.find('li').not('.ui-editable-temp').length;
         },
 
         items: function () {
