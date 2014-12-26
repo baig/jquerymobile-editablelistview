@@ -109,11 +109,21 @@
                     button: wrapper.find('h1 + a, h1 + button'),
                     content: wrapper.find('div.ui-collapsible-content'),
                 };
+                
+                var items = {}
+                if (this.options.editableType === 'simple') {
+                    this._origDom.find('li').each( function(idx, li) {
+                        var $li = $(li)
+                        items[$li.data('item')] = $li.text()
+                    })
+                }
+                
+//                console.log(items)
 
                 $.extend(this, {
                     _ui: ui,
                     _newItems: [],
-                    _items: [],
+                    _items: items,
                 });
 
                 ui.header.addClass('ui-btn-icon-left');
@@ -280,10 +290,11 @@
         // _triggerListChange
         _triggerListChange: function (e) {
             this._trigger('change', e, {
-                items: this._newItems,
+                newItems: this._newItems,
+                allItems: this._toArray(this._items),
                 length: this.length(),
             });
-            this._items = this._items.concat(this._newItems)
+            // emptying the _newItems array
             this._newItems = []
         },
 
@@ -411,12 +422,14 @@
                 // Not proceeding to add if any input value is empty
                 if (!proceed) return;
                 
+                var dataItemNumber = this._counter
+                this._counter++;
+                
                 this._newItems.push(itemObj)
+                this._items[dataItemNumber] = itemObj
 
                 liTemplate = $("<li><a>" + liTemplate + "</a></li>");
-
-                liTemplate.attr("data-" + this._dataItemName, this._counter);
-                this._counter++;
+                liTemplate.attr("data-" + this._dataItemName, dataItemNumber);
                 
                 this._origDom.prepend(liTemplate);
                 
@@ -434,21 +447,23 @@
                 if (!!inputTextString) {
                     $input.val(""); // Clearing the input text field
                     
+                    var dataItemNumber = this._counter
+                    this._counter++;
+                    
+                    this._newItems.push(inputTextString)
+                    this._items[dataItemNumber] = inputTextString
                     
                     var liTemplate = this._isListEmpty()
                                      ? $('<li></li>') // simple static list template is list is empty
                                      : this._origDom.find('li').first().clone(); //
 
-                    liTemplate.attr("data-" + this._dataItemName, this._counter);
-                    this._counter++;
+                    liTemplate.attr("data-" + this._dataItemName, dataItemNumber);
 
                     if (liTemplate.children().length === 0) {
                         liTemplate.text(inputTextString);
                     } else {
                         liTemplate.children('a').text(inputTextString);
                     }
-                    
-                    this._newItems.push(inputTextString)
 
                     this._origDom.prepend(liTemplate)
                     
@@ -458,16 +473,20 @@
         },
 
         _deleteListItem: function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
             var $parentTarget = $(e.currentTarget).parent(),
                 itemNum = $parentTarget.data(this._dataItemName);
 
             this._origDom.find("li[data-" + this._dataItemName + "=\"" + itemNum + "\"]")
                 .remove();
+            
+            delete this._items[itemNum]
 
             $parentTarget.remove();
+            
             this._updateHeader();
-            e.preventDefault();
-            e.stopPropagation();
         },
 
         // --(end)-- Event Handler Helper Functions --
@@ -524,6 +543,17 @@
                     "'>Edit</button>" +
                     "</div>";
             }
+        },
+        
+        _toArray: function(obj) {
+            var arr = []
+            var keys = Object.keys(obj)
+            
+            for (var i=0; i<keys.length; i++) {
+                arr.push( obj[keys[i]] )
+            }
+            
+            return arr
         },
 
         // Public API
