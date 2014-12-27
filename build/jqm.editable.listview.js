@@ -28,6 +28,7 @@
             editable: false,
             editableType: 'simple',
             editableForm: '',
+            itemName: '',
 
             title: "View list items",
             emptyTitle: "No items to view",
@@ -298,9 +299,15 @@
 
         // _triggerListChange
         _triggerListChange: function (e) {
+            var opts = this.options
             this._trigger('change', e, {
-                newItems: this._newItems,
-                allItems: this._toArray(this._items),
+                newItems: (opts.editableType === 'simple' && opts.itemName !== '') ? this._toObjectCollection(this._newItems, opts.itemName) : this._newItems,
+                allItems: (opts.editableType === 'simple' && opts.itemName !== '') ? this._toObjectCollection(this._toArray(this._items), opts.itemName) : this._toArray(this._items),
+                length: this.length(),
+            });
+            console.log({
+                newItems: (opts.editableType === 'simple' && opts.itemName !== '') ? this._toObjectCollection(this._newItems, opts.itemName) : this._newItems,
+                allItems: (opts.editableType === 'simple' && opts.itemName !== '') ? this._toObjectCollection(this._toArray(this._items), opts.itemName) : this._toArray(this._items),
                 length: this.length(),
             });
             // emptying the _newItems array
@@ -563,6 +570,17 @@
             }
             
             return arr
+        },
+        
+        _toObjectCollection: function(arr, keyName) {
+            console.log(arr)
+            var arrOfObj = []
+            for (var i=0; i<arr.length; i++) {
+                var obj = {}
+                obj[keyName] = arr[i]
+                arrOfObj.push(obj)
+            }
+            return arrOfObj
         },
         
         // Public API
