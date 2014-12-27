@@ -103,7 +103,8 @@
                 // Wrapping the list structure inside Collapsible
                 var wrapper = this._wrapCollapsible(),
                     ui = {},
-                    items = {};
+                    items = {},
+                    self = this;
 
                 ui.wrapper = wrapper
                 ui.header = wrapper.find('h1')
@@ -127,36 +128,25 @@
                         }
                     }
                     
-                    var itemArr = []
+                    var itemObj = {}
                     
                     ui.form.find('input').each( function( idx, input ) {
-                        var $input = $(input)
-                        var $dataItemName = $input.data('item-name')
-                        var $dataItemTemplate = $input.data('item-template')
-                        var $selector = $dataItemTemplate.match(/<[A-Za-z0-9]*>%%<\/[A-Za-z0-9]*>/)[0]
-                        
-                        itemArr.push({name: $dataItemName, template: $dataItemTemplate, selector: $selector})
+                        var dataItemName = $(input).data('item-name')
+                        itemObj[dataItemName] = dataItemName
                     })
                     
                     this._origDom.find('li').each( function(idx, li) {
                         var $li = $(li)
                         var htmlStr = $li.html()
                         
-                        var itemObj = {}
+                        var obj = {}
                         
-                        $.each(itemArr, function(i, obj) {
-                            var findStr = obj.template.replace("%%", ".*")
-                            var filterStr = obj.selector.replace("%%", ".*")
-                                                              
-                            var reg = new RegExp(findStr)
-                            var filter = new RegExp(filterStr)
-                            
-                            itemObj[obj.name] = $(htmlStr.match(reg)[0].match(filter)[0]).text()
+                        $.each(itemObj, function(k) {
+                            obj[k] = $li.find('span#' + k).text()
                         })
                         
-                        items[$li.data('item')] = itemObj
+                        items[$li.data('item')] = obj
                     })
-                    
                 }
                 
                 if (this.options.editableType === 'simple') {
@@ -574,7 +564,7 @@
             
             return arr
         },
-
+        
         // Public API
         
         length: function () {
