@@ -301,13 +301,8 @@
         _triggerListChange: function (e) {
             var opts = this.options
             this._trigger('change', e, {
-                newItems: (opts.editableType === 'simple' && opts.itemName !== '') ? this._toObjectCollection(this._newItems, opts.itemName) : this._newItems,
-                allItems: (opts.editableType === 'simple' && opts.itemName !== '') ? this._toObjectCollection(this._toArray(this._items), opts.itemName) : this._toArray(this._items),
-                length: this.length(),
-            });
-            console.log({
-                newItems: (opts.editableType === 'simple' && opts.itemName !== '') ? this._toObjectCollection(this._newItems, opts.itemName) : this._newItems,
-                allItems: (opts.editableType === 'simple' && opts.itemName !== '') ? this._toObjectCollection(this._toArray(this._items), opts.itemName) : this._toArray(this._items),
+                items: (opts.editableType === 'simple' && opts.itemName !== '') ? this._toObjectCollection(this._toArray(this._items), opts.itemName) : this._toArray(this._items),
+                added: (opts.editableType === 'simple' && opts.itemName !== '') ? this._toObjectCollection(this._newItems, opts.itemName) : this._newItems,
                 length: this.length(),
             });
             // emptying the _newItems array
@@ -573,7 +568,6 @@
         },
         
         _toObjectCollection: function(arr, keyName) {
-            console.log(arr)
             var arrOfObj = []
             for (var i=0; i<arr.length; i++) {
                 var obj = {}
