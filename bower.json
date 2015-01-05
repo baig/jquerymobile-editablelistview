@@ -18,9 +18,5 @@
         "README.md",
         "package.json",
         "gulpfile.js"
-    ],
-
-    "dependencies": {
-        "jquery-mobile-bower": "1.4.2"
-    }
+    ]
 }
