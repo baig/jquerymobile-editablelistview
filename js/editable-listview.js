@@ -112,6 +112,12 @@
                 ui.button = wrapper.find('h1 + a, h1 + button')
                 ui.content = wrapper.find('div.ui-collapsible-content')
                 
+                $.extend(this, {
+                    _ui: ui,
+                    _newItems: [],
+                    _items: items,
+                })
+                
                 if (this.options.editableType === 'complex') {
 
                     if (!ui.form) {
@@ -166,11 +172,6 @@
 
                 this._created = true;
                 
-                $.extend(this, {
-                    _ui: ui,
-                    _newItems: [],
-                    _items: items,
-                })
                 
             }
 
