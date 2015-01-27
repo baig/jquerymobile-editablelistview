@@ -104,7 +104,7 @@ See the [List of data attributes](https://github.com/baig/jquerymobile-editablel
 [Wasif Hasan Baig](https://twitter.com/wasifhasanbaig)
 
 ## License
-Copyright &copy; 2014 Wasif Hasan Baig
+Copyright &copy; 2015 Wasif Hasan Baig
 
 Source code is released under the Terms and Conditions of [MIT License](http://opensource.org/licenses/MIT).
 
