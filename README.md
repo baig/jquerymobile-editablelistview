@@ -100,7 +100,7 @@ This is a preliminary list of planned fatures.
 See the [List of data attributes](https://github.com/baig/jquerymobile-editablelistview/wiki/List-of-data-attributes) wiki page.
 
 ## License
-Copyright &copy; 2015 [Wasif Hasan Baig](https://twitter.com/_wbaig)
+Copyright &copy; 2014 -- 2015 [Wasif Hasan Baig](https://twitter.com/_wbaig)
 
 Source code is released under the Terms and Conditions of [MIT License](http://opensource.org/licenses/MIT).
 
