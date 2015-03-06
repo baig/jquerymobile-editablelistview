@@ -148,8 +148,14 @@
                         
                         var obj = {}
                         
-                        $.each(itemObj, function(k) {
-                            obj[k] = $li.find('span#' + k).text()
+                        $.each(itemObj, function(dataItemName) {
+                            var $span = $li.find('span#' + dataItemName)
+                            var itemValue = $span.data('value')
+                            if (itemValue !== undefined) {
+                                obj[dataItemName] = itemValue
+                            } else {
+                                obj[dataItemName] = $span.text()
+                            }
                         })
                         
                         items[$li.data('item')] = obj
