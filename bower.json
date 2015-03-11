@@ -21,6 +21,7 @@
         ".gitignore",
         "README.md",
         "package.json",
-        "gulpfile.js"
+        "gulpfile.js",
+        "tests"
     ]
 }
