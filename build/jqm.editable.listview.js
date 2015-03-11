@@ -147,8 +147,14 @@
                 
                 $el.append($orig.find('li'));
 
-                // Disabling the click event on header when list is in `Edit` mode
-                evt.click[0].handler = evt.tap[0].handler = $.noop;
+                /**
+                 * Disabling the click and tap event handlers on header when the
+                 * list is in `Edit` mode
+                 */ 
+                evt.click[0].handler = evt.tap[0].handler = function (e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
             } else {
                 
                 // Re-enabling the click event handler when the list is in `View` mode
