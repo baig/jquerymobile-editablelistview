@@ -22,6 +22,7 @@
         _dataItemName: "item",
         _evt: null,
         _clickHandler: null,
+        _tapHandler: null,
         
         // The options hash
         options: {
@@ -60,125 +61,59 @@
                 $origDom = this._origDom,
                 dataItemName = this._dataItemName,
                 counter = this._counter,
-                ui, $orig, $origLis,
+                ui = {},
+                $orig,
+                $origLis,
+                self = this,
                 evt = this._evt,
                 $lis = $el.find("li"),
                 $markup = this._$markup;
 
-            // saving original DOM structure if there is a discrepency in the number
-            // of list items between `this.element` and `this._origDom` or if the
-            // or if the `this._origDom` is null
-            // Note: list item length count ignores the list item housing the
-            //       text box
-            // Fix for Bug #4
+            /**
+             * saving original DOM structure if there is a discrepency in the number
+             * of list items between `this.element` and `this._origDom` or if the
+             * or if `this._origDom` is null
+             * Note: list item length count ignores the list item housing the
+             *       text box
+             *       Fix for Bug #4
+             */
+            // ## Creation
             if (!this._created) {
                 if ($el.find('li').not('li.ui-editable-temp').length !== ($origDom === null ? -1 : $origDom.find('li').length)) {
-
                     $origDom = $el.clone();
-
                     // Assign each list item a unique number value
                     $.each($origDom.children('li'), function (idx, val) {
                         $(val).attr("data-" + dataItemName, counter);
                         counter++;
                     });
-
                     // Incrementing the counter that is used to assign unique value to `data-item` attribute on each list item
                     this._counter = counter;
-
-                    // Removing all css classes to get the original DOM structure
-                    $origDom.removeClass("ui-listview ui-shadow ui-corner-all ui-listview-inset ui-group-theme-" + this.options.theme)
-                        .find("li")
-                        .removeClass("ui-li-static ui-body-inherit ui-first-child ui-last-child ui-li-has-alt")
-                        .end()
-                        .find("a")
-                        .removeClass("ui-link")
-                        .end();
-
-                    // Caching the original DOM to the widget instance
-                    this._origDom = $origDom;
+                    // Caching the original list to the widget instance
+                    this._origDom = this._getUnenhancedList($origDom);
                 }
-            }
-            
-            // ## Creation
-            if (!this._created) {
+                
                 // Wrapping the list structure inside Collapsible
-                var wrapper = this._wrapCollapsible(),
-                    ui = {},
-                    items = {},
-                    self = this;
-
-                ui.wrapper = wrapper
-                ui.header = wrapper.find('h1')
-                ui.button = wrapper.find('h1 + a, h1 + button')
-                ui.content = wrapper.find('div.ui-collapsible-content')
+                ui.wrapper = this._wrapCollapsible();
+                ui.header = ui.wrapper.find('.ui-collapsible-heading')
+                ui.button = ui.header.find('a a, a button')
+                ui.content = ui.wrapper.find('.ui-collapsible-content')
+                ui.form = this._getForm();
                 
                 $.extend(this, {
                     _ui: ui,
                     _newItems: [],
-                    _items: items,
+                    _items: {}
                 })
                 
-                if (this.options.editableType === 'complex') {
-
-                    if (!ui.form) {
-
-                        if (opts.editableForm.length === 0) {
-                            throw new Error("Form not specified for the Complex Editable Listview type.")
-                        }
-
-                        var form = $el.closest(':jqmData(role="page")').find('#' + opts.editableForm);
-
-                        if (form.is("form, div") && form.attr("data-editable-form")) {
-                            ui.form = form.detach();
-                        } else {
-                            throw new Error("Reference Error: the form's id should match the \"data-editable-form\" attribute on ul and the form element itself should have data-editable-form=\"true\" attribute.")
-                        }
-                    }
-                    
-                    var itemObj = {}
-                    
-                    ui.form.find('input').each( function( idx, input ) {
-                        var dataItemName = $(input).data('item-name')
-                        itemObj[dataItemName] = dataItemName
-                    })
-                    
-                    this._origDom.find('li').each( function(idx, li) {
-                        var $li = $(li)
-                        var htmlStr = $li.html()
-                        
-                        var obj = {}
-                        
-                        $.each(itemObj, function(dataItemName) {
-                            var $span = $li.find('span#' + dataItemName)
-                            var itemValue = $span.data('value')
-                            if (itemValue !== undefined) {
-                                obj[dataItemName] = itemValue
-                            } else {
-                                obj[dataItemName] = $span.text()
-                            }
-                        })
-                        
-                        items[$li.data('item')] = obj
-                    })
-                }
+                this._items = this._getExistingListContents();
                 
-                if (this.options.editableType === 'simple') {
-                    this._origDom.find('li').each( function(idx, li) {
-                        var $li = $(li)
-                        items[$li.data('item')] = $li.text()
-                    })
-                }
-                
-                ui.header.addClass('ui-btn-icon-left');
-
-                evt = this._evt = $._data(ui.header.parent()[0], "events");
+                evt = this._evt = $._data(ui.header[0], "events");
                 this._clickHandler = evt.click[0].handler;
+                this._tapHandler = evt.tap[0].handler
 
                 this._attachEditEventButtons();
 
                 this._created = true;
-                
-                
             }
 
             if (this._editMode) {
@@ -192,7 +127,6 @@
                     if ($orig.find('a').length === 0) {
                         // wrapping contents of <li> inside <a>
                         $origLis.wrapInner('<a></a>')
-                        
                     }
 
                     // appending another <a> inside <li>; this is the delete button
@@ -214,11 +148,12 @@
                 $el.append($orig.find('li'));
 
                 // Disabling the click event on header when list is in `Edit` mode
-                evt.click[0].handler = $.noop;
+                evt.click[0].handler = evt.tap[0].handler = $.noop;
             } else {
                 
                 // Re-enabling the click event handler when the list is in `View` mode
                 evt.click[0].handler = this._clickHandler;
+                evt.tap[0].handler = this._tapHandler;
                 
                 // Removing `Edit` mode `Li`s
                 $lis.filter(".ui-editable-temp").hide()
@@ -234,31 +169,107 @@
             // Updating the header title, header button label and icon based on the list contents and its state (`Edit` or `View`)
             this._updateHeader();
         },
+        
+        _getExistingListContents: function() {
+            var opts = this.options,
+                ui = this._ui,
+                origDom = this._origDom,
+                items = {},
+                tmpObj = {};
+            
+            if (this.options.editableType === 'simple') {
+                this._origDom.find('li').each( function(idx, li) {
+                    var $li = $(li)
+                    items[$li.data('item')] = $li.text()
+                })
+            }
+            
+            if (opts.editableType === 'complex') {
+                    
+                ui.form.find('input').each( function( idx, input ) {
+                    var dataItemName = $(input).data('item-name')
+                    tmpObj[dataItemName] = dataItemName
+                })
+
+                this._origDom.find('li').each( function(idx, li) {
+                    var $li = $(li)
+                    var htmlStr = $li.html()
+
+                    var obj = {}
+
+                    $.each(tmpObj, function(dataItemName) {
+                        var $span = $li.find('span#' + dataItemName)
+                        var itemValue = $span.data('value')
+                        if (itemValue !== undefined) {
+                            obj[dataItemName] = itemValue
+                        } else {
+                            obj[dataItemName] = $span.text()
+                        }
+                    })
+
+                    items[$li.data('item')] = obj
+                })
+            }
+
+            return items;
+        },
+        
+        _getForm: function() {
+            var $el = this.element,
+                opts = this.options,
+                ui = this._ui,
+                form = null;
+            
+            if (opts.editableType === 'complex') {
+                if (ui && ui.form) {
+                    return ui.form
+                } else {
+                    try {
+                        if (opts.editableForm.length === 0) {
+                            throw new Error("Form not specified for the Complex Editable Listview type.")
+                        }
+                        form = $el.closest(':jqmData(role="page")')
+                                  .find('#' + opts.editableForm);
+                        if (!form.length) {
+                            throw new Error("No form found. Specify a form.")
+                        }
+                        if (!form.is("form, div") && !form.attr("data-editable-form")) {
+                            throw new Error("In case of Complex Editable type, the form's id should match the \"data-editable-form\" attribute on ul tag, and the form element itself should have data-editable-form=\"true\" attribute.")
+                        }
+                        form = form.detach();
+                    } catch (error) {
+                        console.error(error.message)
+                    }
+                }
+            }
+            
+            return form;
+        },
+        
+        _getUnenhancedList: function($dom) {
+            // removing all CSS classes to get the original list structure
+            return $dom.removeClass("ui-listview ui-shadow ui-corner-all ui-listview-inset ui-group-theme-" + this.options.theme)
+                       .find("li")
+                       .removeClass("ui-li-static ui-body-inherit ui-first-child ui-last-child ui-li-has-alt")
+                       .end()
+                       .find("a")
+                       .removeClass("ui-link")
+                       .end();
+        },
 
         _afterListviewRefresh: function () {
-            
-             // Returning immediately if `data-editable="false"`
-            if (!this.options.editable) return;
-            
-            this._attachDetachEventHandlers();
+            if (this.options.editable) {
+                this._attachDetachEventHandlers();
+            }
         },
 
         _wrapCollapsible: function () {
-            var $el = this.element,
-                opts = this.options,
-                isListEmpty = this._isListEmpty();
-
-            $el.wrap('<div data-role="collapsible"></div>');
-            $el.parent().prepend(this._$markup.header(opts));
-
-            $el.parents($.mobile['collapsible'].initSelector)
-                .not($.mobile.page.prototype.keepNativeSelector())['collapsible']({
-                    collapsed: opts.collapsed,
-                    expandedIcon: opts.expandedIcon,
-                    collapsedIcon: opts.collapsedIcon
-                });
-
-            return $el.parent().parent();
+            var $el = this.element;
+            
+            $el.wrap("<div data-role='collapsible'></div>")
+               .before(this._$markup.header(this.options, this._isListEmpty()))
+            
+            return $el.closest(":jqmData(role='collapsible')").collapsible();
         },
 
         _attachEditEventButtons: function () {
@@ -266,7 +277,7 @@
                 this._ui.header.off("click");
             }
 
-            this._on(this.element.parent().parent().find('.ui-collapsible-heading a, .ui-collapsible-heading button'), {
+            this._on(this._ui.button, {
                 "click": "_onEditButtonTapped"
             });
         },
@@ -294,10 +305,13 @@
                 opts = this.options,
                 isListEmpty = this._isListEmpty();
 
-            // Update List Header Title
-            ui.header.text(isListEmpty ? opts.emptyTitle : opts.title);
+            // updating list header title
+            ui.header
+                .children("a")[0]
+                .childNodes[0]
+                .data = (isListEmpty) ? opts.emptyTitle : opts.title;
 
-            // Change "Edit" button state, icon and label
+            // changing "Edit" button state, icon and label
             ui.button.removeClass('ui-icon-minus ui-icon-' + opts.doneIcon + ' ui-icon-' + opts.addIcon + ' ui-icon-' + opts.editIcon)
                 .addClass('ui-icon-' + (this._editMode ? opts.doneIcon : isListEmpty ? opts.addIcon : opts.editIcon))
                 .text(this._editMode ? opts.doneLabel : isListEmpty ? opts.addLabel : opts.editLabel);
@@ -541,7 +555,19 @@
         },
 
         _$markup: {
-
+            
+            header: function(opts, isListEmpty) {
+                return "<h1>"+ opts.title +
+                          "<button class='ui-btn ui-mini ui-btn-inline ui-btn-right ui-btn-icon-right" +
+                          " ui-icon-"+ opts.editIcon +
+                          " ui-btn-" + opts.buttonTheme +
+                          (opts.buttonCorner ? " ui-corner-all" : "") +
+                          (opts.buttonShadow ? " ui-shadow" : "") +
+                          "'>"+ opts.editLabel +
+                          "</button>" +
+                      "</h1>";
+            },
+            
             listTextInput: "<li class='ui-editable-temp ui-btn' style='padding: 0.3em 0.8em;'>" +
                 "<div class='ui-editable-flex'>" +
                 "<div style='background-color: white; padding: 0;' class='ui-editable-flex-item-left ui-editable-border-left ui-input-text ui-btn ui-shadow-inset'>" +
@@ -551,16 +577,6 @@
                 "</div>" +
                 "</li>",
 
-            header: function (opts) {
-                return "<div data-role='header'>" +
-                    "<h1>List Items</h1>" +
-                    "<button class='ui-btn ui-mini ui-btn-inline ui-btn-right ui-btn-icon-right ui-icon-edit " +
-                    "ui-btn-" + opts.buttonTheme + " " +
-                    (opts.buttonCorner ? "ui-corner-all " : "") +
-                    (opts.buttonShadow ? "ui-shadow " : "") +
-                    "'>Edit</button>" +
-                    "</div>";
-            }
         },
         
         _toArray: function(obj) {
