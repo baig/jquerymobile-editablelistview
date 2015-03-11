@@ -1,6 +1,6 @@
 {
   "name": "jqm-editable-listview",
-  "version": "0.2.17",
+  "version": "0.2.18",
   "description": "A customized version of jQuery Mobile Listview Widget that supports insertion of new list items and removal of existing list items",
   "main": "js/editable-listview.js",
   "scripts": {
