@@ -16,18 +16,23 @@ var uglify = require('gulp-uglify');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var del = require('del');
+var noop = function () {};
+
+//var usemin = require('gulp-usemin');
+//var sourcemaps = require('gulp-sourcemaps');
 
 /** gulp tasks */
 
 help(gulp);
 
-gulp.task('clean', 'Cleans the build folder.', [], function () {
+// Clean
+gulp.task('clean', 'Cleans the build folder.', [], function (cb) {
     "use strict";
-    
+
     del([
         'build/**'
-    ]);
-    
+    ], cb);
+
 }, {
     aliases: ['c', 'C']
 });
@@ -75,19 +80,50 @@ gulp.task("assets", 'Copies all assets (css stylesheets, images etc.) to the bui
     aliases: ['a', 'A']
 });
 
-gulp.task("build", '(default task) Cleans, concatenates and minifies all script files into build folder.', [], function () {
-    "use strict";
-    gulp.run('clean');
-    gulp.run('concat');
-    gulp.run('minify');
-    gulp.run('assets');
-    gulp.run('minify-css');
-}, {
+gulp.task("build", '(default task) Cleans, concatenates and minifies all script files into build folder.', [
+    'clean',
+    'concat',
+    'minify',
+    'assets',
+    'minify-css'
+], noop, {
     aliases: ['b', 'B']
 });
 
-gulp.task('default', function () {
-    "use strict";
-    gulp.run('build');
+gulp.task('lint', '', [], function () {
+    /* style and lint errors */
+    var jscs = require('gulp-jscs');
+    var jshint = require('gulp-jshint');
+    var stylish = require('gulp-jscs-stylish');
+
+    gulp.src('js/*.js')
+        .pipe(jshint())                           // hint
+        .pipe(jscs())                             // enforce style guide
+        .on('error', noop)                        // don't stop on error
+        .pipe(stylish.combineWithHintResults())   // combine with jshint results
+        .pipe(jshint.reporter('jshint-stylish'));    // use any jshint reporter to log hint and style guide errors
 });
+
+gulp.task('unit', '', [], function () {
+    var mocha = require('gulp-mocha');
+    var chai = require('chai');
+
+    return gulp.src(['test/js/**/*.js'], {
+            read: false
+        })
+        .pipe(mocha({
+            reporter: 'spec',
+            globals: {
+                should: chai.expect
+            }
+        }));
+});
+
+gulp.task('default', '', ['build']);
+
+gulp.task('test', ['lint', 'unit']);
+
+//gulp.task('test-watch', function () {
+//    gulp.watch(['src/**/*.js', 'test/**/*.js'], ['test']);
+//});
 
