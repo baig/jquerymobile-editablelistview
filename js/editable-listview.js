@@ -14,41 +14,43 @@
 
     $.widget( "mobile.listview", $.mobile.listview, {
 
-        // Declaring some private instace state variables
-        _created: false,
-        _origDom: null,
-        _editMode: false,
-        _counter: 1,
-        _dataItemName: "item",
-        _evt: null,
+        // private variables
+        _evt:          null,
+        _counter:      1,
+        _created:      false,
+        _origDom:      null,
+        _editMode:     false,
+        _tapHandler:   null,
         _clickHandler: null,
-        _tapHandler: null,
+        _dataItemName: "item",
 
-        // The options hash
+        // options hash
         options: {
-            editable: false,
+            // the essential ones
+            editable:     false,
+            itemName:     "",
             editableType: "simple",
             editableForm: "",
-            itemName: "",
 
-            title: "View list items",
-            emptyTitle: "No items to view",
+            title:      "View list items",  // header title when listview has list items
+            emptyTitle: "No items to view", // header title when listview is empty
+
+            collapsed:     false,
+            expandedIcon:  "carat-d",
+            collapsedIcon: "carat-r",
+
+            addLabel:  "Add",
             editLabel: "Edit",
-            addLabel: "Add",
             doneLabel: "Done",
-            addIcon: "plus",
+
+            addIcon:  "plus",
             editIcon: "edit",
             doneIcon: "check",
-
-            buttonTheme: "a",
-            buttonCorner: true,
-            buttonShadow: true,
-
             itemIcon: false,
 
-            collapsed: false,
-            expandedIcon: "carat-d",
-            collapsedIcon: "carat-r"
+            buttonTheme:  "a",
+            buttonCorner: true,
+            buttonShadow: true
         },
 
         _beforeListviewRefresh: function() {
@@ -669,10 +671,12 @@
             var arrOfObj = [],
                 obj = {},
                 i = 0;
+
             for ( ; i < arr.length; i++ ) {
                 obj[keyName] = arr[i];
                 arrOfObj.push( obj );
             }
+
             return arrOfObj;
         },
 
