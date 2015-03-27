@@ -59,7 +59,7 @@ gulp.task("minify", 'Minifies all the script files.', [], function () {
     aliases: ['m', 'M']
 });
 
-gulp.task("minify-css", 'Minifies the CSS stylesheets.', [], function() {
+gulp.task("minify-css", 'Minifies the CSS stylesheets.', [], function () {
     "use strict";
     gulp.src('css/**/*.css')
         .pipe(concat('jqm.editable.listview.min.css'))
@@ -71,7 +71,7 @@ gulp.task("minify-css", 'Minifies the CSS stylesheets.', [], function() {
     aliases: ['s', 'S']
 });
 
-gulp.task("assets", 'Copies all assets (css stylesheets, images etc.) to the build folder.', [], function(){
+gulp.task("assets", 'Copies all assets (css stylesheets, images etc.) to the build folder.', [], function () {
     "use strict";
     gulp.src("css/**/*")
         .pipe(concat("jqm.editable.listview.css"))
@@ -97,33 +97,25 @@ gulp.task('lint', '', [], function () {
     var stylish = require('gulp-jscs-stylish');
 
     gulp.src('js/*.js')
-        .pipe(jshint())                           // hint
-        .pipe(jscs())                             // enforce style guide
-        .on('error', noop)                        // don't stop on error
-        .pipe(stylish.combineWithHintResults())   // combine with jshint results
-        .pipe(jshint.reporter('jshint-stylish'));    // use any jshint reporter to log hint and style guide errors
+        .pipe(jshint()) // hint
+        .pipe(jscs()) // enforce style guide
+        .on('error', noop) // don't stop on error
+        .pipe(stylish.combineWithHintResults()) // combine with jshint results
+        .pipe(jshint.reporter('jshint-stylish')); // use any jshint reporter to log hint and style guide errors
 });
 
 gulp.task('unit', '', [], function () {
-    var mocha = require('gulp-mocha');
-    var chai = require('chai');
+    var mochaPhantomJS = require('gulp-mocha-phantomjs');
 
-    return gulp.src(['test/js/**/*.js'], {
+    return gulp.src(['tests/test-runner.html'], {
             read: false
         })
-        .pipe(mocha({
-            reporter: 'spec',
-            globals: {
-                should: chai.expect
-            }
+        .pipe(mochaPhantomJS({
+            reporter: 'spec'
         }));
 });
+
 
 gulp.task('default', '', ['build']);
 
 gulp.task('test', ['lint', 'unit']);
-
-//gulp.task('test-watch', function () {
-//    gulp.watch(['src/**/*.js', 'test/**/*.js'], ['test']);
-//});
-

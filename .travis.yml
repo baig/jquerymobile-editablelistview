@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "0.12"
+  - "iojs"
+  - "iojs-v1.0.4"
+before_install:
+  - git clone git://github.com/n1k0/casperjs.git ~/casperjs
+  - cd ~/casperjs
+  - git checkout tags/1.0.4
+  - export PATH=$PATH:`pwd`/bin
+  - cd -
+before_script:
+  - phantomjs --version
+  - casperjs --version

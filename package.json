@@ -1,16 +1,16 @@
 {
-  "name": "jqm-editable-listview",
-  "version": "0.3.1",
-  "description": "A customized version of jQuery Mobile Listview Widget that supports insertion of new list items and removal of existing list items",
-  "main": "js/editable-listview.js",
-  "scripts": {
-    "test": "./node_modules/karma/bin/karma start --browsers Firefox --single-run"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/baig/jquerymobile-editablelistview.git"
-  },
-  "keywords": [
+    "name": "jqm-editable-listview",
+    "version": "0.3.1",
+    "description": "A customized version of jQuery Mobile Listview Widget that supports insertion of new list items and removal of existing list items",
+    "main": "js/editable-listview.js",
+    "scripts": {
+        "test": "./node_modules/karma/bin/karma start --browsers Firefox --single-run"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/baig/jquerymobile-editablelistview.git"
+    },
+    "keywords": [
     "jquery",
     "mobile",
     "jquerymobile",
@@ -21,19 +21,36 @@
     "editablelistview",
     "editable-listview"
   ],
-  "author": "Wasif Hasan Baig",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/baig/jquerymobile-editablelistview/issues"
-  },
-  "homepage": "https://github.com/baig/jquerymobile-editablelistview",
-  "devDependencies": {
-    "del": "^1.1.0",
-    "gulp-concat": "^2.4.2",
-    "gulp-help": "^1.3.1",
-    "gulp-minify-css": "^0.3.11",
-    "gulp-rename": "^1.2.0",
-    "gulp-uglify": "^1.0.2",
-    "karma": "~0.12"
-  }
+    "author": "Wasif Hasan Baig",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/baig/jquerymobile-editablelistview/issues"
+    },
+    "scripts" : {
+        "test": "casperjs test tests/functional/casper.spec.js"
+    },
+    "homepage": "https://github.com/baig/jquerymobile-editablelistview",
+    "devDependencies": {
+        "casper-chai": "^0.2.1",
+        "chai": "^2.1.2",
+        "chai-as-promised": "^4.3.0",
+        "chai-jq": "0.0.8",
+        "chai-jquery": "^2.0.0",
+        "del": "^1.1.0",
+        "gulp": "^3.8.11",
+        "gulp-concat": "^2.4.2",
+        "gulp-help": "^1.3.1",
+        "gulp-jscs": "^1.4.0",
+        "gulp-jscs-stylish": "^1.0.2",
+        "gulp-jshint": "^1.9.4",
+        "gulp-minify-css": "^0.3.11",
+        "gulp-mocha": "^2.0.0",
+        "gulp-mocha-phantomjs": "^0.5.3",
+        "gulp-rename": "^1.2.0",
+        "gulp-uglify": "^1.0.2",
+        "jquery": "^2.1.3",
+        "jquery-mobile": "^1.4.1",
+        "jshint-stylish": "^1.0.1",
+        "mocha": "^2.2.1"
+    }
 }
