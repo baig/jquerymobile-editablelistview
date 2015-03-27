@@ -6,7 +6,7 @@ node_js:
 before_install:
   - git clone git://github.com/n1k0/casperjs.git ~/casperjs
   - cd ~/casperjs
-  - git checkout tags/1.0.4
+  - git checkout tags/1.0.2
   - export PATH=$PATH:`pwd`/bin
   - cd -
 before_script:
