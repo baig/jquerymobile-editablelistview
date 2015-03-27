@@ -1,3 +1,4 @@
+var casper = require('casper').create();
 var cwd = require('fs').workingDirectory;
 var dump = require('utils').dump;
 var system = require('system');
