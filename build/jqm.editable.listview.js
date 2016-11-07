@@ -97,6 +97,10 @@
                 ui.header = ui.wrapper.find('.ui-collapsible-heading')
                 ui.button = ui.header.find('a a, a button')
                 ui.content = ui.wrapper.find('.ui-collapsible-content')
+
+				// add anchor so I can attach identifying class
+				ui.anchor = ui.header.find('.ui-collapsible-heading-toggle');
+				
                 ui.form = this._getForm();
                 
                 $.extend(this, {
@@ -316,7 +320,10 @@
                 .children("a")[0]
                 .childNodes[0]
                 .data = (isListEmpty) ? opts.emptyTitle : opts.title;
-
+				
+			// attached header title as class to enable custom styling to added later
+			ui.anchor.addClass(opts.title.replace(/\s+/g, ''));
+			
             // changing "Edit" button state, icon and label
             ui.button.removeClass('ui-icon-minus ui-icon-' + opts.doneIcon + ' ui-icon-' + opts.addIcon + ' ui-icon-' + opts.editIcon)
                 .addClass('ui-icon-' + (this._editMode ? opts.doneIcon : isListEmpty ? opts.addIcon : opts.editIcon))
