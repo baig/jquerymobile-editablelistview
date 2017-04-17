@@ -19,7 +19,7 @@ Many a times, you come across a situation where you want to allow editing of lis
 
     * Install using bower.
     
-      `bower install jqm-editable-istview`
+      `bower install jqm-editable-listview`
     
     * Use the CDN hosted version.
 
